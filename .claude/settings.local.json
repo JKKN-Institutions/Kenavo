@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavohome-main/**)",
+      "Bash(xcopy:*)",
+      "Read(//c/Users/brabu/Pictures/Screenshots/**)",
+      "Bash(taskkill:*)",
+      "Bash(npm run dev:*)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavoabout-main/src/pages/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavoabout-main/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavodirectory-main/src/pages/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogallery-main/src/pages/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogalleryindividual-main/src/pages/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogallery-main/src/components/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavocontact-main/src/components/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavodirectoryindividual-main/src/components/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogalleryindividual-main/src/components/**)",
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogalleryindividual-main/src/**)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
