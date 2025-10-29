@@ -15,7 +15,14 @@
       "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavocontact-main/src/components/**)",
       "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavodirectoryindividual-main/src/components/**)",
       "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogalleryindividual-main/src/components/**)",
-      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogalleryindividual-main/src/**)"
+      "Read(//c/Users/brabu/Projects/Kenavowebsite/kenavogalleryindividual-main/src/**)",
+      "Read(//c/Users/admin/Projects/Kenavowebsite/demo/**)",
+      "Bash(npm run validate:alumni:*)",
+      "mcp__supabase__apply_migration",
+      "mcp__supabase__list_tables",
+      "mcp__supabase__get_advisors",
+      "mcp__supabase__execute_sql",
+      "Bash(npm run import:alumni:*)"
     ],
     "deny": [],
     "ask": []

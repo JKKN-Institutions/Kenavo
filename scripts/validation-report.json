@@ -1,0 +1,20 @@
+{
+  "timestamp": "2025-10-29T09:52:40.772Z",
+  "stats": {
+    "totalProfiles": 134,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 6
+  },
+  "errors": [],
+  "warnings": [],
+  "info": [
+    "Found 134 images",
+    "Total size: 9.48 MB",
+    "Average image size: 72.44 KB",
+    "[15] Annadurai S.V → 15-annadurai-sv.png (special chars removed)",
+    "[64] K.C. Rameshkumar → 64-kc-rameshkumar.png (special chars removed)",
+    "All names will follow pattern: {id}-{safe-name}.{ext}"
+  ],
+  "passed": true
+}
