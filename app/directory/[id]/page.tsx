@@ -4,6 +4,24 @@ import Footer from '@/components/Footer';
 import ProfileHero from '@/components/ProfileHero';
 import QuestionAnswer from '@/components/QuestionAnswer';
 
+// Generate static paths for all directory profiles
+export function generateStaticParams() {
+  return [
+    { id: 'a-arjoon' },
+    { id: 'ahamed-khan' },
+    { id: 'abishek-valluru' },
+    { id: 'abraham-francis' },
+    { id: 'admin-selvaraj' },
+    { id: 'aji-p-george' },
+    { id: 'bachan' },
+    { id: 'badrinath' },
+    { id: 'balaji-srimurugan' }
+  ];
+}
+
+// Allow dynamic routes for any other profile IDs at runtime
+export const dynamicParams = true;
+
 export default async function DirectoryIndividualPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
 

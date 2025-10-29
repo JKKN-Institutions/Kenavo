@@ -1,18 +1,26 @@
-'use client';
-
-import React, { use } from 'react';
+import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GalleryImagesGrid from '@/components/GalleryImagesGrid';
-import { useRouter } from 'next/navigation';
+import BackToAlbumButton from '@/components/BackToAlbumButton';
 
-export default function GalleryIndividualPage({ params }: { params: Promise<{ id: string }> }) {
-  const router = useRouter();
-  const { id } = use(params);
+// Generate static paths for all gallery albums
+export function generateStaticParams() {
+  return [
+    { id: 'group' },
+    { id: 'sports' },
+    { id: 'hostel' },
+    { id: 'tours' },
+    { id: 'events' },
+    { id: 'annual-day' }
+  ];
+}
 
-  const handleBackToAlbum = () => {
-    router.push('/gallery');
-  };
+// Allow dynamic routes for any other profile IDs at runtime
+export const dynamicParams = true;
+
+export default async function GalleryIndividualPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
 
   // Convert the id to a title (e.g., "group" -> "Group")
   const albumTitle = id.split('-').map(word =>
@@ -32,13 +40,7 @@ export default function GalleryIndividualPage({ params }: { params: Promise<{ id
 
         <GalleryImagesGrid />
 
-        <button
-          onClick={handleBackToAlbum}
-          className="bg-[rgba(217,81,100,1)] flex w-[170px] max-w-full flex-col items-stretch text-lg text-white font-black text-center leading-none justify-center mt-[54px] px-[25px] py-3 rounded-[50px] max-md:mt-10 max-md:px-5 hover:bg-[rgba(197,61,80,1)] transition-colors cursor-pointer"
-          aria-label="Navigate back to album view"
-        >
-          <span>Back to Album</span>
-        </button>
+        <BackToAlbumButton />
       </main>
 
       <Footer />
