@@ -29,50 +29,55 @@ const MobileBottomNav = () => {
       role="navigation"
       aria-label="Mobile navigation"
     >
-      <div className="flex items-center justify-around h-16 px-4 w-full">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          const active = isActive(item.href);
+      <div className="flex items-center justify-between h-16 px-4 w-full">
+        {/* Main Navigation Items */}
+        <div className="flex items-center justify-around flex-1">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
 
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="relative flex flex-col items-center justify-center transition-all duration-300 ease-out active:scale-95"
-            >
-              {/* Active: Horizontal Pill (Icon + Label) | Inactive: Just Icon */}
-              {active ? (
-                <div className="flex flex-row items-center justify-center gap-1.5 px-3 py-2 rounded-2xl bg-[rgba(50,30,90,0.8)] backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300">
-                  <Icon size={20} strokeWidth={2.5} className="text-white transition-all duration-300" />
-                  <span className="text-xs font-semibold text-white whitespace-nowrap">
-                    {item.label}
-                  </span>
-                </div>
-              ) : (
-                <div className="flex items-center justify-center p-2">
-                  <Icon
-                    size={20}
-                    strokeWidth={2}
-                    className="text-white/70 hover:text-white/90 transition-all duration-300"
-                  />
-                </div>
-              )}
-            </Link>
-          );
-        })}
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="relative flex flex-col items-center justify-center transition-all duration-300 ease-out active:scale-95"
+              >
+                {/* Active: Horizontal Pill (Icon + Label) | Inactive: Just Icon */}
+                {active ? (
+                  <div className="flex flex-row items-center justify-center gap-1.5 px-3 py-2 rounded-2xl bg-[rgba(50,30,90,0.8)] backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300">
+                    <Icon size={20} strokeWidth={2.5} className="text-white transition-all duration-300" />
+                    <span className="text-xs font-semibold text-white whitespace-nowrap">
+                      {item.label}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center p-2">
+                    <Icon
+                      size={20}
+                      strokeWidth={2}
+                      className="text-white/70 hover:text-white/90 transition-all duration-300"
+                    />
+                  </div>
+                )}
+              </Link>
+            );
+          })}
+        </div>
 
-        {/* Floating Action Button (FAB) */}
-        <button
-          onClick={() => setShowMenu(!showMenu)}
-          className="relative flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
-          aria-label="More options"
-        >
-          {showMenu ? (
-            <X size={24} strokeWidth={2.5} className="text-white" />
-          ) : (
-            <Plus size={24} strokeWidth={2.5} className="text-white" />
-          )}
-        </button>
+        {/* Floating Action Button (FAB) - Separated */}
+        <div className="ml-3 flex-shrink-0">
+          <button
+            onClick={() => setShowMenu(!showMenu)}
+            className="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
+            aria-label="More options"
+          >
+            {showMenu ? (
+              <X size={16} strokeWidth={2.5} className="text-white" />
+            ) : (
+              <Plus size={16} strokeWidth={2.5} className="text-white" />
+            )}
+          </button>
+        </div>
       </div>
 
       {/* FAB Menu - Bottom Sheet */}

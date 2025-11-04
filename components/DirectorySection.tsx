@@ -125,7 +125,7 @@ const DirectorySection = () => {
                 </div>
 
                 {/* 2 o'clock - Top right */}
-                <div className="absolute top-[10%] right-[3%] w-[105px] md:w-[115px] lg:w-[130px] xl:w-[145px] h-[105px] md:h-[115px] lg:h-[130px] xl:h-[145px] z-10">
+                <div className="absolute top-[12%] right-[12%] w-[105px] md:w-[115px] lg:w-[130px] xl:w-[145px] h-[105px] md:h-[115px] lg:h-[130px] xl:h-[145px] z-10">
                   <img
                     src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/7bb63ea0ad3ab902514ed4aa13964ca0c8ad0883?placeholderIfAbsent=true"
                     alt="Classmate profile"
@@ -143,7 +143,7 @@ const DirectorySection = () => {
                 </div>
 
                 {/* 8 o'clock - Bottom left */}
-                <div className="absolute bottom-[14%] left-[3%] w-[105px] md:w-[115px] lg:w-[130px] xl:w-[145px] h-[105px] md:h-[115px] lg:h-[130px] xl:h-[145px] z-10">
+                <div className="absolute bottom-[10%] left-[12%] w-[105px] md:w-[115px] lg:w-[130px] xl:w-[145px] h-[105px] md:h-[115px] lg:h-[130px] xl:h-[145px] z-10">
                   <img
                     src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/0cc6b72e80f672ae4bd339fabb8fe37c97df7032?placeholderIfAbsent=true"
                     alt="Classmate profile"
@@ -152,7 +152,7 @@ const DirectorySection = () => {
                 </div>
 
                 {/* 10 o'clock - Left */}
-                <div className="absolute top-[42%] left-[1%] w-[110px] md:w-[120px] lg:w-[135px] xl:w-[150px] h-[110px] md:h-[120px] lg:h-[135px] xl:h-[150px] z-10">
+                <div className="absolute top-[38%] left-[5%] w-[110px] md:w-[120px] lg:w-[135px] xl:w-[150px] h-[110px] md:h-[120px] lg:h-[135px] xl:h-[150px] z-10">
                   <img
                     src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/20e63c88b0fe6dc3cf2778312d215c65bf2a7e23?placeholderIfAbsent=true"
                     alt="Classmate profile"
