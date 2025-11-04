@@ -1,6 +1,7 @@
 // API functions for fetching profile data from Supabase
 import { supabase } from '../supabase'
-import type { Profile, ProfileWithGallery } from '../types/database'
+import type { Profile, ProfileWithGallery, ProfileWithAnswers, ProfileQA } from '../types/database'
+import { createSlug, slugMatchesName } from '../utils/slug'
 
 /**
  * Fetch all profiles from the database
@@ -125,4 +126,87 @@ export async function getGraduationYears(): Promise<string[]> {
   // Extract unique years
   const years = [...new Set(data?.map(item => item.year_graduated).filter(Boolean))]
   return years as string[]
+}
+
+/**
+ * Fetch Q&A responses for a specific profile
+ * @param profileId - Profile ID
+ * @returns Array of Q&A pairs for this profile
+ */
+export async function getProfileQA(profileId: number): Promise<ProfileQA[]> {
+  const { data, error } = await supabase
+    .from('profile_answers')
+    .select(`
+      question_id,
+      answer,
+      profile_questions (
+        question_text,
+        order_index
+      )
+    `)
+    .eq('profile_id', profileId)
+    .order('profile_questions(order_index)')
+
+  if (error) {
+    // If table doesn't exist yet, return empty array (migrations not run)
+    if (error.code === 'PGRST205') {
+      console.warn('Profile Q&A tables not created yet. Run migrations first.')
+      return []
+    }
+    console.error('Error fetching profile Q&A:', error)
+    throw error
+  }
+
+  // Transform data to ProfileQA format
+  const qaData = data?.map((item: any) => ({
+    question_id: item.question_id,
+    question_text: item.profile_questions?.question_text || '',
+    answer: item.answer,
+    order_index: item.profile_questions?.order_index || 0
+  })) || []
+
+  return qaData.sort((a, b) => a.order_index - b.order_index)
+}
+
+/**
+ * Fetch profile by slug (URL-friendly version of name)
+ * @param slug - URL slug (e.g., "david-a", "john-doe")
+ * @returns Profile with Q&A responses, or null if not found
+ */
+export async function getProfileBySlug(slug: string): Promise<ProfileWithAnswers | null> {
+  // First, fetch all profiles and find matching slug
+  const { data: profiles, error: profileError } = await supabase
+    .from('profiles')
+    .select('*')
+
+  if (profileError) {
+    console.error('Error fetching profiles for slug match:', profileError)
+    throw profileError
+  }
+
+  // Find profile where slug matches name
+  const profile = profiles?.find(p => slugMatchesName(slug, p.name))
+
+  if (!profile) {
+    return null
+  }
+
+  // Fetch Q&A responses for this profile
+  const qaResponses = await getProfileQA(profile.id)
+
+  return {
+    ...profile,
+    qa_responses: qaResponses
+  }
+}
+
+/**
+ * Get all profile slugs (for static generation)
+ * @returns Array of objects with slug for each profile
+ */
+export async function getAllProfileSlugs(): Promise<{ slug: string }[]> {
+  const profiles = await getAllProfiles()
+  return profiles.map(profile => ({
+    slug: createSlug(profile.name)
+  }))
 }

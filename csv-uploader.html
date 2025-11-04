@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSV Profile Uploader - Kenavo</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #402278;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .upload-section {
+            border: 3px dashed #667eea;
+            border-radius: 8px;
+            padding: 40px;
+            text-align: center;
+            background: #f8f9ff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 30px;
+        }
+
+        .upload-section:hover {
+            border-color: #764ba2;
+            background: #f0f2ff;
+        }
+
+        .upload-section.dragover {
+            border-color: #4CAF50;
+            background: #e8f5e9;
+        }
+
+        .upload-icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        .btn {
+            background: #D95164;
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.1em;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+        }
+
+        .btn:hover {
+            background: #c44153;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(217, 81, 100, 0.4);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #667eea;
+        }
+
+        .btn-secondary:hover {
+            background: #5568d3;
+        }
+
+        .progress-container {
+            display: none;
+            margin: 30px 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .log-container {
+            display: none;
+            max-height: 400px;
+            overflow-y: auto;
+            background: #f5f5f5;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9em;
+        }
+
+        .log-entry {
+            padding: 8px;
+            margin: 4px 0;
+            border-radius: 4px;
+        }
+
+        .log-success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .log-error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #f44336;
+        }
+
+        .log-info {
+            background: #e3f2fd;
+            color: #1565c0;
+            border-left: 4px solid #2196F3;
+        }
+
+        .summary {
+            display: none;
+            background: #402278;
+            color: white;
+            padding: 30px;
+            border-radius: 8px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .summary h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .instructions {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+
+        .instructions h3 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+
+        .instructions ol {
+            padding-left: 25px;
+            color: #856404;
+        }
+
+        .instructions li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+
+        .file-info {
+            display: none;
+            background: #e8f5e9;
+            border: 1px solid #4CAF50;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .file-info h4 {
+            color: #2e7d32;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 CSV Profile Uploader</h1>
+            <p>Bulk update profiles and images easily</p>
+        </div>
+
+        <div class="content">
+            <div class="instructions">
+                <h3>📋 Instructions:</h3>
+                <ol>
+                    <li><strong>Download template:</strong> Click "Export Current Profiles" to get CSV file</li>
+                    <li><strong>Edit CSV:</strong> Open in Excel/Sheets and update profile data & image URLs</li>
+                    <li><strong>Upload CSV:</strong> Drag & drop or click to select your edited CSV file</li>
+                    <li><strong>Import:</strong> Click "Import to Supabase" to update profiles</li>
+                    <li><strong>Refresh:</strong> Press Ctrl+Shift+R on your website to see changes</li>
+                </ol>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 30px;">
+                <button class="btn btn-secondary" onclick="exportProfiles()">
+                    📥 Export Current Profiles
+                </button>
+            </div>
+
+            <div class="upload-section" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                <div class="upload-icon">📁</div>
+                <h2>Drop CSV file here or click to browse</h2>
+                <p style="color: #666; margin-top: 10px;">Supported format: .csv</p>
+                <input type="file" id="fileInput" accept=".csv" onchange="handleFileSelect(event)">
+            </div>
+
+            <div class="file-info" id="fileInfo">
+                <h4>✅ File Selected</h4>
+                <p id="fileName"></p>
+                <p id="fileStats"></p>
+            </div>
+
+            <div style="text-align: center;">
+                <button class="btn" id="uploadBtn" disabled onclick="uploadToSupabase()">
+                    🚀 Import to Supabase
+                </button>
+            </div>
+
+            <div class="progress-container" id="progressContainer">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill">0%</div>
+                </div>
+            </div>
+
+            <div class="log-container" id="logContainer"></div>
+
+            <div class="summary" id="summary">
+                <h2>🎉 Import Complete!</h2>
+                <div class="summary-stats">
+                    <div class="stat">
+                        <div class="stat-number" id="successCount">0</div>
+                        <div class="stat-label">✅ Success</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="errorCount">0</div>
+                        <div class="stat-label">❌ Failed</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="totalCount">0</div>
+                        <div class="stat-label">📝 Total</div>
+                    </div>
+                </div>
+                <p style="margin-top: 30px; font-size: 1.2em;">
+                    Refresh your website (Ctrl+Shift+R) to see updates!
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase configuration
+        const SUPABASE_URL = 'https://rihoufidmnqtffzqhplc.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJpaG91ZmlkbW5xdGZmenFocGxjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjE3MjgwNTMsImV4cCI6MjA3NzMwNDA1M30.15vQ08-ij2ihEMM0sVsdLJdhGFaqhXp_7fb1aB1WHis';
+
+        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+        let csvData = [];
+
+        // Drag and drop handlers
+        const dropZone = document.getElementById('dropZone');
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('dragover');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('dragover');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                handleFile(files[0]);
+            }
+        });
+
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
+            if (file) {
+                handleFile(file);
+            }
+        }
+
+        function handleFile(file) {
+            if (!file.name.endsWith('.csv')) {
+                alert('Please select a CSV file');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const content = e.target.result;
+                csvData = parseCSV(content);
+
+                // Show file info
+                document.getElementById('fileInfo').style.display = 'block';
+                document.getElementById('fileName').textContent = `File: ${file.name}`;
+                document.getElementById('fileStats').textContent = `Profiles to update: ${csvData.length}`;
+
+                // Enable upload button
+                document.getElementById('uploadBtn').disabled = false;
+
+                log(`✅ Loaded ${csvData.length} profiles from CSV`, 'info');
+            };
+
+            reader.readAsText(file);
+        }
+
+        function parseCSV(content) {
+            const lines = content.split('\n').filter(line => line.trim());
+            if (lines.length < 2) return [];
+
+            const headers = lines[0].split(',').map(h => h.trim());
+            const profiles = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                const values = parseCSVLine(lines[i]);
+                if (values.length === 0) continue;
+
+                const profile = {};
+                headers.forEach((header, index) => {
+                    const value = values[index]?.trim();
+                    profile[header] = value === '' || value === 'null' ? null : value;
+                });
+
+                if (profile.id) {
+                    profile.id = parseInt(profile.id);
+                }
+
+                profiles.push(profile);
+            }
+
+            return profiles;
+        }
+
+        function parseCSVLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                const nextChar = line[i + 1];
+
+                if (char === '"') {
+                    if (inQuotes && nextChar === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current);
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+
+            values.push(current);
+            return values;
+        }
+
+        async function uploadToSupabase() {
+            if (csvData.length === 0) {
+                alert('Please select a CSV file first');
+                return;
+            }
+
+            // Show progress
+            document.getElementById('progressContainer').style.display = 'block';
+            document.getElementById('logContainer').style.display = 'block';
+            document.getElementById('logContainer').innerHTML = '';
+            document.getElementById('uploadBtn').disabled = true;
+
+            let successCount = 0;
+            let errorCount = 0;
+
+            for (let i = 0; i < csvData.length; i++) {
+                const profile = csvData[i];
+                const progress = ((i + 1) / csvData.length * 100).toFixed(0);
+
+                // Update progress bar
+                document.getElementById('progressFill').style.width = progress + '%';
+                document.getElementById('progressFill').textContent = progress + '%';
+
+                try {
+                    // Update profile with timestamp for cache busting
+                    const { data, error } = await supabase
+                        .from('profiles')
+                        .upsert({
+                            ...profile,
+                            updated_at: new Date().toISOString()
+                        }, {
+                            onConflict: 'id'
+                        });
+
+                    if (error) throw error;
+
+                    successCount++;
+                    log(`✅ Updated: ${profile.name} (ID: ${profile.id})`, 'success');
+                } catch (error) {
+                    errorCount++;
+                    log(`❌ Failed: ${profile.name} - ${error.message}`, 'error');
+                }
+            }
+
+            // Show summary
+            document.getElementById('summary').style.display = 'block';
+            document.getElementById('successCount').textContent = successCount;
+            document.getElementById('errorCount').textContent = errorCount;
+            document.getElementById('totalCount').textContent = csvData.length;
+
+            document.getElementById('uploadBtn').disabled = false;
+        }
+
+        async function exportProfiles() {
+            log('📥 Exporting profiles from Supabase...', 'info');
+
+            try {
+                const { data: profiles, error } = await supabase
+                    .from('profiles')
+                    .select('*')
+                    .order('name');
+
+                if (error) throw error;
+
+                // Convert to CSV
+                const headers = ['id', 'name', 'profile_image_url', 'location', 'year_graduated', 'current_job', 'company', 'bio', 'email', 'phone', 'linkedin_url'];
+                let csv = headers.join(',') + '\n';
+
+                profiles.forEach(profile => {
+                    const row = headers.map(header => {
+                        const value = profile[header];
+                        if (value === null || value === undefined) return '';
+                        const str = String(value);
+                        if (str.includes(',') || str.includes('"') || str.includes('\n')) {
+                            return `"${str.replace(/"/g, '""')}"`;
+                        }
+                        return str;
+                    });
+                    csv += row.join(',') + '\n';
+                });
+
+                // Download
+                const blob = new Blob([csv], { type: 'text/csv' });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `profiles_export_${new Date().toISOString().split('T')[0]}.csv`;
+                a.click();
+
+                log(`✅ Exported ${profiles.length} profiles to CSV`, 'success');
+            } catch (error) {
+                log(`❌ Export failed: ${error.message}`, 'error');
+            }
+        }
+
+        function log(message, type = 'info') {
+            const logContainer = document.getElementById('logContainer');
+            const entry = document.createElement('div');
+            entry.className = `log-entry log-${type}`;
+            entry.textContent = message;
+            logContainer.appendChild(entry);
+            logContainer.scrollTop = logContainer.scrollHeight;
+        }
+    </script>
+</body>
+</html>

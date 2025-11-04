@@ -1,0 +1,2 @@
+id,name,profile_image_url,location,year_graduated,current_job,company,bio,email,phone,linkedin_url
+39,David A,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/39-david-a.png,New York,2005,Software Engineer,Google,"Passionate software engineer with expertise in web development",david@example.com,+1234567890,https://linkedin.com/in/davida

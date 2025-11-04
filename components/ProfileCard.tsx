@@ -1,38 +1,45 @@
 import React from 'react';
+import { addCacheBuster } from '@/lib/utils/image-cache-buster';
 
 interface ProfileCardProps {
   name: string;
   imageUrl: string;
   backgroundImageUrl?: string;
   className?: string;
+  updatedAt?: string; // Add timestamp for cache busting
 }
 
-const ProfileCard: React.FC<ProfileCardProps> = ({ 
-  name, 
-  imageUrl, 
+const ProfileCard: React.FC<ProfileCardProps> = ({
+  name,
+  imageUrl,
   backgroundImageUrl,
-  className = ""
+  className = "",
+  updatedAt
 }) => {
   const hasBackground = !!backgroundImageUrl;
-  
+
+  // Apply cache busting to prevent showing old cached images
+  const cachedImageUrl = addCacheBuster(imageUrl, updatedAt);
+  const cachedBackgroundUrl = backgroundImageUrl ? addCacheBuster(backgroundImageUrl, updatedAt) : undefined;
+
   return (
     <article className={`bg-[rgba(44,23,82,1)] flex grow flex-col font-normal w-full px-[19px] py-6 max-md:mt-[23px] max-md:pr-5 ${className}`}>
       {hasBackground ? (
         <div className="flex flex-col self-stretch relative aspect-[0.969]">
           <img
-            src={backgroundImageUrl}
+            src={cachedBackgroundUrl}
             className="absolute h-full w-full object-cover inset-0"
             alt=""
           />
           <img
-            src={imageUrl}
+            src={cachedImageUrl}
             className="aspect-[0.97] object-contain w-full"
             alt={`${name} profile`}
           />
         </div>
       ) : (
         <img
-          src={imageUrl}
+          src={cachedImageUrl}
           className="aspect-[0.97] object-contain w-full self-stretch"
           alt={`${name} profile`}
         />

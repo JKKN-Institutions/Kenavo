@@ -1,0 +1,3 @@
+name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames,profile_image_url
+John Doe,john@example.com,+1234567890,New York USA,2010,Software Engineer,Tech Corp,Passionate software engineer with 10+ years experience,https://linkedin.com/in/johndoe,Johnny,https://example.com/image.jpg
+Jane Smith,jane@example.com,+9876543210,London UK,2012,Product Manager,Startup Inc,Building amazing products that people love,https://linkedin.com/in/janesmith,Janey,https://example.com/image2.jpg

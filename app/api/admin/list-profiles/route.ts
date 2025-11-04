@@ -1,0 +1,53 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '@/lib/supabase';
+
+export async function GET(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url);
+    const page = parseInt(searchParams.get('page') || '1');
+    const limit = parseInt(searchParams.get('limit') || '20');
+    const search = searchParams.get('search') || '';
+    const year = searchParams.get('year') || '';
+
+    const offset = (page - 1) * limit;
+
+    // Build query
+    let query = supabase
+      .from('profiles')
+      .select('*', { count: 'exact' });
+
+    // Apply search filter
+    if (search) {
+      query = query.or(`name.ilike.%${search}%,location.ilike.%${search}%,company.ilike.%${search}%`);
+    }
+
+    // Apply year filter
+    if (year) {
+      query = query.eq('year_graduated', year);
+    }
+
+    // Apply pagination and ordering
+    query = query
+      .order('name')
+      .range(offset, offset + limit - 1);
+
+    const { data: profiles, error, count } = await query;
+
+    if (error) {
+      console.error('Error fetching profiles:', error);
+      return NextResponse.json({ error: error.message }, { status: 500 });
+    }
+
+    return NextResponse.json({
+      profiles: profiles || [],
+      total: count || 0,
+      page,
+      limit,
+      totalPages: Math.ceil((count || 0) / limit),
+    });
+
+  } catch (error) {
+    console.error('Error in list-profiles:', error);
+    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+  }
+}

@@ -84,10 +84,19 @@ export default function DirectoryPage() {
   const ProfileCard = ({ profile }: { profile: Profile }) => {
     const slug = createSlug(profile.name);
 
+    // Add cache-busting parameter to force fresh image load
+    const getImageUrl = (url: string | null) => {
+      if (!url) return '/placeholder-profile.png';
+      // Add timestamp or updated_at to bust cache
+      const separator = url.includes('?') ? '&' : '?';
+      const cacheBuster = profile.updated_at ? new Date(profile.updated_at).getTime() : Date.now();
+      return `${url}${separator}t=${cacheBuster}`;
+    };
+
     return (
       <article className="bg-[rgba(44,23,82,1)] flex grow flex-col font-normal w-full px-[19px] py-6 max-md:mt-[23px] max-md:pr-5">
         <img
-          src={profile.profile_image_url || '/placeholder-profile.png'}
+          src={getImageUrl(profile.profile_image_url)}
           className="aspect-[0.97] object-contain w-full self-stretch"
           alt={`${profile.name} profile`}
         />

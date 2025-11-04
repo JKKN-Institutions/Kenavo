@@ -26,5 +26,11 @@
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "disabledMcpjsonServers": [
+    "memory",
+    "filesystem",
+    "supabase",
+    "context7"
+  ]
 }

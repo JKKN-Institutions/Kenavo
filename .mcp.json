@@ -1,23 +1,42 @@
 {
   "mcpServers": {
     "memory": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "-y",
         "@modelcontextprotocol/server-memory"
       ]
     },
     "filesystem": {
-      "command": "npx",
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "/path/to/allowed/files"
+        "C:\\Users\\admin\\Downloads\\Facepluse"
       ]
     },
-        "context7": {
-      "command": "npx",
+    "supabase": {
+      "command": "cmd",
       "args": [
+        "/c",
+        "npx",
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--project-ref=rihoufidmnqtffzqhplc"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_02a8ed6194297bdebeb4874abce1bbf5f83819ed"
+      }
+    },
+    "context7": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
         "-y",
         "@upstash/context7-mcp"
       ]
