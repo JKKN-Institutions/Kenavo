@@ -24,7 +24,7 @@ const GallerySection = () => {
         <img
           src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/93ac5ec72bbc1db90c9a7382fddaa6ace2c20646?placeholderIfAbsent=true"
           alt="Gallery preview showing various school and reunion photos"
-          className="aspect-[2.7] object-contain w-full mx-auto mt-8 sm:mt-10 md:mt-12 lg:mt-14 xl:mt-16 rounded-lg shadow-lg"
+          className="aspect-[2.7] object-cover w-full mx-auto mt-8 sm:mt-10 md:mt-12 lg:mt-14 xl:mt-16 rounded-lg shadow-lg"
         />
         <Link href="/gallery">
           <button

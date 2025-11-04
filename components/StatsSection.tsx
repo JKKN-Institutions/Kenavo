@@ -69,7 +69,7 @@ const StatsSection = () => {
             >
               Kenavo by the Numbers
             </h2>
-            <p className="text-white text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] font-normal leading-tight md:text-right mt-3">
+            <p className="text-white text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] font-normal leading-tight text-center md:text-left mt-3">
               Some stats. Some smiles.
             </p>
           </div>

@@ -1,6 +1,12 @@
-import React from 'react';
+'use client';
+
+import React, { useState } from 'react';
+import ImageLightbox from './ImageLightbox';
 
 const GalleryImagesGrid: React.FC = () => {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
   const galleryImages = [
     {
       src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/8b9a6705c766f3c7905780c536941a5537bf9cd8?placeholderIfAbsent=true",
@@ -52,28 +58,64 @@ const GalleryImagesGrid: React.FC = () => {
     }
   ];
 
+  const handleImageClick = (index: number) => {
+    setCurrentImageIndex(index);
+    setLightboxOpen(true);
+  };
+
+  const handleNext = () => {
+    setCurrentImageIndex((prev) => Math.min(prev + 1, galleryImages.length - 1));
+  };
+
+  const handlePrevious = () => {
+    setCurrentImageIndex((prev) => Math.max(prev - 1, 0));
+  };
+
+  const handleClose = () => {
+    setLightboxOpen(false);
+  };
+
   const renderRow = (startIndex: number, marginTop: string) => (
-    <div className={`w-[930px] max-w-full ${marginTop}`}>
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        {galleryImages.slice(startIndex, startIndex + 4).map((image, index) => (
-          <div key={startIndex + index} className="w-3/12 ml-5 first:ml-0 max-md:w-full max-md:ml-0">
-            <img
-              src={image.src}
-              alt={image.alt}
-              className="aspect-[1] object-contain w-[221px] shrink-0 max-w-full max-md:mt-[15px] hover:opacity-80 transition-opacity cursor-pointer"
-            />
-          </div>
-        ))}
+    <div className={`w-full max-w-[930px] ${marginTop}`}>
+      <div className="gap-3 sm:gap-4 md:gap-5 flex flex-wrap justify-center md:justify-start">
+        {galleryImages.slice(startIndex, startIndex + 4).map((image, index) => {
+          const imageIndex = startIndex + index;
+          return (
+            <div
+              key={imageIndex}
+              className="w-[calc(50%-0.375rem)] sm:w-[calc(50%-0.5rem)] md:w-[calc(25%-0.9375rem)] lg:w-[221px]"
+            >
+              <img
+                src={image.src}
+                alt={image.alt}
+                onClick={() => handleImageClick(imageIndex)}
+                className="aspect-square object-cover w-full rounded-lg hover:opacity-80 hover:scale-105 transition-all cursor-pointer shadow-md"
+                loading="lazy"
+              />
+            </div>
+          );
+        })}
       </div>
     </div>
   );
 
   return (
-    <section className="flex flex-col items-center">
-      {renderRow(0, "mt-[111px] max-md:mt-10")}
-      {renderRow(4, "mt-4")}
-      {renderRow(8, "mt-[19px]")}
-    </section>
+    <>
+      <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-20 lg:pb-0">
+        {renderRow(0, "mt-12 sm:mt-16 md:mt-20 lg:mt-24")}
+        {renderRow(4, "mt-3 sm:mt-4")}
+        {renderRow(8, "mt-3 sm:mt-4")}
+      </section>
+
+      <ImageLightbox
+        images={galleryImages}
+        currentIndex={currentImageIndex}
+        isOpen={lightboxOpen}
+        onClose={handleClose}
+        onNext={handleNext}
+        onPrevious={handlePrevious}
+      />
+    </>
   );
 };
 

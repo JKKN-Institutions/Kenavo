@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Footer = () => {
   return (
@@ -8,9 +9,24 @@ const Footer = () => {
       role="contentinfo"
     >
       <div className="w-full max-w-[1400px] mx-auto">
-        <h2 className="text-[rgba(254,249,232,1)] text-[20px] sm:text-[28px] md:text-[36px] lg:text-[44px] xl:text-[54px] font-bold leading-tight sm:leading-[32px] md:leading-[42px] lg:leading-[52px] xl:leading-[60px] text-center md:text-left">
-          Built by the boys of Kenavo with grown-up skills and leftover nostalgia.
-        </h2>
+        {/* Two-column layout: Text + Logo */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6 md:gap-8">
+          {/* Left: Tagline */}
+          <h2 className="text-[rgba(254,249,232,1)] text-[20px] sm:text-[28px] md:text-[36px] lg:text-[44px] xl:text-[54px] font-bold leading-tight sm:leading-[32px] md:leading-[42px] lg:leading-[52px] xl:leading-[60px] text-center md:text-left md:flex-1">
+            Built by the boys of Kenavo with grown-up skills and leftover nostalgia.
+          </h2>
+
+          {/* Right: Logo */}
+          <div className="flex justify-center md:justify-end flex-shrink-0">
+            <Image
+              src="/kenavo-logo.png"
+              alt="Kenavo 25 Year Reunion 2025 Logo"
+              width={180}
+              height={180}
+              className="w-[120px] h-auto sm:w-[140px] md:w-[160px] lg:w-[180px]"
+            />
+          </div>
+        </div>
 
         {/* Copyright for mobile view */}
         <div className="lg:hidden text-center mt-6 text-white/80 text-xs">
