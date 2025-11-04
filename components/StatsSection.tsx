@@ -55,21 +55,21 @@ const StatsSection = () => {
 
   return (
     <section className="bg-[rgba(64,34,120,1)] w-full mt-10 sm:mt-12 md:mt-16 lg:mt-20 xl:mt-[90px]" aria-labelledby="stats-heading">
-      <div className="flex flex-col relative min-h-[350px] sm:min-h-[400px] md:min-h-[450px] lg:min-h-[500px] xl:min-h-[457px] w-full items-center justify-center px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20 py-10 sm:py-12 md:py-14 lg:py-16 xl:py-[60px]">
+      <div className="flex flex-col relative min-h-[350px] sm:min-h-[400px] md:min-h-[450px] lg:min-h-[500px] xl:min-h-[550px] w-full items-center justify-center px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 py-10 sm:py-12 md:py-14 lg:py-16 xl:py-20">
         <img
           src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/3fd1f4a82581cd0af28b50a05b1f32a051095786?placeholderIfAbsent=true"
           alt="Stats section background"
           className="absolute h-full w-full object-cover inset-0"
         />
-        <div className="relative flex w-full max-w-[930px] flex-col">
+        <div className="relative flex w-full max-w-[1400px] mx-auto flex-col">
           <div className="text-center md:text-left">
             <h2
               id="stats-heading"
-              className="text-[rgba(217,81,100,1)] text-[24px] sm:text-[32px] md:text-[40px] lg:text-[48px] xl:text-[54px] font-bold leading-tight"
+              className="text-[rgba(217,81,100,1)] text-[28px] sm:text-[36px] md:text-[48px] lg:text-[58px] xl:text-[64px] font-bold leading-tight"
             >
               Kenavo by the Numbers
             </h2>
-            <p className="text-white text-[16px] sm:text-[18px] md:text-[20px] lg:text-[24px] xl:text-[28px] font-normal leading-tight md:text-right mt-2">
+            <p className="text-white text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] font-normal leading-tight md:text-right mt-3">
               Some stats. Some smiles.
             </p>
           </div>

@@ -6,16 +6,16 @@ import Link from 'next/link';
 const StorySection = () => {
   return (
     <section
-      className="w-full px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20 mt-12 sm:mt-16 md:mt-24 lg:mt-32 xl:mt-[140px]"
+      className="w-full px-6 sm:px-10 md:px-16 lg:px-24 xl:px-32 mt-12 sm:mt-16 md:mt-24 lg:mt-32 xl:mt-[140px]"
       aria-labelledby="story-heading"
     >
-      <div className="max-w-[930px] mx-auto">
-        <div className="gap-4 sm:gap-5 md:gap-6 lg:gap-8 flex flex-col md:flex-row items-center">
+      <div className="max-w-[1400px] mx-auto">
+        <div className="gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-16 flex flex-col md:flex-row items-center">
           <div className="w-full md:w-6/12 order-2 md:order-1">
             <div className="flex flex-col items-stretch text-center md:text-left">
               <h2
                 id="story-heading"
-                className="text-[rgba(217,81,100,1)] text-[28px] sm:text-[38px] md:text-[46px] lg:text-[56px] xl:text-[64px] font-bold leading-tight sm:leading-[42px] md:leading-[50px] lg:leading-[60px] xl:leading-[63px]"
+                className="text-[rgba(217,81,100,1)] text-[32px] sm:text-[42px] md:text-[52px] lg:text-[64px] xl:text-[72px] font-bold leading-tight sm:leading-[46px] md:leading-[56px] lg:leading-[68px] xl:leading-[76px]"
               >
                 Who we are.
                 <br />
@@ -23,7 +23,7 @@ const StorySection = () => {
                 <br />
                 still showing up.
               </h2>
-              <p className="text-white text-[14px] sm:text-[18px] md:text-[20px] lg:text-[24px] xl:text-[28px] font-normal leading-relaxed sm:leading-7 md:leading-8 lg:leading-9 mt-4 sm:mt-6 md:mt-8 lg:mt-10">
+              <p className="text-white text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] font-normal leading-relaxed sm:leading-8 md:leading-9 lg:leading-10 xl:leading-[44px] mt-5 sm:mt-6 md:mt-8 lg:mt-10 xl:mt-12">
                 We're the Montfort School Class of 2000, a batch of 134 boys who grew up together on a hill in Yercaud. Some of us lived in dorms. Some walked in every morning. All of us walked out in 2000 with stories we still talk about.
               </p>
               <Link href="/about">

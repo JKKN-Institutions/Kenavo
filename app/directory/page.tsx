@@ -56,25 +56,24 @@ export default function DirectoryPage() {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     return (
-      <div className="text-[rgba(254,249,232,1)] text-[28px] font-normal leading-none self-stretch mt-[51px] max-md:max-w-full max-md:mt-10">
-        {alphabet.map((letter, index) => {
+      <div className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 self-stretch mt-8 sm:mt-10 md:mt-12 lg:mt-[51px]">
+        {alphabet.map((letter) => {
           const hasProfiles = letters.includes(letter);
           return (
-            <span key={letter}>
+            <div key={letter} className="inline-block">
               {hasProfiles ? (
                 <a
                   href={`#letter-${letter}`}
-                  className="text-[rgba(217,65,66,1)] hover:text-[rgba(217,65,66,0.8)] transition-colors"
+                  className="text-[rgba(217,65,66,1)] hover:text-[rgba(217,65,66,0.8)] transition-colors text-base sm:text-lg md:text-xl lg:text-2xl font-normal inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-2"
                 >
                   {letter}
                 </a>
               ) : (
-                <span className="opacity-50">
+                <span className="opacity-50 text-base sm:text-lg md:text-xl lg:text-2xl font-normal inline-flex items-center justify-center min-w-[44px] min-h-[44px] px-2 text-[rgba(254,249,232,1)]">
                   {letter}
                 </span>
               )}
-              {index < alphabet.length - 1 && ' '}
-            </span>
+            </div>
           );
         })}
       </div>
@@ -94,18 +93,18 @@ export default function DirectoryPage() {
     };
 
     return (
-      <article className="bg-[rgba(44,23,82,1)] flex grow flex-col font-normal w-full px-[19px] py-6 max-md:mt-[23px] max-md:pr-5">
+      <article className="bg-[rgba(44,23,82,1)] flex grow flex-col font-normal w-full px-4 sm:px-5 py-5 sm:py-6 max-md:mt-6">
         <img
           src={getImageUrl(profile.profile_image_url)}
-          className="aspect-[0.97] object-contain w-full self-stretch"
+          className="aspect-[0.97] object-cover w-full self-stretch rounded-sm"
           alt={`${profile.name} profile`}
         />
-        <div className="text-[rgba(254,249,232,1)] text-[28px] leading-[1.2] mt-[15px]">
+        <div className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] leading-tight mt-3 sm:mt-4">
           {profile.name}
         </div>
         <Link
           href={`/directory/${slug}`}
-          className="text-[rgba(217,81,100,1)] text-lg leading-none underline mt-[97px] max-md:mt-10 text-left hover:text-[rgba(217,81,100,0.8)] transition-colors"
+          className="text-[rgba(217,81,100,1)] text-base sm:text-lg leading-none underline mt-6 sm:mt-8 md:mt-10 lg:mt-12 text-left hover:text-[rgba(217,81,100,0.8)] transition-colors inline-block"
         >
           View More
         </Link>
@@ -119,7 +118,7 @@ export default function DirectoryPage() {
       <div className="bg-[rgba(64,34,120,1)] flex flex-col overflow-hidden items-stretch min-h-screen">
         <Header />
         <DirectoryHeroSection />
-        <main className="self-center flex w-[1011px] max-w-full flex-col ml-[38px] mt-[65px] px-5">
+        <main className="w-full max-w-[1011px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
           <div className="text-[rgba(254,249,232,1)] text-center py-20">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgba(217,81,100,1)] mx-auto mb-4"></div>
             <p className="text-2xl">Loading alumni directory...</p>
@@ -136,7 +135,7 @@ export default function DirectoryPage() {
       <div className="bg-[rgba(64,34,120,1)] flex flex-col overflow-hidden items-stretch min-h-screen">
         <Header />
         <DirectoryHeroSection />
-        <main className="self-center flex w-[1011px] max-w-full flex-col ml-[38px] mt-[65px] px-5">
+        <main className="w-full max-w-[1011px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
           <div className="text-[rgba(254,249,232,1)] text-center py-20">
             <p className="text-2xl text-red-400 mb-4">Error loading profiles</p>
             <p className="text-lg">{error}</p>
@@ -158,8 +157,8 @@ export default function DirectoryPage() {
       <Header />
       <DirectoryHeroSection />
 
-      <main className="self-center flex w-[1011px] max-w-full flex-col ml-[38px] mt-[65px] px-5 max-md:mt-10">
-        <p className="text-[rgba(254,249,232,1)] text-[28px] font-normal leading-9 max-md:max-w-full">
+      <main className="w-full max-w-[1011px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
+        <p className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] font-normal leading-relaxed">
           Start exploring you might just reconnect with someone you forgot you
           missed.
         </p>
@@ -169,14 +168,14 @@ export default function DirectoryPage() {
         {/* All sections A-Z */}
         {letters.map((letter, letterIndex) => (
           <section key={letter} id={`letter-${letter}`}>
-            <h2 className={`text-[rgba(217,81,100,1)] text-[42px] font-bold leading-none ${letterIndex === 0 ? 'mt-[285px]' : 'mt-[61px]'} max-md:ml-2 max-md:mt-10`}>
+            <h2 className={`text-[rgba(217,81,100,1)] text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold leading-none ${letterIndex === 0 ? 'mt-16 sm:mt-20 md:mt-32 lg:mt-40 xl:mt-[285px]' : 'mt-10 sm:mt-12 md:mt-14 lg:mt-[61px]'}`}>
               {letter}
             </h2>
 
             {Array.from({ length: Math.ceil(alumniByLetter[letter].length / 3) }, (_, groupIndex) => (
-              <div key={groupIndex} className="w-[931px] max-w-full mt-[47px] max-md:mt-10">
-                <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-                  {alumniByLetter[letter].slice(groupIndex * 3, (groupIndex + 1) * 3).map((profile, index) => (
+              <div key={groupIndex} className="w-full max-w-[931px] mt-8 sm:mt-10 md:mt-12">
+                <div className="gap-4 sm:gap-5 flex max-md:flex-col max-md:items-stretch">
+                  {alumniByLetter[letter].slice(groupIndex * 3, (groupIndex + 1) * 3).map((profile) => (
                     <div key={profile.id} className="w-[33%] max-md:w-full max-md:ml-0">
                       <ProfileCard profile={profile} />
                     </div>

@@ -23,10 +23,10 @@ export const ContentSection: React.FC<ContentSectionProps> = ({
 
   return (
     <section
-      className={`self-center w-full max-w-[974px] px-4 sm:px-6 md:px-8 lg:px-4 xl:px-0 relative z-10 ${className}`}
+      className={`self-center w-full max-w-[974px] mx-auto px-4 sm:px-6 md:px-8 lg:px-4 xl:px-0 relative z-10 ${className}`}
       aria-labelledby={`section-${title.toLowerCase().replace(/\s+/g, '-')}`}
     >
-      <div className="gap-4 sm:gap-5 md:gap-6 lg:gap-5 flex flex-col md:flex-row md:items-start">
+      <div className="gap-4 sm:gap-5 md:gap-6 lg:gap-8 flex flex-col md:flex-row md:items-start md:justify-between">
         {/* Image Container */}
         <div className={
           isImageLeft
@@ -40,7 +40,7 @@ export const ContentSection: React.FC<ContentSectionProps> = ({
               ${isImageLeft ? 'aspect-[0.69]' : 'aspect-[0.76]'}
               object-cover w-full
               max-w-[280px] sm:max-w-[350px] md:max-w-full
-              mx-auto md:mx-0 rounded-lg shadow-lg
+              mx-auto rounded-lg shadow-lg
               ${isImageLeft ? 'mt-0 md:mt-[15px]' : 'mt-0'}
             `}
           />

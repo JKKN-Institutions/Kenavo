@@ -6,10 +6,10 @@ import Footer from '@/components/Footer';
 
 export default function AboutPage() {
   return (
-    <div className="bg-[rgba(78,46,140,1)] flex flex-col items-stretch min-h-screen overflow-x-hidden">
+    <div className="bg-[rgba(78,46,140,1)] flex flex-col items-center min-h-screen overflow-x-hidden">
       <Header />
 
-      <main role="main" className="flex-1 pb-16 sm:pb-20 md:pb-24 lg:pb-32">
+      <main role="main" className="flex-1 w-full pb-16 sm:pb-20 md:pb-24 lg:pb-32">
         <AboutHeroSection />
 
         {/* THE CLASS Section */}
