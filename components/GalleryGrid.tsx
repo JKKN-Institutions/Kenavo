@@ -38,17 +38,10 @@ const GalleryGrid: React.FC = () => {
   ];
 
   return (
-    <section className="w-[931px] max-w-full ml-[42px] mt-[119px] max-md:mt-10" aria-label="Photo gallery">
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-        {galleryItems.slice(0, 3).map((item, index) => (
-          <div key={index} className="w-[33%] max-md:w-full max-md:ml-0">
-            <GalleryCard {...item} />
-          </div>
-        ))}
-      </div>
-      <div className="gap-5 flex max-md:flex-col max-md:items-stretch mt-[27px]">
-        {galleryItems.slice(3, 6).map((item, index) => (
-          <div key={index + 3} className="w-[33%] max-md:w-full max-md:ml-0">
+    <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        {galleryItems.map((item, index) => (
+          <div key={index} className="w-full">
             <GalleryCard {...item} />
           </div>
         ))}
