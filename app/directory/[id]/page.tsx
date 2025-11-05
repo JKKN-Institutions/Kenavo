@@ -48,7 +48,7 @@ export default async function DirectoryIndividualPage({ params }: { params: Prom
 
       <div className="flex min-h-[147px] w-full max-md:max-w-full" />
 
-      <main>
+      <main className="w-full">
         <ProfileHero
           name={profile.name}
           profileImageUrl={profile.profile_image_url}
@@ -60,7 +60,7 @@ export default async function DirectoryIndividualPage({ params }: { params: Prom
           updatedAt={profile.updated_at}
         />
 
-        <section className="self-center flex w-[969px] max-w-full flex-col ml-[19px] px-5" aria-label="Questions and Answers">
+        <section className="self-center flex w-full max-w-[969px] flex-col px-4 md:px-6 lg:px-5 mb-12 md:mb-16 lg:mb-20" aria-label="Questions and Answers">
           {profile.qa_responses && profile.qa_responses.length > 0 ? (
             profile.qa_responses.map((qa, index) => (
               <QuestionAnswer
@@ -71,9 +71,9 @@ export default async function DirectoryIndividualPage({ params }: { params: Prom
               />
             ))
           ) : (
-            <div className="text-white text-center py-10">
-              <p className="text-xl">No Q&A responses available yet</p>
-              <p className="text-sm mt-2 opacity-75">Check back later for updates</p>
+            <div className="text-white text-center py-8 md:py-10 lg:py-12">
+              <p className="text-lg md:text-xl lg:text-2xl">No Q&A responses available yet</p>
+              <p className="text-xs md:text-sm lg:text-base mt-2 opacity-75">Check back later for updates</p>
             </div>
           )}
         </section>

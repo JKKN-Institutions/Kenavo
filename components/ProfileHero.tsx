@@ -38,8 +38,8 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
   const imageUrl = addCacheBuster(profileImageUrl || '/placeholder-profile.svg', updatedAt);
 
   return (
-    <section className="self-center flex w-[969px] max-w-full flex-col ml-[19px]">
-      <h1 className="text-[rgba(217,81,100,1)] text-[78px] font-bold leading-[73px] w-[488px] ml-[11px] max-md:max-w-full max-md:text-[40px] max-md:leading-[42px]">
+    <section className="self-center flex w-full max-w-[969px] flex-col px-4 md:px-6 lg:px-0">
+      <h1 className="text-[rgba(217,81,100,1)] text-3xl md:text-5xl lg:text-[78px] font-bold leading-tight md:leading-[50px] lg:leading-[73px] max-w-full md:max-w-[488px]">
         {nameLines.map((line, index) => (
           <React.Fragment key={index}>
             {line}
@@ -48,21 +48,21 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
         ))}
       </h1>
 
-      <div className="self-stretch mt-[59px] max-md:mt-10">
-        <div className="gap-5 flex max-md:flex-col max-md:items-stretch">
-          <div className="w-6/12 max-md:w-full max-md:ml-0">
+      <div className="self-stretch mt-8 md:mt-12 lg:mt-[59px]">
+        <div className="gap-5 flex flex-col md:flex-row md:items-stretch">
+          <div className="w-full md:w-6/12">
             <img
               src={imageUrl}
               alt={`${name} Profile`}
-              className="aspect-[0.95] object-contain w-full grow max-md:max-w-full max-md:mt-10"
+              className="aspect-[0.95] object-contain object-center w-full max-w-full"
             />
           </div>
-          <div className="w-6/12 ml-5 max-md:w-full max-md:ml-0">
-            <div className="flex grow flex-col text-lg text-[rgba(217,81,100,1)] font-normal leading-none max-md:mt-10">
+          <div className="w-full md:w-6/12 md:ml-5 mt-6 md:mt-0">
+            <div className="flex grow flex-col text-sm md:text-base lg:text-lg text-[rgba(217,81,100,1)] font-normal leading-none">
               {yearGraduated && (
                 <>
                   <div>Tenure at Montfort</div>
-                  <div className="text-white text-[28px] leading-[1.1] mt-4">
+                  <div className="text-white text-xl md:text-2xl lg:text-[28px] leading-[1.1] mt-3 md:mt-4">
                     {yearGraduated}
                   </div>
                 </>
@@ -70,10 +70,10 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
 
               {(company || currentJob) && (
                 <>
-                  <div className="leading-[17px] w-[251px] mt-[53px] max-md:mt-10">
+                  <div className="leading-tight max-w-full mt-8 md:mt-10 lg:mt-[53px]">
                     Company / Organization / Industry Name
                   </div>
-                  <div className="text-white text-[28px] leading-[1.1] self-stretch mt-6">
+                  <div className="text-white text-xl md:text-2xl lg:text-[28px] leading-[1.1] self-stretch mt-4 md:mt-5 lg:mt-6 break-words">
                     {currentJob && company ? `${currentJob} at ${company}` : company || currentJob}
                   </div>
                 </>
@@ -81,10 +81,10 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
 
               {location && (
                 <>
-                  <div className="mt-[53px] max-md:mt-10">
+                  <div className="mt-8 md:mt-10 lg:mt-[53px]">
                     Current Residential Address
                   </div>
-                  <address className="text-white text-[28px] leading-[31px] self-stretch mt-5 max-md:mr-2.5 not-italic">
+                  <address className="text-white text-xl md:text-2xl lg:text-[28px] leading-relaxed md:leading-relaxed lg:leading-[31px] self-stretch mt-4 md:mt-5 not-italic break-words">
                     {location.split(',').map((line, idx) => (
                       <React.Fragment key={idx}>
                         {line.trim()}
@@ -97,10 +97,10 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
 
               {nicknames && (
                 <>
-                  <div className="mt-[53px] max-md:mt-10">
+                  <div className="mt-8 md:mt-10 lg:mt-[53px]">
                     Nick Names
                   </div>
-                  <div className="text-white text-[28px] leading-[1.1] mt-5">
+                  <div className="text-white text-xl md:text-2xl lg:text-[28px] leading-[1.1] mt-4 md:mt-5 break-words">
                     {nicknames}
                   </div>
                 </>

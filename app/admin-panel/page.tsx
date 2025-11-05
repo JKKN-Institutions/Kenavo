@@ -683,6 +683,7 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
 
 // NEW: Bulk Update Tab
 function BulkUpdateTab() {
+  const router = useRouter();
   const [exportLoading, setExportLoading] = useState(false);
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
@@ -1000,6 +1001,24 @@ function BulkUpdateTab() {
           console.warn('⚠️ Failed to revalidate directory cache:', revalidateError);
           // Don't fail the operation if revalidation fails
         }
+
+        // Force router refresh to clear all client-side cache
+        router.refresh();
+
+        // Show success dialog and offer to open directory
+        setTimeout(() => {
+          const openDirectory = window.confirm(
+            `Successfully updated ${summary.successful} profile image${summary.successful !== 1 ? 's' : ''}!\n\n` +
+            'The images have been uploaded to Supabase Storage.\n\n' +
+            'Click OK to open the directory page in a new tab and see the updated images.'
+          );
+
+          if (openDirectory) {
+            window.open('/directory', '_blank');
+            // Refresh current page too
+            router.refresh();
+          }
+        }, 500);
       } else {
         setImageMessage({
           type: 'error',
