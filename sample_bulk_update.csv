@@ -1,6 +1,6 @@
-id,name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames,profile_image_url
-1,A Arjoon,,,"Chennai, Tamil Nadu",2000,,,"Alumni from the Class of 2000. A Arjoon is currently based in Chennai, Tamil Nadu.",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/1-a-arjoon.png
-2,Annamalai Natarajan,,,salem             ,2000,,,"Alumni from the Class of 2000. Annamalai Natarajan is currently based in Bangalore, Karnataka.",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/2-annamalai-natarajan.png
-3,A S Syed Ahamed Khan,,,"Mumbai, Maharashtra",2000,,,"Alumni from the Class of 2000. A S Syed Ahamed Khan is currently based in Mumbai, Maharashtra.",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/3-a-s-syed-ahamed-khan.png
-4,Antony G Prakash,,,"Chennai, Tamil Nadu",2000,,,"Alumni from the Class of 2000. Antony G Prakash is currently based in Chennai, Tamil Nadu.",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/4-antony-g-prakash.png
-5,Abishek Valluru,,,"Hyderabad, Telangana",2000,,,"Alumni from the Class of 2000. Abishek Valluru is currently based in Hyderabad, Telangana.",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/5-abishek-valluru.png
+id,name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames
+1,A Arjoon,,test,test,1999,test,test,"Alumni from the Class of 2000. A Arjoon is currently based in Chennai, Tamil Nadu.",,
+2,Annamalai Natarajan,,test,test,1999,test,test,"Alumni from the Class of 2000. Annamalai Natarajan is currently based in Bangalore, Karnataka.",,
+3,A S Syed Ahamed Khan,,test,test,1999,test,test,"Alumni from the Class of 2000. A S Syed Ahamed Khan is currently based in Mumbai, Maharashtra.",,
+4,Antony G Prakash,,test,test,1999,test,test,"Alumni from the Class of 2000. Antony G Prakash is currently based in Chennai, Tamil Nadu.",,
+5,Abishek Valluru,,test,test,1999,test,test,"Alumni from the Class of 2000. Abishek Valluru is currently based in Hyderabad, Telangana.",,

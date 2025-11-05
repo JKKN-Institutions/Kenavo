@@ -740,7 +740,7 @@ function BulkUpdateTab() {
       if (response.ok) {
         // Convert to CSV
         const profiles = data.profiles;
-        const headers = ['id', 'name', 'email', 'phone', 'location', 'year_graduated', 'current_job', 'company', 'bio', 'linkedin_url', 'nicknames', 'profile_image_url'];
+        const headers = ['id', 'name', 'email', 'phone', 'location', 'year_graduated', 'current_job', 'company', 'bio', 'linkedin_url', 'nicknames'];
         const csvContent = [
           headers.join(','),
           ...profiles.map((p: Profile) =>
@@ -828,13 +828,15 @@ function BulkUpdateTab() {
             continue;
           }
 
+          // Build FormData with only fields that have values (PATCH semantics)
           const formData = new FormData();
           Object.entries(row).forEach(([key, value]) => {
-            if (key !== 'id' && value) {
+            // Only append if field has a non-empty value
+            if (key !== 'id' && value !== undefined && value !== null && value !== '') {
               formData.append(key, value as string);
             }
           });
-          formData.append('existing_image_url', row.profile_image_url || '');
+          // Don't send profile_image_url - API will preserve it automatically (PATCH behavior)
 
           const response = await fetch(`/api/admin/update-profile/${row.id}`, {
             method: 'PUT',
@@ -1049,6 +1051,12 @@ function BulkUpdateTab() {
           <li>Edit the CSV file with new data (keep the "id" column!)</li>
           <li>Upload the modified CSV to update profiles in bulk</li>
         </ol>
+        <div className="mt-3 pt-3 border-t border-blue-500/30">
+          <p className="text-xs text-blue-200">
+            📝 <strong>Note:</strong> This CSV updates profile data only (name, email, job, etc.).
+            To update profile images, use the <strong>"Bulk Image Upload"</strong> section below.
+          </p>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

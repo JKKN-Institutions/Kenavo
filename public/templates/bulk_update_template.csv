@@ -1,4 +1,4 @@
-id,name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames,profile_image_url
-39,David A,david.a@example.com,+1-555-0101,New York USA,2008,Senior Software Engineer,Google Inc,Experienced software engineer passionate about cloud computing and scalable systems,https://linkedin.com/in/davida,Dave,https://example.com/images/david.jpg
-40,Sarah Johnson,sarah.j@example.com,+1-555-0102,San Francisco USA,2010,Product Manager,Meta,Product leader focused on user experience and data-driven decision making,https://linkedin.com/in/sarahj,SJ,https://example.com/images/sarah.jpg
-41,Michael Chen,michael.chen@example.com,+1-555-0103,Seattle USA,2009,DevOps Engineer,Amazon,Automation enthusiast specializing in CI/CD and infrastructure as code,https://linkedin.com/in/michaelchen,Mike,https://example.com/images/michael.jpg
+id,name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames
+39,David A,david.a@example.com,+1-555-0101,New York USA,2008,Senior Software Engineer,Google Inc,Experienced software engineer passionate about cloud computing and scalable systems,https://linkedin.com/in/davida,Dave
+40,Sarah Johnson,sarah.j@example.com,+1-555-0102,San Francisco USA,2010,Product Manager,Meta,Product leader focused on user experience and data-driven decision making,https://linkedin.com/in/sarahj,SJ
+41,Michael Chen,michael.chen@example.com,+1-555-0103,Seattle USA,2009,DevOps Engineer,Amazon,Automation enthusiast specializing in CI/CD and infrastructure as code,https://linkedin.com/in/michaelchen,Mike

@@ -90,23 +90,39 @@ export async function PUT(
       }
     }
 
-    // Update profile in database
+    // Build update object dynamically (PATCH semantics - only update provided fields)
+    const updateData: any = {
+      updated_at: new Date().toISOString(),
+    };
+
+    // Required field
+    if (name) updateData.name = name;
+
+    // Optional fields - only update if present in FormData
+    if (formData.has('email')) updateData.email = email;
+    if (formData.has('phone')) updateData.phone = phone;
+    if (formData.has('location')) updateData.location = location;
+    if (formData.has('year_graduated')) updateData.year_graduated = year_graduated;
+    if (formData.has('current_job')) updateData.current_job = current_job;
+    if (formData.has('company')) updateData.company = company;
+    if (formData.has('bio')) updateData.bio = bio;
+    if (formData.has('linkedin_url')) updateData.linkedin_url = linkedin_url;
+    if (formData.has('nicknames')) updateData.nicknames = nicknames;
+
+    // Handle profile image
+    if (imageFile && imageFile.size > 0) {
+      // New image uploaded
+      updateData.profile_image_url = profile_image_url;
+    } else if (formData.has('existing_image_url') && existing_image_url) {
+      // Explicit preservation (from Edit Modal)
+      updateData.profile_image_url = existing_image_url;
+    }
+    // If neither above is true, profile_image_url not in updateData = preserved in database
+
+    // Update profile in database with only provided fields
     const { data: profile, error: dbError } = await supabaseAdmin
       .from('profiles')
-      .update({
-        name,
-        email,
-        phone,
-        location,
-        year_graduated,
-        current_job,
-        company,
-        bio,
-        linkedin_url,
-        nicknames,
-        profile_image_url,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq('id', profileId)
       .select()
       .maybeSingle();
