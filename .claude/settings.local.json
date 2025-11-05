@@ -38,7 +38,10 @@
       "Bash(del \"C:\\Users\\admin\\Projects\\KenavoFinal\\app\\api\\admin\\setup-user\\route.ts\")",
       "Bash(del \"C:\\Users\\admin\\Projects\\KenavoFinal\\app\\api\\admin\\setup-user-simple\\route.ts\")",
       "Bash(del \"C:\\Users\\admin\\Projects\\KenavoFinal\\app\\update-password\\page.tsx\")",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "WebFetch(domain:rihoufidmnqtffzqhplc.supabase.co)",
+      "Bash(npx supabase storage ls:*)",
+      "Bash(npx supabase status)"
     ],
     "deny": [],
     "ask": []

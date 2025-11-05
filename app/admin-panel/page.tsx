@@ -280,11 +280,11 @@ function ManageProfilesTab() {
             >
               <div className="flex items-center gap-4 flex-1">
                 <img
-                  src={profile.profile_image_url || '/placeholder-profile.png'}
+                  src={profile.profile_image_url || '/placeholder-profile.svg'}
                   alt={profile.name}
                   className="w-12 h-12 rounded-full object-cover"
                   onError={(e) => {
-                    e.currentTarget.src = '/placeholder-profile.png';
+                    e.currentTarget.src = '/placeholder-profile.svg';
                   }}
                 />
                 <div className="flex-1">
@@ -986,6 +986,19 @@ function BulkUpdateTab() {
         const fileInput = document.getElementById('zip-file-input') as HTMLInputElement;
         if (fileInput) {
           fileInput.value = '';
+        }
+
+        // Revalidate directory page to show updated images
+        try {
+          await fetch('/api/revalidate', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ paths: ['/directory'] })
+          });
+          console.log('✅ Directory page cache revalidated');
+        } catch (revalidateError) {
+          console.warn('⚠️ Failed to revalidate directory cache:', revalidateError);
+          // Don't fail the operation if revalidation fails
         }
       } else {
         setImageMessage({

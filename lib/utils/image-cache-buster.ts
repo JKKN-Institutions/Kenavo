@@ -13,7 +13,7 @@
  */
 export function addCacheBuster(url: string | null | undefined, timestamp?: string | number): string {
   // Return placeholder if no URL
-  if (!url) return '/placeholder-profile.png';
+  if (!url) return '/placeholder-profile.svg';
 
   try {
     // Parse URL to handle existing query parameters

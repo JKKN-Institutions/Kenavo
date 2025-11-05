@@ -85,7 +85,7 @@ export default function DirectoryPage() {
 
     // Add cache-busting parameter to force fresh image load
     const getImageUrl = (url: string | null) => {
-      if (!url) return '/placeholder-profile.png';
+      if (!url) return '/placeholder-profile.svg';
       // Add timestamp or updated_at to bust cache
       const separator = url.includes('?') ? '&' : '?';
       const cacheBuster = profile.updated_at ? new Date(profile.updated_at).getTime() : Date.now();

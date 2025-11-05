@@ -35,7 +35,7 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
   };
 
   const nameLines = formatName(name);
-  const imageUrl = addCacheBuster(profileImageUrl || '/placeholder-profile.png', updatedAt);
+  const imageUrl = addCacheBuster(profileImageUrl || '/placeholder-profile.svg', updatedAt);
 
   return (
     <section className="self-center flex w-[969px] max-w-full flex-col ml-[19px]">

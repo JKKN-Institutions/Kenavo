@@ -159,19 +159,44 @@ export async function POST(request: NextRequest) {
           .from('profile-images')
           .getPublicUrl(storagePath);
 
+        console.log(`✅ Upload successful for profile ${mapping.profileId}:`);
+        console.log(`   - Storage path: ${storagePath}`);
+        console.log(`   - Public URL: ${publicUrl}`);
+
         if (!publicUrl) {
           throw new Error('Failed to generate public URL');
         }
 
         // Step 3: Update database with new image URL
-        const { error: dbError } = await supabaseAdmin
+        const { data: updateData, error: dbError } = await supabaseAdmin
           .from('profiles')
-          .update({ profile_image_url: publicUrl })
-          .eq('id', mapping.profileId);
+          .update({
+            profile_image_url: publicUrl,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', mapping.profileId)
+          .select('id, name, profile_image_url');
 
         if (dbError) {
           throw new Error(`Database update failed: ${dbError.message}`);
         }
+
+        console.log(`✅ Database updated for profile ${mapping.profileId}:`, updateData);
+
+        // Verify the URL was actually updated
+        if (!updateData || updateData.length === 0) {
+          throw new Error('Database update returned no data - profile may not exist');
+        }
+
+        if (updateData[0].profile_image_url !== publicUrl) {
+          throw new Error(
+            `Database URL not updated correctly!\n` +
+            `Expected: ${publicUrl}\n` +
+            `Got: ${updateData[0].profile_image_url}`
+          );
+        }
+
+        console.log(`✅ Verified: URL changed from ${mapping.currentImageUrl} to ${publicUrl}`);
 
         // Step 4: Safe deletion - only after successful upload and DB update
         if (mapping.currentImageUrl && mapping.currentImageUrl.includes('profile-images')) {
