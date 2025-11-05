@@ -1006,6 +1006,7 @@ function BulkUpdateTab() {
         router.refresh();
 
         // Show success dialog and offer to open directory
+        // Increased delay to allow revalidation to complete
         setTimeout(() => {
           const openDirectory = window.confirm(
             `Successfully updated ${summary.successful} profile image${summary.successful !== 1 ? 's' : ''}!\n\n` +
@@ -1014,11 +1015,13 @@ function BulkUpdateTab() {
           );
 
           if (openDirectory) {
-            window.open('/directory', '_blank');
+            // Add timestamp to force fresh page load and bypass all caches
+            const timestamp = Date.now();
+            window.open(`/directory?refresh=${timestamp}`, '_blank');
             // Refresh current page too
             router.refresh();
           }
-        }, 500);
+        }, 1500);
       } else {
         setImageMessage({
           type: 'error',

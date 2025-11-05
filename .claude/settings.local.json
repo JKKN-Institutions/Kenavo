@@ -42,7 +42,8 @@
       "WebFetch(domain:rihoufidmnqtffzqhplc.supabase.co)",
       "Bash(npx supabase storage ls:*)",
       "Bash(npx supabase status)",
-      "Bash(FINAL_SUMMARY.txt)"
+      "Bash(FINAL_SUMMARY.txt)",
+      "Bash(npm run build:*)"
     ],
     "deny": [],
     "ask": []

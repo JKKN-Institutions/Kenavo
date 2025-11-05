@@ -30,6 +30,7 @@ export default function DirectoryPage() {
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   // Fetch profiles from Supabase
   useEffect(() => {
@@ -47,6 +48,21 @@ export default function DirectoryPage() {
     }
 
     loadProfiles();
+  }, [refreshKey]);
+
+  // Check for refresh parameter in URL and trigger refetch
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const refreshParam = params.get('refresh');
+      if (refreshParam) {
+        // Trigger refetch by updating refresh key
+        setRefreshKey(prev => prev + 1);
+        // Remove refresh parameter from URL without page reload
+        const newUrl = window.location.pathname;
+        window.history.replaceState({}, '', newUrl);
+      }
+    }
   }, []);
 
   const alumniByLetter = groupByLetter(profiles);
