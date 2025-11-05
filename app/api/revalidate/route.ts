@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { revalidatePath, revalidateTag } from 'next/cache';
+import { revalidatePath } from 'next/cache';
 import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 /**
@@ -24,11 +24,10 @@ export async function POST(request: NextRequest) {
 
     // Support both single path and multiple paths
     const paths = body.paths || (body.path ? [body.path] : []);
-    const tags = body.tags || (body.tag ? [body.tag] : []);
 
-    if (paths.length === 0 && tags.length === 0) {
+    if (paths.length === 0) {
       return NextResponse.json(
-        { error: 'Must provide "path", "paths", "tag", or "tags" parameter' },
+        { error: 'Must provide "path" or "paths" parameter' },
         { status: 400 }
       );
     }
@@ -46,19 +45,6 @@ export async function POST(request: NextRequest) {
         const errorMsg = error instanceof Error ? error.message : 'Unknown error';
         errors.push(`path: ${path} - ${errorMsg}`);
         console.error(`❌ Failed to revalidate path ${path}:`, error);
-      }
-    }
-
-    // Revalidate tags
-    for (const tag of tags) {
-      try {
-        revalidateTag(tag);
-        revalidated.push(`tag: ${tag}`);
-        console.log(`✅ Revalidated tag: ${tag}`);
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : 'Unknown error';
-        errors.push(`tag: ${tag} - ${errorMsg}`);
-        console.error(`❌ Failed to revalidate tag ${tag}:`, error);
       }
     }
 
