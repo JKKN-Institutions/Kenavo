@@ -1,9 +1,35 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Upload, UserPlus, FileSpreadsheet, CheckCircle, AlertCircle, Edit2, Search, RefreshCw, X, Save, List } from 'lucide-react';
+import { Upload, UserPlus, FileSpreadsheet, CheckCircle, AlertCircle, Edit2, Search, RefreshCw, X, Save, List, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { signOut } from '@/lib/auth/client';
+import BulkImagePreviewModal, { ImageMapping } from '@/components/admin/BulkImagePreviewModal';
 
 type TabType = 'manage' | 'bulkUpdate' | 'single' | 'bulk' | 'qa';
+
+// Helper function to parse CSV line (handles quoted values with commas)
+function parseCSVLine(line: string): string[] {
+  const result = [];
+  let current = '';
+  let inQuotes = false;
+
+  for (let i = 0; i < line.length; i++) {
+    const char = line[i];
+
+    if (char === '"') {
+      inQuotes = !inQuotes;
+    } else if (char === ',' && !inQuotes) {
+      result.push(current);
+      current = '';
+    } else {
+      current += char;
+    }
+  }
+
+  result.push(current);
+  return result;
+}
 
 interface Profile {
   id: number;
@@ -36,15 +62,43 @@ interface Question {
 }
 
 export default function AdminPanel() {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('manage');
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    const { error } = await signOut();
+
+    if (error) {
+      console.error('Logout error:', error);
+      setLoggingOut(false);
+      return;
+    }
+
+    router.push('/login');
+    router.refresh();
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
       <div className="container mx-auto px-4 py-8">
         {/* Header */}
         <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 mb-6 border border-white/20">
-          <h1 className="text-4xl font-bold text-white mb-2">Kenavo Admin Panel</h1>
-          <p className="text-purple-200">Manage alumni profiles, images, and Q&A data</p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h1 className="text-4xl font-bold text-white mb-2">Kenavo Admin Panel</h1>
+              <p className="text-purple-200">Manage alumni profiles, images, and Q&A data</p>
+            </div>
+            <button
+              onClick={handleLogout}
+              disabled={loggingOut}
+              className="flex items-center gap-2 px-6 py-3 rounded-lg bg-red-600 hover:bg-red-700 disabled:bg-red-800 text-white font-semibold transition-all disabled:cursor-not-allowed"
+            >
+              <LogOut size={20} />
+              {loggingOut ? 'Logging out...' : 'Logout'}
+            </button>
+          </div>
         </div>
 
         {/* Tab Navigation */}
@@ -225,13 +279,14 @@ function ManageProfilesTab() {
               className="bg-white/10 rounded-lg p-4 flex items-center justify-between hover:bg-white/15 transition-all"
             >
               <div className="flex items-center gap-4 flex-1">
-                {profile.profile_image_url && (
-                  <img
-                    src={profile.profile_image_url}
-                    alt={profile.name}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-                )}
+                <img
+                  src={profile.profile_image_url || '/placeholder-profile.png'}
+                  alt={profile.name}
+                  className="w-12 h-12 rounded-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = '/placeholder-profile.png';
+                  }}
+                />
                 <div className="flex-1">
                   <h3 className="text-white font-semibold">{profile.name}</h3>
                   <p className="text-purple-200 text-sm">
@@ -633,6 +688,48 @@ function BulkUpdateTab() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  // Bulk Image Upload State
+  const [zipFile, setZipFile] = useState<File | null>(null);
+  const [imageLoading, setImageLoading] = useState(false);
+  const [imageMessage, setImageMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [previewMappings, setPreviewMappings] = useState<ImageMapping[]>([]);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isApplying, setIsApplying] = useState(false);
+
+  // Export Profile IDs function
+  const exportProfileIds = async () => {
+    try {
+      const response = await fetch('/api/admin/export-profile-ids');
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `profile_ids_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Error downloading profile IDs:', error);
+    }
+  };
+
+  // Download bulk update template
+  const downloadBulkUpdateTemplate = () => {
+    const a = document.createElement('a');
+    a.href = '/templates/bulk_update_template.csv';
+    a.download = 'bulk_update_template.csv';
+    a.click();
+  };
+
+  // Download image naming guide
+  const downloadImageGuide = () => {
+    const a = document.createElement('a');
+    a.href = '/templates/image_naming_guide.txt';
+    a.download = 'image_naming_guide.txt';
+    a.click();
+  };
+
   const handleExportProfiles = async () => {
     setExportLoading(true);
     try {
@@ -690,7 +787,7 @@ function BulkUpdateTab() {
       // Read CSV and parse
       const text = await csvFile.text();
       const lines = text.split('\n').filter(line => line.trim());
-      const headers = lines[0].split(',').map(h => h.trim());
+      const headers = parseCSVLine(lines[0]).map(h => h.trim().replace(/^"|"$/g, ''));
 
       // Must have ID column for updates
       if (!headers.includes('id')) {
@@ -700,10 +797,12 @@ function BulkUpdateTab() {
       }
 
       const rows = lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim().replace(/^"|"$/g, ''));
+        const values = parseCSVLine(line); // Use proper CSV parser
         const row: any = {};
         headers.forEach((h, i) => {
-          row[h] = values[i] || null;
+          // Remove surrounding quotes and trim
+          const cleanValue = values[i] ? values[i].trim().replace(/^"|"$/g, '') : null;
+          row[h] = cleanValue;
         });
         return row;
       });
@@ -711,11 +810,23 @@ function BulkUpdateTab() {
       // Update each profile
       let successCount = 0;
       let errorCount = 0;
+      const errors: string[] = [];
 
       for (const row of rows) {
         if (!row.id) continue;
 
         try {
+          console.log(`Processing profile ${row.id}:`, row);
+
+          // Validate year_graduated length (database constraint: VARCHAR(4))
+          if (row.year_graduated && row.year_graduated.length > 4) {
+            const error = `Profile ID ${row.id}: year_graduated "${row.year_graduated}" exceeds 4 characters. Use format: "2024"`;
+            console.error(error);
+            errors.push(error);
+            errorCount++;
+            continue;
+          }
+
           const formData = new FormData();
           Object.entries(row).forEach(([key, value]) => {
             if (key !== 'id' && value) {
@@ -730,25 +841,165 @@ function BulkUpdateTab() {
           });
 
           if (response.ok) {
+            console.log(`✅ Profile ${row.id} updated successfully`);
             successCount++;
           } else {
+            const result = await response.json();
+            const error = `Profile ID ${row.id}: ${result.error || 'Update failed'}`;
+            console.error(`❌ ${error}`);
+            errors.push(error);
             errorCount++;
           }
-        } catch (error) {
+        } catch (error: any) {
+          const errorMsg = `Profile ID ${row.id}: ${error.message || 'Network error'}`;
+          console.error(`❌ ${errorMsg}`);
+          errors.push(errorMsg);
           errorCount++;
         }
       }
 
-      setMessage({
-        type: successCount > 0 ? 'success' : 'error',
-        text: `Updated ${successCount} profiles successfully. ${errorCount > 0 ? `Failed: ${errorCount}` : ''}`
-      });
-      setCsvFile(null);
+      // Show detailed error messages
+      console.log(`Bulk update complete: ${successCount} success, ${errorCount} errors`);
+      console.log('All errors:', errors);
+
+      let messageText = '';
+      let messageType: 'success' | 'error' = 'error';
+
+      if (successCount > 0 && errorCount === 0) {
+        messageText = `✅ Successfully updated all ${successCount} profiles!`;
+        messageType = 'success';
+        setCsvFile(null);
+      } else if (successCount > 0 && errorCount > 0) {
+        messageText = `⚠️ Partially successful: Updated ${successCount} profiles, ${errorCount} failed.\n\nFirst ${Math.min(5, errors.length)} errors:\n${errors.slice(0, 5).join('\n')}`;
+        if (errors.length > 5) {
+          messageText += `\n... and ${errors.length - 5} more errors. Check console for details.`;
+        }
+        messageType = 'error';
+      } else {
+        messageText = `❌ All ${errorCount} profile updates failed.\n\nFirst ${Math.min(5, errors.length)} errors:\n${errors.slice(0, 5).join('\n')}`;
+        if (errors.length > 5) {
+          messageText += `\n... and ${errors.length - 5} more errors. Check console for details.`;
+        }
+        messageType = 'error';
+      }
+
+      setMessage({ type: messageType, text: messageText });
 
     } catch (error) {
       setMessage({ type: 'error', text: 'Failed to process CSV file' });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Bulk Image Upload Handlers
+  const handleZipFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setZipFile(file);
+      setImageMessage(null);
+    }
+  };
+
+  const handleZipUpload = async () => {
+    if (!zipFile) return;
+
+    setImageLoading(true);
+    setImageMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('zipFile', zipFile);
+
+      const response = await fetch('/api/admin/bulk-upload-images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        if (data.mappings.length === 0) {
+          setImageMessage({
+            type: 'error',
+            text: `No valid mappings found. ${data.errors.length} errors. Please check filenames.`
+          });
+        } else {
+          setPreviewMappings(data.mappings);
+          setIsPreviewOpen(true);
+        }
+      } else {
+        setImageMessage({
+          type: 'error',
+          text: data.error || 'Failed to process ZIP file'
+        });
+      }
+    } catch (error) {
+      setImageMessage({
+        type: 'error',
+        text: 'Network error during ZIP upload'
+      });
+    } finally {
+      setImageLoading(false);
+    }
+  };
+
+  const handleApplyBulkImages = async () => {
+    if (!zipFile || previewMappings.length === 0) return;
+
+    setIsApplying(true);
+
+    try {
+      const formData = new FormData();
+      formData.append('zipFile', zipFile);
+      formData.append('mappings', JSON.stringify(previewMappings));
+
+      const response = await fetch('/api/admin/apply-bulk-images', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const { summary, deletionWarnings } = data;
+
+        let messageText = `Successfully updated ${summary.successful} profile${summary.successful !== 1 ? 's' : ''}!`;
+        if (summary.failed > 0) {
+          messageText += ` ${summary.failed} failed.`;
+        }
+        if (deletionWarnings.length > 0) {
+          messageText += ` (${deletionWarnings.length} old images could not be deleted)`;
+        }
+
+        setImageMessage({
+          type: summary.successful > 0 ? 'success' : 'error',
+          text: messageText
+        });
+
+        // Reset state
+        setZipFile(null);
+        setPreviewMappings([]);
+        setIsPreviewOpen(false);
+
+        // Reset file input
+        const fileInput = document.getElementById('zip-file-input') as HTMLInputElement;
+        if (fileInput) {
+          fileInput.value = '';
+        }
+      } else {
+        setImageMessage({
+          type: 'error',
+          text: data.error || 'Failed to apply bulk images'
+        });
+      }
+    } catch (error) {
+      setImageMessage({
+        type: 'error',
+        text: 'Network error during image upload'
+      });
+    } finally {
+      setIsApplying(false);
     }
   };
 
@@ -759,19 +1010,33 @@ function BulkUpdateTab() {
       <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4 text-blue-100">
         <p className="font-semibold mb-2">How to bulk update:</p>
         <ol className="list-decimal list-inside space-y-1 text-sm">
-          <li>Click "Export All Profiles" to download current data as CSV</li>
+          <li>Download template or export current profiles</li>
           <li>Edit the CSV file with new data (keep the "id" column!)</li>
           <li>Upload the modified CSV to update profiles in bulk</li>
         </ol>
       </div>
 
-      <button
-        onClick={handleExportProfiles}
-        disabled={exportLoading}
-        className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all"
-      >
-        {exportLoading ? 'Exporting...' : '⬇️ Export All Profiles to CSV'}
-      </button>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <button
+          onClick={handleExportProfiles}
+          disabled={exportLoading}
+          className="bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+        >
+          {exportLoading ? 'Exporting...' : '📥 Export All Profiles'}
+        </button>
+        <button
+          onClick={downloadBulkUpdateTemplate}
+          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+        >
+          📋 Download Template
+        </button>
+        <button
+          onClick={exportProfileIds}
+          className="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+        >
+          🆔 Export Profile IDs
+        </button>
+      </div>
 
       <div className="border-t border-white/20 pt-6">
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -800,12 +1065,103 @@ function BulkUpdateTab() {
           <button
             type="submit"
             disabled={loading || !csvFile}
-            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all"
+            className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2"
           >
-            {loading ? 'Updating...' : '⬆️ Update Profiles from CSV'}
+            {loading ? 'Updating...' : (
+              <>
+                <Upload size={20} />
+                Update Profiles from CSV
+              </>
+            )}
           </button>
         </form>
       </div>
+
+      {/* Bulk Image Upload Section */}
+      <div className="border-t border-white/20 pt-6 mt-6">
+        <h3 className="text-xl font-bold text-white mb-4">📸 Bulk Image Upload</h3>
+
+        <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 text-yellow-100 mb-6">
+          <div className="flex items-start justify-between">
+            <div className="flex-1">
+              <p className="font-semibold mb-2">How to upload profile images in bulk:</p>
+              <ol className="list-decimal list-inside space-y-1 text-sm">
+                <li>Prepare images with filenames as profile IDs (e.g., 123.jpg, 456.png)</li>
+                <li>Create a ZIP file containing all profile images</li>
+                <li>Upload the ZIP file and preview the mappings</li>
+                <li>Confirm to upload and update all profiles at once</li>
+              </ol>
+              <p className="text-xs mt-3 text-yellow-200">
+                💡 Supported formats: JPG, PNG, WEBP | Max size: 5MB per image |
+                Filenames: {'{'}id{'}'}. jpg (e.g., 123.jpg or 123-john-doe.png)
+              </p>
+            </div>
+            <button
+              onClick={downloadImageGuide}
+              className="ml-4 bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap"
+            >
+              📖 Full Guide
+            </button>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-white font-semibold mb-2">Upload ZIP File with Images</label>
+            <input
+              id="zip-file-input"
+              type="file"
+              accept=".zip"
+              onChange={handleZipFileChange}
+              disabled={imageLoading}
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600 file:text-white file:cursor-pointer hover:file:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+            />
+            {zipFile && (
+              <p className="text-white/70 mt-2">
+                Selected: {zipFile.name} ({(zipFile.size / 1024 / 1024).toFixed(2)} MB)
+              </p>
+            )}
+          </div>
+
+          {imageMessage && (
+            <div
+              className={`flex items-center gap-2 p-4 rounded-lg ${
+                imageMessage.type === 'success' ? 'bg-green-500/20 text-green-100' : 'bg-red-500/20 text-red-100'
+              }`}
+            >
+              {imageMessage.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
+              <span>{imageMessage.text}</span>
+            </div>
+          )}
+
+          <button
+            onClick={handleZipUpload}
+            disabled={imageLoading || !zipFile}
+            className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2"
+          >
+            {imageLoading ? (
+              <>
+                <RefreshCw className="animate-spin" size={20} />
+                Processing ZIP...
+              </>
+            ) : (
+              <>
+                <Upload size={20} />
+                Preview Image Mappings
+              </>
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Preview Modal */}
+      <BulkImagePreviewModal
+        mappings={previewMappings}
+        isOpen={isPreviewOpen}
+        onClose={() => setIsPreviewOpen(false)}
+        onConfirm={handleApplyBulkImages}
+        isApplying={isApplying}
+      />
     </div>
   );
 }
@@ -1065,6 +1421,7 @@ function BulkUploadForm() {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showHelp, setShowHelp] = useState(false);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1092,7 +1449,10 @@ function BulkUploadForm() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: `Successfully uploaded ${result.count} profiles!` });
+        setMessage({
+          type: 'success',
+          text: `✅ Successfully created ${result.count} profile${result.count !== 1 ? 's' : ''}! Next: Go to "Q&A Upload" tab to add answers for these profiles.`
+        });
         setCsvFile(null);
       } else {
         setMessage({ type: 'error', text: result.error || 'Failed to upload profiles' });
@@ -1105,13 +1465,9 @@ function BulkUploadForm() {
   };
 
   const downloadTemplate = () => {
-    const template = `name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames,profile_image_url
-John Doe,john@example.com,+1234567890,New York USA,2010,Software Engineer,Tech Corp,Bio text here,https://linkedin.com/in/johndoe,Johnny,https://example.com/image.jpg`;
-
-    const blob = new Blob([template], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
+    // Link to static template file instead of generating inline
     const a = document.createElement('a');
-    a.href = url;
+    a.href = '/templates/profiles_template.csv';
     a.download = 'profiles_template.csv';
     a.click();
   };
@@ -1129,11 +1485,60 @@ John Doe,john@example.com,+1234567890,New York USA,2010,Software Engineer,Tech C
         </ul>
       </div>
 
+      {/* Workflow Guide - Expandable */}
+      <div className="bg-green-500/20 border border-green-500/50 rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowHelp(!showHelp)}
+          className="w-full px-4 py-3 flex items-center justify-between text-left text-white hover:bg-green-500/30 transition-colors"
+        >
+          <span className="font-semibold">💡 Need Help? View Step-by-Step Workflow</span>
+          <span className="text-2xl">{showHelp ? '−' : '+'}</span>
+        </button>
+        {showHelp && (
+          <div className="p-4 bg-green-900/30 text-green-100">
+            <div className="space-y-4">
+              <div>
+                <h4 className="font-semibold mb-2">📋 Step-by-Step Workflow:</h4>
+                <ol className="list-decimal list-inside space-y-2 text-sm">
+                  <li><strong>Download Template:</strong> Click "Download CSV Template" button below</li>
+                  <li><strong>Open in Spreadsheet:</strong> Use Excel, Google Sheets, or any CSV editor</li>
+                  <li><strong>Fill Data:</strong> Add one profile per row (name is required, rest optional)</li>
+                  <li><strong>Save as CSV:</strong> Export/save your file as .csv format</li>
+                  <li><strong>Upload:</strong> Use the upload button below to import</li>
+                  <li><strong>Add Q&A (Optional):</strong> After creation, go to "Q&A Upload" tab to add answers</li>
+                </ol>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">💼 Field Format Guidelines:</h4>
+                <ul className="list-disc list-inside space-y-1 text-xs">
+                  <li><strong>name:</strong> Full name (e.g., "John Doe")</li>
+                  <li><strong>email:</strong> Valid email address</li>
+                  <li><strong>phone:</strong> Include country code (e.g., "+1-555-0123")</li>
+                  <li><strong>year_graduated:</strong> 4-digit year (e.g., "2010")</li>
+                  <li><strong>linkedin_url:</strong> Full URL starting with https://</li>
+                  <li><strong>profile_image_url:</strong> Public image URL (or upload images later via Bulk Update → Bulk Image Upload)</li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-2">⚠️ Common Mistakes to Avoid:</h4>
+                <ul className="list-disc list-inside space-y-1 text-xs text-yellow-200">
+                  <li>Don't modify the header row (first row with column names)</li>
+                  <li>Don't leave name column empty</li>
+                  <li>Use commas only within quoted fields</li>
+                  <li>Save as CSV, not Excel (.xlsx)</li>
+                  <li>Q&A answers must be added separately after profile creation</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
       <button
         onClick={downloadTemplate}
-        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+        className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
       >
-        Download CSV Template
+        📥 Download CSV Template
       </button>
 
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -1176,6 +1581,21 @@ function QAUploadForm() {
   const [csvFile, setCsvFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+  const [showQuestions, setShowQuestions] = useState(false);
+
+  // The 10 standard questions
+  const questions = [
+    { id: 1, text: "A school memory that still makes you smile" },
+    { id: 2, text: "Your favourite spot in school" },
+    { id: 3, text: "If you get one full day in school today, what would you do..." },
+    { id: 4, text: "What advice would you give to the younger students entering the workforce today:" },
+    { id: 5, text: "A book / movie / experience that changed your perspective of life:" },
+    { id: 6, text: "A personal achievement that means a lot to you:" },
+    { id: 7, text: "Your favourite hobby that you pursue when off work:" },
+    { id: 8, text: "Your favourite go-to song(s) to enliven your spirits" },
+    { id: 9, text: "What does reconnecting with this alumini group mean to you at this stage of your life?" },
+    { id: 10, text: "Would you be open to mentoring younger students or collaborating with alumni?" }
+  ];
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1203,7 +1623,10 @@ function QAUploadForm() {
       const result = await response.json();
 
       if (response.ok) {
-        setMessage({ type: 'success', text: `Successfully uploaded ${result.count} Q&A answers!` });
+        setMessage({
+          type: 'success',
+          text: `✅ Successfully uploaded ${result.count} Q&A answer${result.count !== 1 ? 's' : ''}! View profiles in "Manage Profiles" tab to see the answers.`
+        });
         setCsvFile(null);
       } else {
         setMessage({ type: 'error', text: result.error || 'Failed to upload Q&A answers' });
@@ -1216,17 +1639,28 @@ function QAUploadForm() {
   };
 
   const downloadTemplate = () => {
-    const template = `profile_id,question_id,answer
-1,1,Playing cricket with friends during lunch break
-1,2,The library - it was my peaceful corner
-2,1,Annual day celebrations were always memorable`;
-
-    const blob = new Blob([template], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
+    // Link to static template file instead of generating inline
     const a = document.createElement('a');
-    a.href = url;
+    a.href = '/templates/qa_answers_template.csv';
     a.download = 'qa_answers_template.csv';
     a.click();
+  };
+
+  const exportProfileIds = async () => {
+    try {
+      const response = await fetch('/api/admin/export-profile-ids');
+      if (response.ok) {
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `profile_ids_${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      }
+    } catch (error) {
+      console.error('Error downloading profile IDs:', error);
+    }
   };
 
   return (
@@ -1238,16 +1672,49 @@ function QAUploadForm() {
         <ul className="list-disc list-inside space-y-1 text-sm">
           <li>Required columns: <code className="bg-black/30 px-2 py-1 rounded">profile_id</code>, <code className="bg-black/30 px-2 py-1 rounded">question_id</code>, <code className="bg-black/30 px-2 py-1 rounded">answer</code></li>
           <li>profile_id must match existing profile IDs</li>
-          <li>question_id: 1-10 (the 10 standard questions)</li>
+          <li>question_id: 1-10 (the 10 standard questions below)</li>
         </ul>
       </div>
 
-      <button
-        onClick={downloadTemplate}
-        className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-      >
-        Download CSV Template
-      </button>
+      {/* Questions Reference */}
+      <div className="bg-purple-500/20 border border-purple-500/50 rounded-lg overflow-hidden">
+        <button
+          onClick={() => setShowQuestions(!showQuestions)}
+          className="w-full px-4 py-3 flex items-center justify-between text-left text-white hover:bg-purple-500/30 transition-colors"
+        >
+          <span className="font-semibold">📋 View All 10 Questions & Their IDs</span>
+          <span className="text-2xl">{showQuestions ? '−' : '+'}</span>
+        </button>
+        {showQuestions && (
+          <div className="p-4 bg-purple-900/30">
+            <div className="space-y-3">
+              {questions.map((q) => (
+                <div key={q.id} className="flex gap-3 text-sm">
+                  <span className="bg-purple-600 text-white px-3 py-1 rounded-lg font-bold min-w-[3rem] text-center">
+                    ID: {q.id}
+                  </span>
+                  <span className="text-purple-100 flex-1">{q.text}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="flex gap-3">
+        <button
+          onClick={downloadTemplate}
+          className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+        >
+          📥 Download CSV Template
+        </button>
+        <button
+          onClick={exportProfileIds}
+          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
+        >
+          🆔 Export Profile IDs
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>

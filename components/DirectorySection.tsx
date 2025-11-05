@@ -23,62 +23,72 @@ const DirectorySection = () => {
 
               {/* Mobile Circular Arrangement */}
               <div className="relative w-full max-w-[320px] sm:max-w-[380px] h-[320px] sm:h-[380px] bg-[rgba(78,46,140,1)] rounded-lg">
-                {/* Center: 2000 ALUMNI Badge */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] sm:w-[140px] h-[120px] sm:h-[140px] z-30">
+                {/* Center: CLASS OF 2000 Badge */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[85px] sm:w-[95px] h-[85px] sm:h-[95px] z-20">
                   <div className="relative w-full h-full">
                     <div className="absolute inset-0 rounded-full bg-[rgba(217,81,100,1)] flex items-center justify-center shadow-xl">
-                      <div className="text-center">
-                        <div className="text-white text-[32px] sm:text-[36px] font-black leading-none">
-                          2000
+                      <div className="text-center rotate-[8deg]">
+                        <div className="text-white text-[7px] sm:text-[8px] font-bold uppercase tracking-wide leading-tight">
+                          CLASS OF
                         </div>
-                        <div className="text-white text-[11px] sm:text-[13px] font-bold uppercase tracking-wider mt-1">
-                          ALUMNI
+                        <div className="text-white text-[24px] sm:text-[28px] font-black leading-none mt-0.5">
+                          2000
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Top */}
-                <div className="absolute top-[8%] left-1/2 -translate-x-1/2 w-[70px] sm:w-[80px] h-[70px] sm:h-[80px] z-20">
+                {/* Top Left - Profile 1 */}
+                <div className="absolute top-[22%] left-[10%] w-[62px] sm:w-[72px] h-[62px] sm:h-[72px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/24b6092061762f9c056ef449f82e306264bcb41d?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-1.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* Right */}
-                <div className="absolute top-1/2 right-[8%] -translate-y-1/2 w-[70px] sm:w-[80px] h-[70px] sm:h-[80px] z-10">
+                {/* Top Center - Profile 2 */}
+                <div className="absolute top-[5%] left-[40%] w-[66px] sm:w-[76px] h-[66px] sm:h-[76px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/7bb63ea0ad3ab902514ed4aa13964ca0c8ad0883?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-2.png"
+                    alt="Classmate profile"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center 20%' }}
+                  />
+                </div>
+
+                {/* Top Right - Profile 3 */}
+                <div className="absolute top-[14%] right-[10%] w-[63px] sm:w-[73px] h-[63px] sm:h-[73px] z-10">
+                  <img
+                    src="/images/alumni/profile-3.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* Bottom */}
-                <div className="absolute bottom-[8%] left-1/2 -translate-x-1/2 w-[75px] sm:w-[85px] h-[75px] sm:h-[85px] z-20">
+                {/* Middle Left - Profile 4 */}
+                <div className="absolute top-[60%] left-[6%] -translate-y-1/2 w-[66px] sm:w-[76px] h-[66px] sm:h-[76px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/ff89d2ee719f706c663f406428367b65c718ac20?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-4.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* Left */}
-                <div className="absolute top-1/2 left-[8%] -translate-y-1/2 w-[70px] sm:w-[80px] h-[70px] sm:h-[80px] z-10">
+                {/* Middle Right - Profile 5 */}
+                <div className="absolute top-[52%] right-[6%] -translate-y-1/2 w-[64px] sm:w-[74px] h-[64px] sm:h-[74px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/20e63c88b0fe6dc3cf2778312d215c65bf2a7e23?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-5.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* Bottom left */}
-                <div className="absolute bottom-[18%] left-[15%] w-[65px] sm:w-[75px] h-[65px] sm:h-[75px] z-10">
+                {/* Bottom Center - Profile 6 */}
+                <div className="absolute bottom-[6%] left-[43%] w-[67px] sm:w-[77px] h-[67px] sm:h-[77px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/0cc6b72e80f672ae4bd339fabb8fe37c97df7032?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-6.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
@@ -99,62 +109,72 @@ const DirectorySection = () => {
             <div className="hidden md:flex gap-8 lg:gap-12 xl:gap-16 items-center">
               {/* Left: Artistic Image Collage - Circular Arrangement */}
               <div className="w-[42%] relative min-h-[400px] md:min-h-[450px] lg:min-h-[500px] xl:min-h-[550px] overflow-hidden bg-[rgba(78,46,140,1)]">
-                {/* Center: 2000 ALUMNI Badge (focal point) */}
-                <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] md:w-[180px] lg:w-[200px] xl:w-[220px] h-[160px] md:h-[180px] lg:h-[200px] xl:h-[220px] z-30">
+                {/* Center: CLASS OF 2000 Badge (focal point) */}
+                <div className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2 w-[110px] md:w-[120px] lg:w-[135px] xl:w-[145px] h-[110px] md:h-[120px] lg:h-[135px] xl:h-[145px] z-20">
                   <div className="relative w-full h-full">
                     <div className="absolute inset-0 rounded-full bg-[rgba(217,81,100,1)] flex items-center justify-center shadow-xl">
-                      <div className="text-center">
-                        <div className="text-white text-[38px] md:text-[42px] lg:text-[46px] xl:text-[50px] font-black leading-none">
-                          2000
+                      <div className="text-center rotate-[8deg]">
+                        <div className="text-white text-[9px] md:text-[10px] lg:text-[11px] xl:text-[12px] font-bold uppercase tracking-wide leading-tight">
+                          CLASS OF
                         </div>
-                        <div className="text-white text-[13px] md:text-[14px] lg:text-[16px] xl:text-[18px] font-bold uppercase tracking-wider mt-1">
-                          ALUMNI
+                        <div className="text-white text-[28px] md:text-[32px] lg:text-[36px] xl:text-[38px] font-black leading-none mt-1">
+                          2000
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* 12 o'clock - Top center */}
-                <div className="absolute top-[2%] left-1/2 -translate-x-1/2 w-[110px] md:w-[120px] lg:w-[135px] xl:w-[150px] h-[110px] md:h-[120px] lg:h-[135px] xl:h-[150px] z-20">
+                {/* Top Left - Profile 1 */}
+                <div className="absolute top-[25%] left-[8%] w-[90px] md:w-[100px] lg:w-[115px] xl:w-[125px] h-[90px] md:h-[100px] lg:h-[115px] xl:h-[125px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/24b6092061762f9c056ef449f82e306264bcb41d?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-1.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* 2 o'clock - Top right */}
-                <div className="absolute top-[12%] right-[12%] w-[105px] md:w-[115px] lg:w-[130px] xl:w-[145px] h-[105px] md:h-[115px] lg:h-[130px] xl:h-[145px] z-10">
+                {/* Top Center - Profile 2 */}
+                <div className="absolute top-[5%] left-[38%] w-[95px] md:w-[105px] lg:w-[120px] xl:w-[130px] h-[95px] md:h-[105px] lg:h-[120px] xl:h-[130px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/7bb63ea0ad3ab902514ed4aa13964ca0c8ad0883?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-2.png"
+                    alt="Classmate profile"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center 20%' }}
+                  />
+                </div>
+
+                {/* Top Right - Profile 3 */}
+                <div className="absolute top-[15%] right-[8%] w-[92px] md:w-[102px] lg:w-[117px] xl:w-[127px] h-[92px] md:h-[102px] lg:h-[117px] xl:h-[127px] z-10">
+                  <img
+                    src="/images/alumni/profile-3.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* 6 o'clock - Bottom center */}
-                <div className="absolute bottom-[6%] left-1/2 -translate-x-1/2 w-[115px] md:w-[125px] lg:w-[140px] xl:w-[155px] h-[115px] md:h-[125px] lg:h-[140px] xl:h-[155px] z-20">
+                {/* Middle Left - Profile 4 */}
+                <div className="absolute top-[60%] left-[4%] -translate-y-1/2 w-[95px] md:w-[105px] lg:w-[120px] xl:w-[130px] h-[95px] md:h-[105px] lg:h-[120px] xl:h-[130px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/ff89d2ee719f706c663f406428367b65c718ac20?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-4.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* 8 o'clock - Bottom left */}
-                <div className="absolute bottom-[10%] left-[12%] w-[105px] md:w-[115px] lg:w-[130px] xl:w-[145px] h-[105px] md:h-[115px] lg:h-[130px] xl:h-[145px] z-10">
+                {/* Middle Right - Profile 5 */}
+                <div className="absolute top-[52%] right-[5%] -translate-y-1/2 w-[93px] md:w-[103px] lg:w-[118px] xl:w-[128px] h-[93px] md:h-[103px] lg:h-[118px] xl:h-[128px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/0cc6b72e80f672ae4bd339fabb8fe37c97df7032?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-5.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />
                 </div>
 
-                {/* 10 o'clock - Left */}
-                <div className="absolute top-[38%] left-[5%] w-[110px] md:w-[120px] lg:w-[135px] xl:w-[150px] h-[110px] md:h-[120px] lg:h-[135px] xl:h-[150px] z-10">
+                {/* Bottom Center - Profile 6 */}
+                <div className="absolute bottom-[8%] left-[42%] w-[97px] md:w-[107px] lg:w-[122px] xl:w-[132px] h-[97px] md:h-[107px] lg:h-[122px] xl:h-[132px] z-10">
                   <img
-                    src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/20e63c88b0fe6dc3cf2778312d215c65bf2a7e23?placeholderIfAbsent=true"
+                    src="/images/alumni/profile-6.png"
                     alt="Classmate profile"
                     className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
                   />

@@ -172,24 +172,62 @@ export async function getProfileQA(profileId: number): Promise<ProfileQA[]> {
  * Fetch profile by slug (URL-friendly version of name)
  * @param slug - URL slug (e.g., "david-a", "john-doe")
  * @returns Profile with Q&A responses, or null if not found
+ *
+ * OPTIMIZED: Queries database directly by converting slug to name pattern
+ * instead of fetching all profiles (was O(n), now O(1))
  */
 export async function getProfileBySlug(slug: string): Promise<ProfileWithAnswers | null> {
-  // First, fetch all profiles and find matching slug
+  // Convert slug to name search pattern
+  // "david-a" → "david a", "john-doe" → "john doe"
+  const namePattern = slug.replace(/-/g, ' ')
+
+  // Query database with ilike for case-insensitive match
+  // This is much faster than fetching all profiles (134+)
   const { data: profiles, error: profileError } = await supabase
     .from('profiles')
     .select('*')
+    .ilike('name', namePattern)
 
   if (profileError) {
-    console.error('Error fetching profiles for slug match:', profileError)
+    console.error('Error fetching profile by slug:', profileError)
     throw profileError
   }
 
-  // Find profile where slug matches name
-  const profile = profiles?.find(p => slugMatchesName(slug, p.name))
+  // If no exact match, try fuzzy match with partial search
+  if (!profiles || profiles.length === 0) {
+    // Fallback: search each word in slug separately
+    const searchTerms = slug.split('-').filter(term => term.length > 1)
+    if (searchTerms.length === 0) return null
 
-  if (!profile) {
-    return null
+    // Build OR query for partial matches
+    const orQuery = searchTerms.map(term => `name.ilike.%${term}%`).join(',')
+    const { data: fuzzyProfiles, error: fuzzyError } = await supabase
+      .from('profiles')
+      .select('*')
+      .or(orQuery)
+      .limit(10) // Limit to prevent fetching too many
+
+    if (fuzzyError) {
+      console.error('Error in fuzzy profile search:', fuzzyError)
+      throw fuzzyError
+    }
+
+    // Find best match using slug matching
+    const profile = fuzzyProfiles?.find(p => slugMatchesName(slug, p.name))
+
+    if (!profile) return null
+
+    // Fetch Q&A responses
+    const qaResponses = await getProfileQA(profile.id)
+
+    return {
+      ...profile,
+      qa_responses: qaResponses
+    }
   }
+
+  // If we have matches, find the one that exactly matches the slug
+  const profile = profiles.find(p => slugMatchesName(slug, p.name)) || profiles[0]
 
   // Fetch Q&A responses for this profile
   const qaResponses = await getProfileQA(profile.id)

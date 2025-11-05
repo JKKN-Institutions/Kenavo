@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export async function POST(request: NextRequest) {
+  // Protect this route - require admin authentication
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -59,7 +64,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Bulk insert/upsert into database
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('profile_answers')
       .upsert(answers, {
         onConflict: 'profile_id,question_id',

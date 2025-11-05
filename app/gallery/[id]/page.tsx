@@ -31,9 +31,9 @@ export default async function GalleryIndividualPage({ params }: { params: Promis
     <div className="bg-white flex flex-col overflow-hidden items-center min-h-screen">
       <Header />
 
-      <main className="flex flex-col items-center w-full">
-        <section className="self-stretch flex w-full flex-col items-center text-[78px] text-[rgba(78,46,140,1)] font-bold whitespace-nowrap text-center leading-[1.1] pt-[86px] px-[70px] max-md:max-w-full max-md:text-[40px] max-md:px-5">
-          <h1 className="z-10 mb-[-25px] max-md:text-[40px] max-md:mb-2.5">
+      <main className="flex flex-col items-center w-full max-w-[1200px] mx-auto">
+        <section className="flex w-full flex-col items-center text-[40px] sm:text-[50px] md:text-[64px] lg:text-[78px] text-[rgba(78,46,140,1)] font-bold whitespace-nowrap text-center leading-[1.1] pt-8 sm:pt-12 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
+          <h1 className="z-10 mb-[-25px] max-md:mb-2.5">
             {albumTitle}
           </h1>
         </section>

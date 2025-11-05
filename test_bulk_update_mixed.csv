@@ -1,0 +1,3 @@
+id,name,email,phone,location,year_graduated,current_job,company,bio,linkedin_url,nicknames,profile_image_url
+1,A Arjoon,arjoon@test.com,,Chennai India,2000,Software Engineer,Tech Corp,"Updated bio, with comma",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/1-a-arjoon.png
+2,Annamalai Natarajan,annamalai@test.com,,,2024,Product Manager,Google,"Bio updated, testing commas",,,https://rihoufidmnqtffzqhplc.supabase.co/storage/v1/object/public/profile-images/alumni/2-annamalai-natarajan.png

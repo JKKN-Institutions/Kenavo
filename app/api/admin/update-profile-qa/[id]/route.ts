@@ -1,10 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
+import { createSlug } from '@/lib/utils/slug';
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Protect this route - require admin authentication
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
     const { id } = await params;
     const profileId = parseInt(id);
@@ -38,7 +44,7 @@ export async function PUT(
     }
 
     // Upsert Q&A answers (update if exists, insert if not)
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('profile_answers')
       .upsert(answersToUpsert, {
         onConflict: 'profile_id,question_id',
@@ -49,6 +55,43 @@ export async function PUT(
     if (error) {
       console.error('Database error:', error);
       return NextResponse.json({ error: 'Failed to update Q&A: ' + error.message }, { status: 500 });
+    }
+
+    // Fetch profile name to generate slug for revalidation
+    const { data: profile, error: profileError } = await supabaseAdmin
+      .from('profiles')
+      .select('name')
+      .eq('id', profileId)
+      .single();
+
+    // Trigger on-demand revalidation for instant Q&A updates
+    if (profile && !profileError) {
+      const slug = createSlug(profile.name);
+      const pathsToRevalidate = [
+        '/directory',
+        `/directory/${slug}`,
+      ];
+
+      try {
+        const revalidateUrl = new URL('/api/revalidate', request.url);
+        const revalidateResponse = await fetch(revalidateUrl.toString(), {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Cookie': request.headers.get('Cookie') || '',
+          },
+          body: JSON.stringify({ paths: pathsToRevalidate }),
+        });
+
+        if (revalidateResponse.ok) {
+          console.log('✅ Q&A cache revalidated for:', pathsToRevalidate);
+        } else {
+          console.warn('⚠️ Q&A revalidation failed but answers were updated');
+        }
+      } catch (revalidateError) {
+        console.error('Q&A revalidation error:', revalidateError);
+        // Don't fail the request if revalidation fails
+      }
     }
 
     return NextResponse.json({

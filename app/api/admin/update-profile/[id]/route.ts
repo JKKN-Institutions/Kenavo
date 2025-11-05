@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
+import { deleteProfileImage } from '@/lib/storage-utils';
+import { createSlug } from '@/lib/utils/slug';
 
 export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Protect this route - require admin authentication
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
     const { id } = await params;
     const profileId = parseInt(id);
@@ -33,10 +40,28 @@ export async function PUT(
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
+    // Validate year_graduated length (database constraint: VARCHAR(4))
+    if (year_graduated && year_graduated.length > 4) {
+      return NextResponse.json({
+        error: `Year graduated "${year_graduated}" exceeds 4 characters. Please use format: "2024"`
+      }, { status: 400 });
+    }
+
     let profile_image_url = existing_image_url;
 
     // Upload new image if provided
     if (imageFile && imageFile.size > 0) {
+      // Delete old image first to prevent storage bloat
+      if (existing_image_url) {
+        const deleteResult = await deleteProfileImage(existing_image_url);
+        if (deleteResult.success) {
+          console.log('✅ Old profile image deleted successfully');
+        } else {
+          console.warn('⚠️ Could not delete old image:', deleteResult.error);
+          // Continue anyway - don't fail the update if cleanup fails
+        }
+      }
+
       const fileExt = imageFile.name.split('.').pop();
       const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
       const filePath = `profiles/${fileName}`;
@@ -45,7 +70,7 @@ export async function PUT(
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = new Uint8Array(arrayBuffer);
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
         .from('profile-images')
         .upload(filePath, buffer, {
           contentType: imageFile.type,
@@ -57,7 +82,7 @@ export async function PUT(
         // Continue with update even if image upload fails
       } else {
         // Get public URL
-        const { data: { publicUrl } } = supabase.storage
+        const { data: { publicUrl } } = supabaseAdmin.storage
           .from('profile-images')
           .getPublicUrl(filePath);
 
@@ -66,7 +91,7 @@ export async function PUT(
     }
 
     // Update profile in database
-    const { data: profile, error: dbError } = await supabase
+    const { data: profile, error: dbError } = await supabaseAdmin
       .from('profiles')
       .update({
         name,
@@ -84,11 +109,45 @@ export async function PUT(
       })
       .eq('id', profileId)
       .select()
-      .single();
+      .maybeSingle();
 
     if (dbError) {
       console.error('Database error:', dbError);
       return NextResponse.json({ error: 'Failed to update profile: ' + dbError.message }, { status: 500 });
+    }
+
+    // Check if profile exists
+    if (!profile) {
+      return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+    }
+
+    // Trigger on-demand revalidation for instant updates
+    const slug = createSlug(profile.name);
+    const pathsToRevalidate = [
+      '/directory',
+      `/directory/${slug}`,
+    ];
+
+    try {
+      // Call revalidation API to purge cache
+      const revalidateUrl = new URL('/api/revalidate', request.url);
+      const revalidateResponse = await fetch(revalidateUrl.toString(), {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Cookie': request.headers.get('Cookie') || '', // Forward auth cookies
+        },
+        body: JSON.stringify({ paths: pathsToRevalidate }),
+      });
+
+      if (revalidateResponse.ok) {
+        console.log('✅ Cache revalidated for:', pathsToRevalidate);
+      } else {
+        console.warn('⚠️ Revalidation failed but profile was updated');
+      }
+    } catch (revalidateError) {
+      console.error('Revalidation error:', revalidateError);
+      // Don't fail the request if revalidation fails
     }
 
     return NextResponse.json({

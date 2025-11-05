@@ -1,0 +1,236 @@
+═══════════════════════════════════════════════════════
+  BULK PROFILE IMAGE UPLOAD - FILENAME GUIDE
+═══════════════════════════════════════════════════════
+
+📋 FILENAME FORMAT
+==================
+
+Your image filenames MUST contain the profile ID number.
+
+✅ SUPPORTED PATTERNS:
+
+  Pattern 1: {id}.{ext}
+    Examples:
+      • 1.jpg
+      • 39.png
+      • 100.webp
+
+  Pattern 2: {id}-{name}.{ext}
+    Examples:
+      • 1-john-doe.jpg
+      • 39-david-a.png
+      • 100-sarah-johnson.webp
+
+  Pattern 3: profile-{id}.{ext}
+    Examples:
+      • profile-1.jpg
+      • profile-39.png
+      • profile-100.webp
+
+❌ INVALID PATTERNS:
+
+  • john-doe.jpg        (no ID number)
+  • image001.jpg        (ID must be profile ID, not sequence)
+  • IMG_2024.jpg        (no profile ID)
+  • photo.png           (no ID)
+
+
+📦 ZIP FILE STRUCTURE
+=====================
+
+Correct Structure:
+
+  my-profile-images.zip
+  ├── 1.jpg
+  ├── 2.png
+  ├── 39-david-a.jpg
+  ├── 40-sarah.png
+  ├── 100.webp
+  └── 101-michael-chen.jpg
+
+
+You can also organize in folders (they will be flattened):
+
+  images.zip
+  ├── batch1/
+  │   ├── 1.jpg
+  │   └── 2.png
+  └── batch2/
+      ├── 39.jpg
+      └── 40.png
+
+
+📸 IMAGE REQUIREMENTS
+=====================
+
+Format:
+  ✅ JPG / JPEG
+  ✅ PNG
+  ✅ WEBP
+  ❌ GIF (not supported)
+  ❌ BMP (not supported)
+
+Size:
+  • Maximum: 5 MB per image
+  • Recommended: 500 KB - 2 MB
+  • Minimum resolution: 400x400 pixels
+  • Recommended: 800x800 pixels or higher
+
+Quality Tips:
+  • Use clear, professional headshots
+  • Good lighting and focus
+  • Neutral or simple backgrounds
+  • Recent photos preferred
+
+
+🔍 GETTING PROFILE IDS
+======================
+
+Need to find profile IDs? Use one of these methods:
+
+Method 1: Export from Admin Panel
+  1. Go to "Bulk Update" tab
+  2. Click "Export Profile IDs"
+  3. Download CSV with id, name, year_graduated
+  4. Use IDs from the first column
+
+Method 2: Export All Profiles
+  1. Go to "Bulk Update" tab
+  2. Click "Export All Profiles"
+  3. CSV includes all profile data with IDs
+
+Method 3: View in Manage Profiles Tab
+  1. Go to "Manage Profiles" tab
+  2. Click Edit on any profile
+  3. Profile ID shown in edit modal
+
+
+🎯 STEP-BY-STEP WORKFLOW
+=========================
+
+Step 1: Get Profile IDs
+  ► Export profile IDs or full profiles CSV
+
+Step 2: Prepare Images
+  ► Rename your images with profile IDs
+  ► Format: {id}.jpg or {id}-name.jpg
+  ► Check size (max 5MB each)
+  ► Verify format (JPG/PNG/WEBP)
+
+Step 3: Create ZIP
+  ► Select all renamed images
+  ► Right-click → Send to → Compressed folder (Windows)
+  ► Or use any ZIP utility
+  ► Name the ZIP file (e.g., profile-images-2025.zip)
+
+Step 4: Upload & Preview
+  ► Go to Admin Panel → Bulk Update tab
+  ► Scroll to "Bulk Image Upload" section
+  ► Upload your ZIP file
+  ► Click "Preview Image Mappings"
+
+Step 5: Review & Confirm
+  ► Preview modal shows all mappings
+  ► Check current vs new images
+  ► Review any errors
+  ► Click "Apply Updates" to confirm
+
+Step 6: Success!
+  ► Images uploaded to Supabase Storage
+  ► Database updated with new URLs
+  ► Old images safely removed
+
+
+⚠️  COMMON MISTAKES TO AVOID
+=============================
+
+1. Wrong ID Format
+   ❌ Using sequential numbers (1, 2, 3...)
+   ✅ Using actual profile IDs from database
+
+2. Special Characters in Filename
+   ❌ 39#david-a.jpg
+   ❌ 40@sarah.png
+   ✅ 39-david-a.jpg
+   ✅ 40-sarah.png
+
+3. Spaces in Filename
+   ❌ 39 david a.jpg
+   ✅ 39-david-a.jpg
+   ✅ 39_david_a.jpg
+
+4. Missing File Extension
+   ❌ 39-david
+   ✅ 39-david.jpg
+
+5. Wrong File Format
+   ❌ 39.gif
+   ❌ 39.bmp
+   ✅ 39.jpg
+   ✅ 39.png
+   ✅ 39.webp
+
+6. File Too Large
+   ❌ 39.jpg (8 MB)
+   ✅ 39.jpg (2 MB)
+
+
+🛠️  TROUBLESHOOTING
+====================
+
+Problem: "Profile ID not found"
+  Solution:
+    • Verify the ID exists in your database
+    • Export profile IDs to check valid IDs
+    • Make sure you're using profile ID, not row number
+
+Problem: "File too large"
+  Solution:
+    • Compress image (reduce quality/size)
+    • Use online tools like TinyPNG
+    • Target 500KB - 2MB per image
+
+Problem: "Unsupported format"
+  Solution:
+    • Convert to JPG, PNG, or WEBP
+    • Use image editor or online converter
+    • Remove animated GIFs
+
+Problem: "No images found in ZIP"
+  Solution:
+    • Make sure images are in root or folders within ZIP
+    • Check file extensions (.jpg, .png, .webp)
+    • Don't use nested ZIPs (ZIP within ZIP)
+
+Problem: "Could not extract profile ID"
+  Solution:
+    • Filename must contain a number
+    • Use format: {id}.jpg or {id}-name.jpg
+    • Number must be at the start or after "profile-"
+
+
+💡 PRO TIPS
+===========
+
+• Batch Process: Use image editing software to batch resize images
+• Naming: Keep names simple - just ID or ID-name
+• Organization: Process in batches of 50-100 images at a time
+• Backup: Keep original images before uploading
+• Verify: Always review the preview before applying
+• Test: Try with 2-3 images first to ensure workflow works
+
+
+📞 NEED HELP?
+=============
+
+If you encounter issues:
+  1. Check this guide for common problems
+  2. Review the error message in the preview
+  3. Try with a smaller batch first
+  4. Contact system administrator
+
+
+═══════════════════════════════════════════════════════
+  Last Updated: 2025
+  For: Kenavo Alumni Management System
+═══════════════════════════════════════════════════════

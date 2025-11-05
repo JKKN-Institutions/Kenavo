@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export async function POST(request: NextRequest) {
+  // Protect this route - require admin authentication
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
     const formData = await request.formData();
     const file = formData.get('file') as File;
@@ -41,12 +46,19 @@ export async function POST(request: NextRequest) {
       });
 
       if (profile.name) {
+        // Validate year_graduated length (database constraint: VARCHAR(4))
+        const yearGrad = profile.year_graduated?.trim();
+        if (yearGrad && yearGrad.length > 4) {
+          console.warn(`Skipping profile "${profile.name}": year_graduated "${yearGrad}" exceeds 4 characters`);
+          continue;
+        }
+
         profiles.push({
           name: profile.name,
           email: profile.email || null,
           phone: profile.phone || null,
           location: profile.location || null,
-          year_graduated: profile.year_graduated || null,
+          year_graduated: yearGrad || null,
           current_job: profile.current_job || null,
           company: profile.company || null,
           bio: profile.bio || null,
@@ -62,7 +74,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Bulk insert into database
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('profiles')
       .insert(profiles)
       .select();

@@ -6,6 +6,11 @@ import ProfileHero from '@/components/ProfileHero';
 import QuestionAnswer from '@/components/QuestionAnswer';
 import { getProfileBySlug, getAllProfileSlugs } from '@/lib/api/profiles';
 
+// Enable on-demand revalidation (triggered by admin updates via /api/revalidate)
+// This provides instant updates without the performance cost of fully dynamic pages
+// Profiles are cached until explicitly revalidated by the admin panel
+export const revalidate = false; // No time-based revalidation, only on-demand
+
 // Generate static paths for ALL 134 profiles
 export async function generateStaticParams() {
   try {

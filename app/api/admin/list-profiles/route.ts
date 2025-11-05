@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export async function GET(request: NextRequest) {
+  // Protect this route - require admin authentication
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
@@ -12,7 +17,7 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build query
-    let query = supabase
+    let query = supabaseAdmin
       .from('profiles')
       .select('*', { count: 'exact' });
 

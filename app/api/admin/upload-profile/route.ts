@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export async function POST(request: NextRequest) {
+  // Protect this route - require admin authentication
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
     const formData = await request.formData();
 
@@ -22,6 +27,13 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
 
+    // Validate year_graduated length (database constraint: VARCHAR(4))
+    if (year_graduated && year_graduated.length > 4) {
+      return NextResponse.json({
+        error: `Year graduated "${year_graduated}" exceeds 4 characters. Please use format: "2024"`
+      }, { status: 400 });
+    }
+
     let profile_image_url = null;
 
     // Upload image to Supabase Storage if provided
@@ -34,7 +46,7 @@ export async function POST(request: NextRequest) {
       const arrayBuffer = await imageFile.arrayBuffer();
       const buffer = new Uint8Array(arrayBuffer);
 
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { data: uploadData, error: uploadError } = await supabaseAdmin.storage
         .from('profile-images')
         .upload(filePath, buffer, {
           contentType: imageFile.type,
@@ -46,7 +58,7 @@ export async function POST(request: NextRequest) {
         // Continue without image if upload fails
       } else {
         // Get public URL
-        const { data: { publicUrl } } = supabase.storage
+        const { data: { publicUrl } } = supabaseAdmin.storage
           .from('profile-images')
           .getPublicUrl(filePath);
 
@@ -55,7 +67,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Insert profile into database
-    const { data: profile, error: dbError } = await supabase
+    const { data: profile, error: dbError } = await supabaseAdmin
       .from('profiles')
       .insert({
         name,

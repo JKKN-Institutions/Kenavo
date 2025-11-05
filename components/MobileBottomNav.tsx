@@ -24,14 +24,14 @@ const MobileBottomNav = () => {
   };
 
   return (
-    <nav
-      className="fixed bottom-4 left-4 right-4 bg-[rgba(78,46,140,0.75)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-full lg:hidden z-50"
-      role="navigation"
-      aria-label="Mobile navigation"
-    >
-      <div className="flex items-center justify-between h-16 px-4 w-full">
-        {/* Main Navigation Items */}
-        <div className="flex items-center justify-around flex-1">
+    <>
+      {/* Main Navigation Container - 4 Navigation Items */}
+      <nav
+        className="fixed bottom-4 left-4 right-16 bg-[rgba(78,46,140,0.75)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-full lg:hidden z-50"
+        role="navigation"
+        aria-label="Mobile navigation"
+      >
+        <div className="flex items-center justify-around h-12 px-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -51,7 +51,7 @@ const MobileBottomNav = () => {
                     </span>
                   </div>
                 ) : (
-                  <div className="flex items-center justify-center p-2">
+                  <div className="flex items-center justify-center p-1">
                     <Icon
                       size={20}
                       strokeWidth={2}
@@ -63,21 +63,21 @@ const MobileBottomNav = () => {
             );
           })}
         </div>
+      </nav>
 
-        {/* Floating Action Button (FAB) - Separated */}
-        <div className="ml-3 flex-shrink-0">
-          <button
-            onClick={() => setShowMenu(!showMenu)}
-            className="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
-            aria-label="More options"
-          >
-            {showMenu ? (
-              <X size={16} strokeWidth={2.5} className="text-white" />
-            ) : (
-              <Plus size={16} strokeWidth={2.5} className="text-white" />
-            )}
-          </button>
-        </div>
+      {/* Separate Plus Button Container */}
+      <div className="fixed bottom-4 right-4 lg:hidden z-50">
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
+          aria-label="More options"
+        >
+          {showMenu ? (
+            <X size={18} strokeWidth={2.5} className="text-white" />
+          ) : (
+            <Plus size={18} strokeWidth={2.5} className="text-white" />
+          )}
+        </button>
       </div>
 
       {/* FAB Menu - Bottom Sheet */}
@@ -87,7 +87,7 @@ const MobileBottomNav = () => {
           onClick={() => setShowMenu(false)}
         >
           <div
-            className="absolute bottom-20 right-4 bg-[rgba(78,46,140,0.98)] backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
+            className="absolute bottom-[4.5rem] right-4 bg-[rgba(78,46,140,0.98)] backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex flex-col p-2 min-w-[160px]">
@@ -103,7 +103,7 @@ const MobileBottomNav = () => {
           </div>
         </div>
       )}
-    </nav>
+    </>
   );
 };
 

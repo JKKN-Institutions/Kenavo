@@ -76,14 +76,14 @@ const GalleryImagesGrid: React.FC = () => {
   };
 
   const renderRow = (startIndex: number, marginTop: string) => (
-    <div className={`w-full max-w-[930px] ${marginTop}`}>
-      <div className="gap-3 sm:gap-4 md:gap-5 flex flex-wrap justify-center md:justify-start">
+    <div className={`w-full ${marginTop}`}>
+      <div className="gap-3 sm:gap-4 md:gap-5 flex flex-wrap justify-center">
         {galleryImages.slice(startIndex, startIndex + 4).map((image, index) => {
           const imageIndex = startIndex + index;
           return (
             <div
               key={imageIndex}
-              className="w-[calc(50%-0.375rem)] sm:w-[calc(50%-0.5rem)] md:w-[calc(25%-0.9375rem)] lg:w-[221px]"
+              className="w-[calc(50%-0.375rem)] sm:w-[calc(50%-0.5rem)] md:w-[calc(25%-0.9375rem)] lg:w-[calc(25%-1.25rem)]"
             >
               <img
                 src={image.src}
@@ -101,7 +101,7 @@ const GalleryImagesGrid: React.FC = () => {
 
   return (
     <>
-      <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-20 lg:pb-0">
+      <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-12 lg:pb-8">
         {renderRow(0, "mt-12 sm:mt-16 md:mt-20 lg:mt-24")}
         {renderRow(4, "mt-3 sm:mt-4")}
         {renderRow(8, "mt-3 sm:mt-4")}
