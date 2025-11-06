@@ -23,38 +23,62 @@ interface SlambookRow {
   answers: string[]; // 10 Q&A answers
 }
 
-// Parse CSV content
+// Parse CSV content - FIXED to handle multiline quoted fields correctly
 function parseCSV(content: string): string[][] {
-  const lines = content.split('\n');
   const result: string[][] = [];
+  let row: string[] = [];
+  let current = '';
+  let inQuotes = false;
 
-  for (const line of lines) {
-    if (!line.trim()) continue;
+  // Process the entire content character by character
+  // This correctly handles newlines INSIDE quoted fields
+  for (let i = 0; i < content.length; i++) {
+    const char = content[i];
+    const nextChar = content[i + 1];
 
-    const row: string[] = [];
-    let current = '';
-    let inQuotes = false;
-
-    for (let i = 0; i < line.length; i++) {
-      const char = line[i];
-
-      if (char === '"') {
-        if (inQuotes && line[i + 1] === '"') {
-          current += '"';
-          i++; // Skip next quote
-        } else {
-          inQuotes = !inQuotes;
-        }
-      } else if (char === ',' && !inQuotes) {
-        row.push(current.trim());
-        current = '';
+    if (char === '"') {
+      // Handle escaped quotes (double quotes "")
+      if (inQuotes && nextChar === '"') {
+        current += '"';
+        i++; // Skip the escaped quote
       } else {
-        current += char;
+        // Toggle quote state
+        inQuotes = !inQuotes;
       }
-    }
-    row.push(current.trim());
+    } else if (char === ',' && !inQuotes) {
+      // Field separator (only when not inside quotes)
+      row.push(current.trim());
+      current = '';
+    } else if ((char === '\n' || char === '\r') && !inQuotes) {
+      // Row separator (only when not inside quotes)
+      // Handle both \r\n and \n line endings
+      if (char === '\r' && nextChar === '\n') {
+        i++; // Skip the \n in \r\n
+      }
 
-    result.push(row);
+      // Push current field and complete the row
+      row.push(current.trim());
+
+      // Only add row if it has content (skip empty rows)
+      if (row.length > 0 && row.some(cell => cell.trim())) {
+        result.push(row);
+      }
+
+      // Reset for next row
+      row = [];
+      current = '';
+    } else {
+      // Add character to current field (including newlines inside quotes)
+      current += char;
+    }
+  }
+
+  // Handle last row if content doesn't end with newline
+  if (current || row.length > 0) {
+    row.push(current.trim());
+    if (row.some(cell => cell.trim())) {
+      result.push(row);
+    }
   }
 
   return result;
