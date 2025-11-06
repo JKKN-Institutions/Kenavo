@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabase } from '@/lib/supabase';
 import { protectAdminRoute } from '@/lib/auth/api-protection';
 
+export const dynamic = 'force-dynamic'; // Disable static optimization
+export const revalidate = 0; // Disable caching
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -68,11 +71,18 @@ export async function GET(
       .eq('is_active', true)
       .order('order_index');
 
-    return NextResponse.json({
+    const response = NextResponse.json({
       profile,
       qa_responses: qaResponses,
       all_questions: allQuestions || [],
     });
+
+    // Prevent caching to ensure fresh data
+    response.headers.set('Cache-Control', 'no-store, no-cache, must-revalidate');
+    response.headers.set('Pragma', 'no-cache');
+    response.headers.set('Expires', '0');
+
+    return response;
 
   } catch (error) {
     console.error('Error in get-profile:', error);

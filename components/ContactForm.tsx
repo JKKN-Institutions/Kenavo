@@ -76,14 +76,14 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
   };
 
   return (
-    <div className={`flex w-full flex-col items-stretch text-white font-normal leading-[1.3] mt-6 sm:mt-8 md:mt-[30px] ${className}`}>
-      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
-        <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-[15px] text-base sm:text-lg">
-          <div className="bg-[rgba(61,26,131,1)] flex flex-col justify-center px-4 sm:px-5 py-3 sm:py-[19px] rounded-[10px] flex-1">
+    <div className={`flex w-full flex-col items-center text-white font-normal leading-[1.3] mt-4 sm:mt-5 md:mt-0 ${className}`}>
+      <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col w-full">
+        <div className="flex flex-col sm:flex-row items-stretch gap-3 sm:gap-4 md:gap-5 lg:gap-6 text-base sm:text-lg">
+          <div className="bg-[rgba(61,26,131,1)] flex flex-col justify-center px-5 sm:px-6 md:px-7 lg:px-8 py-3 sm:py-3.5 md:py-4 lg:py-5 rounded-[10px] flex-1">
             <input
               type="text"
               placeholder="Full name"
-              className="bg-transparent outline-none placeholder-white text-sm sm:text-base"
+              className="bg-transparent outline-none placeholder-white text-base sm:text-lg md:text-xl"
               {...register('fullName', { required: 'Full name is required' })}
               aria-label="Full name"
             />
@@ -91,11 +91,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
               <span className="text-red-300 text-xs sm:text-sm mt-1">{errors.fullName.message}</span>
             )}
           </div>
-          <div className="bg-[rgba(61,26,131,1)] flex flex-col justify-center px-4 sm:px-5 md:px-[29px] py-3 sm:py-[19px] rounded-[10px] flex-1">
+          <div className="bg-[rgba(61,26,131,1)] flex flex-col justify-center px-5 sm:px-6 md:px-7 lg:px-8 py-3 sm:py-3.5 md:py-4 lg:py-5 rounded-[10px] flex-1">
             <input
               type="email"
               placeholder="Mail address"
-              className="bg-transparent outline-none placeholder-white text-sm sm:text-base"
+              className="bg-transparent outline-none placeholder-white text-base sm:text-lg md:text-xl"
               {...register('email', {
                 required: 'Email is required',
                 pattern: {
@@ -111,11 +111,11 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
           </div>
         </div>
 
-        <div className="bg-[rgba(61,26,131,1)] flex flex-col text-base sm:text-lg mt-3 sm:mt-[17px] pt-3 sm:pt-[17px] pb-24 sm:pb-28 md:pb-[121px] px-4 sm:px-5 rounded-[10px]">
+        <div className="bg-[rgba(61,26,131,1)] flex flex-col text-base sm:text-lg mt-3 sm:mt-4 md:mt-5 lg:mt-6 pt-4 sm:pt-5 md:pt-6 pb-24 sm:pb-28 md:pb-32 lg:pb-36 px-5 sm:px-6 md:px-7 lg:px-8 rounded-[10px]">
           <textarea
             placeholder="Message"
-            className="bg-transparent outline-none placeholder-white resize-none h-full text-sm sm:text-base"
-            rows={4}
+            className="bg-transparent outline-none placeholder-white resize-none h-full text-base sm:text-lg md:text-xl"
+            rows={5}
             {...register('message', { required: 'Message is required' })}
             aria-label="Message"
           />
@@ -125,7 +125,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
         </div>
 
         <div
-          className={`bg-[rgba(61,26,131,1)] flex flex-col items-center mt-3 sm:mt-[17px] pt-16 sm:pt-20 md:pt-[89px] pb-6 sm:pb-8 md:pb-9 px-8 sm:px-12 md:px-20 rounded-[10px] relative cursor-pointer transition-colors ${
+          className={`bg-[rgba(61,26,131,1)] flex flex-col items-center mt-3 sm:mt-4 md:mt-5 lg:mt-6 pt-12 sm:pt-14 md:pt-16 lg:pt-18 pb-6 sm:pb-7 md:pb-8 lg:pb-9 px-10 sm:px-14 md:px-18 lg:px-20 rounded-[10px] relative cursor-pointer transition-colors ${
             dragActive ? 'bg-[rgba(71,36,141,1)]' : ''
           }`}
           onDragEnter={handleDrag}
@@ -142,28 +142,28 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
             onChange={handleFileInput}
             accept="image/*,.pdf,.doc,.docx"
           />
-          <div className="flex w-full max-w-[201px] flex-col items-stretch text-center">
-            <div className="text-sm sm:text-base md:text-lg">
+          <div className="flex w-full max-w-[240px] md:max-w-[280px] flex-col items-stretch text-center">
+            <div className="text-base sm:text-lg md:text-xl">
               Click to upload your files
             </div>
-            <div className="text-[10px] sm:text-xs self-center mt-1 sm:mt-[5px]">
+            <div className="text-xs sm:text-sm md:text-base self-center mt-1.5 md:mt-2">
               (Max. File size 25 mb)
             </div>
           </div>
 
           {uploadedFiles.length > 0 && (
-            <div className="absolute top-2 sm:top-4 left-2 sm:left-4 right-2 sm:right-4">
-              <div className="text-xs sm:text-sm mb-2">Uploaded files:</div>
+            <div className="absolute top-3 sm:top-4 md:top-5 left-3 sm:left-4 md:left-5 right-3 sm:right-4 md:right-5">
+              <div className="text-sm sm:text-base md:text-lg mb-2">Uploaded files:</div>
               {uploadedFiles.map((file, index) => (
-                <div key={index} className="flex justify-between items-center bg-[rgba(51,16,121,1)] p-1.5 sm:p-2 rounded mb-1">
-                  <span className="text-[10px] sm:text-xs truncate">{file.name}</span>
+                <div key={index} className="flex justify-between items-center bg-[rgba(51,16,121,1)] p-2 sm:p-2.5 md:p-3 rounded mb-1.5">
+                  <span className="text-xs sm:text-sm md:text-base truncate">{file.name}</span>
                   <button
                     type="button"
                     onClick={(e) => {
                       e.stopPropagation();
                       removeFile(index);
                     }}
-                    className="text-red-300 hover:text-red-100 ml-2 text-lg sm:text-xl"
+                    className="text-red-300 hover:text-red-100 ml-2 text-xl sm:text-2xl"
                     aria-label={`Remove ${file.name}`}
                   >
                     ×
@@ -177,7 +177,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-[rgba(217,81,100,1)] self-center flex w-[140px] sm:w-[160px] md:w-[170px] max-w-full flex-col items-stretch text-base sm:text-lg font-black whitespace-nowrap text-center leading-none justify-center mt-4 sm:mt-5 md:mt-[22px] px-8 sm:px-12 md:px-14 py-2.5 sm:py-3 rounded-[50px] hover:bg-[rgba(207,71,90,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-[rgba(217,81,100,1)] self-center flex w-[150px] sm:w-[170px] md:w-[190px] lg:w-[210px] max-w-full flex-col items-stretch text-lg sm:text-xl md:text-2xl font-black whitespace-nowrap text-center leading-none justify-center mt-4 sm:mt-5 md:mt-6 lg:mt-7 px-10 sm:px-12 md:px-14 py-3 md:py-3.5 lg:py-4 rounded-[50px] hover:bg-[rgba(207,71,90,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Sending...' : 'Submit'}
         </button>

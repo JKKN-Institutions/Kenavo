@@ -170,64 +170,68 @@ export async function getProfileQA(profileId: number): Promise<ProfileQA[]> {
 
 /**
  * Fetch profile by slug (URL-friendly version of name)
- * @param slug - URL slug (e.g., "david-a", "john-doe")
+ * @param slug - URL slug (e.g., "david-a", "john-doe", "a-s-syed-ahamed-khan")
  * @returns Profile with Q&A responses, or null if not found
  *
- * OPTIMIZED: Queries database directly by converting slug to name pattern
- * instead of fetching all profiles (was O(n), now O(1))
+ * IMPROVED: Handles special characters properly by using fuzzy matching
+ * with slug comparison instead of exact name matching
  */
 export async function getProfileBySlug(slug: string): Promise<ProfileWithAnswers | null> {
-  // Convert slug to name search pattern
-  // "david-a" → "david a", "john-doe" → "john doe"
-  const namePattern = slug.replace(/-/g, ' ')
+  // Strategy: Search by words in the slug to handle special characters
+  // Example: "a-s-syed-ahamed-khan" searches for profiles containing these words
+  // Then use slugMatchesName() to find the exact match
 
-  // Query database with ilike for case-insensitive match
-  // This is much faster than fetching all profiles (134+)
+  const searchTerms = slug.split('-').filter(term => term.length > 1)
+  if (searchTerms.length === 0) return null
+
+  // Build OR query for partial matches
+  // This finds all profiles that contain ANY of the search terms
+  const orQuery = searchTerms.map(term => `name.ilike.%${term}%`).join(',')
   const { data: profiles, error: profileError } = await supabase
     .from('profiles')
     .select('*')
-    .ilike('name', namePattern)
+    .or(orQuery)
 
   if (profileError) {
     console.error('Error fetching profile by slug:', profileError)
     throw profileError
   }
 
-  // If no exact match, try fuzzy match with partial search
   if (!profiles || profiles.length === 0) {
-    // Fallback: search each word in slug separately
-    const searchTerms = slug.split('-').filter(term => term.length > 1)
-    if (searchTerms.length === 0) return null
-
-    // Build OR query for partial matches
-    const orQuery = searchTerms.map(term => `name.ilike.%${term}%`).join(',')
-    const { data: fuzzyProfiles, error: fuzzyError } = await supabase
-      .from('profiles')
-      .select('*')
-      .or(orQuery)
-      .limit(10) // Limit to prevent fetching too many
-
-    if (fuzzyError) {
-      console.error('Error in fuzzy profile search:', fuzzyError)
-      throw fuzzyError
-    }
-
-    // Find best match using slug matching
-    const profile = fuzzyProfiles?.find(p => slugMatchesName(slug, p.name))
-
-    if (!profile) return null
-
-    // Fetch Q&A responses
-    const qaResponses = await getProfileQA(profile.id)
-
-    return {
-      ...profile,
-      qa_responses: qaResponses
-    }
+    return null
   }
 
-  // If we have matches, find the one that exactly matches the slug
-  const profile = profiles.find(p => slugMatchesName(slug, p.name)) || profiles[0]
+  // Find exact match by comparing generated slugs
+  // This handles special characters like periods, apostrophes, etc.
+  const matchedProfiles = profiles.filter(p => slugMatchesName(slug, p.name))
+
+  if (matchedProfiles.length === 0) {
+    // No exact slug match found
+    console.warn(`No exact slug match found for: ${slug}`)
+    return null
+  }
+
+  // If multiple matches (duplicates), prefer:
+  // 1. Profile with most recent updated_at
+  // 2. Profile with more complete data (has company, job, etc.)
+  let profile = matchedProfiles[0]
+
+  if (matchedProfiles.length > 1) {
+    console.warn(`Multiple profiles match slug "${slug}":`, matchedProfiles.map(p => `ID ${p.id}: ${p.name}`))
+
+    // Prefer profile with most complete data
+    profile = matchedProfiles.reduce((best, current) => {
+      const bestScore = (best.company ? 1 : 0) + (best.current_job ? 1 : 0) + (best.location ? 1 : 0)
+      const currentScore = (current.company ? 1 : 0) + (current.current_job ? 1 : 0) + (current.location ? 1 : 0)
+
+      if (currentScore > bestScore) return current
+      if (currentScore === bestScore) {
+        // If equal data, prefer most recently updated
+        return new Date(current.updated_at) > new Date(best.updated_at) ? current : best
+      }
+      return best
+    })
+  }
 
   // Fetch Q&A responses for this profile
   const qaResponses = await getProfileQA(profile.id)

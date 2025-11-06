@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 const Header = () => {
   return (
-    <header className="bg-white flex w-full flex-col items-center text-sm text-black font-semibold leading-none justify-center px-4 py-3 sm:px-5 sm:py-4 md:px-10 lg:px-[70px] md:py-[15px] sticky top-0 z-50 shadow-sm">
-      <div className="flex w-full max-w-[1400px] items-center justify-between">
+    <header className="bg-white flex w-full flex-col text-sm text-black font-semibold leading-none px-0 py-3 sm:py-4 md:py-[15px] sticky top-0 z-50">
+      <div className="flex w-full max-w-[1400px] items-center justify-between px-4 sm:px-5 md:px-10 lg:px-[70px] mx-auto">
         <Link href="/">
           <img
             src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/1786e1fe8a5eb8ea616d009a830f24f5eda8fa46?placeholderIfAbsent=true"

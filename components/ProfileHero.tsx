@@ -38,8 +38,9 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
   const imageUrl = addCacheBuster(profileImageUrl || '/placeholder-profile.svg', updatedAt);
 
   return (
-    <section className="self-center flex w-full max-w-[969px] flex-col px-4 md:px-6 lg:px-0">
-      <h1 className="text-[rgba(217,81,100,1)] text-3xl md:text-5xl lg:text-[78px] font-bold leading-tight md:leading-[50px] lg:leading-[73px] max-w-full md:max-w-[488px]">
+    <section className="self-center flex w-full max-w-[1200px] flex-col px-4 sm:px-6 md:px-8 lg:px-12 xl:px-0">
+      {/* Name - Mobile optimized with better spacing */}
+      <h1 className="text-[rgba(217,81,100,1)] text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-[48px] font-bold leading-tight sm:leading-tight md:leading-[50px] lg:leading-[60px] xl:leading-[1.2] max-w-full md:max-w-[488px] mb-8 sm:mb-10 md:mb-12 lg:mb-16 xl:mb-10">
         {nameLines.map((line, index) => (
           <React.Fragment key={index}>
             {line}
@@ -48,64 +49,74 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
         ))}
       </h1>
 
-      <div className="self-stretch mt-8 md:mt-12 lg:mt-[59px]">
-        <div className="gap-5 flex flex-col md:flex-row md:items-stretch">
-          <div className="w-full md:w-6/12">
-            <img
-              src={imageUrl}
-              alt={`${name} Profile`}
-              className="aspect-[0.95] object-contain object-center w-full max-w-full"
-            />
-          </div>
-          <div className="w-full md:w-6/12 md:ml-5 mt-6 md:mt-0">
-            <div className="flex grow flex-col text-sm md:text-base lg:text-lg text-[rgba(217,81,100,1)] font-normal leading-none">
-              {yearGraduated && (
-                <>
-                  <div>Tenure at Montfort</div>
-                  <div className="text-white text-xl md:text-2xl lg:text-[28px] leading-[1.1] mt-3 md:mt-4">
-                    {yearGraduated}
-                  </div>
-                </>
-              )}
-
-              {(company || currentJob) && (
-                <>
-                  <div className="leading-tight max-w-full mt-8 md:mt-10 lg:mt-[53px]">
-                    Company / Organization / Industry Name
-                  </div>
-                  <div className="text-white text-xl md:text-2xl lg:text-[28px] leading-[1.1] self-stretch mt-4 md:mt-5 lg:mt-6 break-words">
-                    {currentJob && company ? `${currentJob} at ${company}` : company || currentJob}
-                  </div>
-                </>
-              )}
-
-              {location && (
-                <>
-                  <div className="mt-8 md:mt-10 lg:mt-[53px]">
-                    Current Residential Address
-                  </div>
-                  <address className="text-white text-xl md:text-2xl lg:text-[28px] leading-relaxed md:leading-relaxed lg:leading-[31px] self-stretch mt-4 md:mt-5 not-italic break-words">
-                    {location.split(',').map((line, idx) => (
-                      <React.Fragment key={idx}>
-                        {line.trim()}
-                        {idx < location.split(',').length - 1 && <>,<br /></>}
-                      </React.Fragment>
-                    ))}
-                  </address>
-                </>
-              )}
-
-              {nicknames && (
-                <>
-                  <div className="mt-8 md:mt-10 lg:mt-[53px]">
-                    Nick Names
-                  </div>
-                  <div className="text-white text-xl md:text-2xl lg:text-[28px] leading-[1.1] mt-4 md:mt-5 break-words">
-                    {nicknames}
-                  </div>
-                </>
-              )}
+      {/* Profile Content - Two Column Layout */}
+      <div className="w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-8">
+          {/* Left Column - Profile Image */}
+          <div className="w-full">
+            <div className="relative w-full overflow-hidden rounded-lg shadow-xl">
+              <img
+                src={imageUrl}
+                alt={`${name} Profile`}
+                className="aspect-[0.95] object-cover object-center w-full h-full"
+              />
             </div>
+          </div>
+
+          {/* Right Column - Profile Information */}
+          <div className="w-full flex flex-col justify-start space-y-6 sm:space-y-8 md:space-y-10 xl:space-y-6">
+            {/* Tenure at Montfort */}
+            {yearGraduated && (
+              <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-lg p-4 sm:p-5 md:p-6 xl:p-5 border border-[rgba(217,81,100,0.2)]">
+                <div className="text-[rgba(217,81,100,1)] text-xs sm:text-sm md:text-base font-medium uppercase tracking-wide mb-2 sm:mb-3">
+                  Tenure at Montfort
+                </div>
+                <div className="text-white text-lg sm:text-xl md:text-2xl lg:text-[28px] font-semibold leading-tight xl:leading-[1.25]">
+                  {yearGraduated}
+                </div>
+              </div>
+            )}
+
+            {/* Company / Organization */}
+            {(company || currentJob) && (
+              <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-lg p-4 sm:p-5 md:p-6 xl:p-5 border border-[rgba(217,81,100,0.2)]">
+                <div className="text-[rgba(217,81,100,1)] text-xs sm:text-sm md:text-base font-medium uppercase tracking-wide mb-2 sm:mb-3">
+                  Company / Organization
+                </div>
+                <div className="text-white text-lg sm:text-xl md:text-2xl lg:text-[28px] font-semibold leading-tight xl:leading-[1.25] break-words">
+                  {currentJob && company ? `${currentJob} at ${company}` : company || currentJob}
+                </div>
+              </div>
+            )}
+
+            {/* Current Residential Address */}
+            {location && (
+              <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-lg p-4 sm:p-5 md:p-6 xl:p-5 border border-[rgba(217,81,100,0.2)]">
+                <div className="text-[rgba(217,81,100,1)] text-xs sm:text-sm md:text-base font-medium uppercase tracking-wide mb-2 sm:mb-3">
+                  Current Location
+                </div>
+                <address className="text-white text-lg sm:text-xl md:text-2xl lg:text-[28px] font-semibold leading-relaxed xl:leading-[1.3] not-italic break-words">
+                  {location.split(',').map((line, idx) => (
+                    <React.Fragment key={idx}>
+                      {line.trim()}
+                      {idx < location.split(',').length - 1 && <>,<br /></>}
+                    </React.Fragment>
+                  ))}
+                </address>
+              </div>
+            )}
+
+            {/* Nicknames */}
+            {nicknames && (
+              <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-lg p-4 sm:p-5 md:p-6 xl:p-5 border border-[rgba(217,81,100,0.2)]">
+                <div className="text-[rgba(217,81,100,1)] text-xs sm:text-sm md:text-base font-medium uppercase tracking-wide mb-2 sm:mb-3">
+                  Nicknames
+                </div>
+                <div className="text-white text-lg sm:text-xl md:text-2xl lg:text-[28px] font-semibold leading-tight xl:leading-[1.25] break-words">
+                  {nicknames}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>

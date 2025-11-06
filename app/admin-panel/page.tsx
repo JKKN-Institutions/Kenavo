@@ -195,9 +195,16 @@ function ManageProfilesTab() {
         limit: '20',
         ...(searchTerm && { search: searchTerm }),
         ...(yearFilter && { year: yearFilter }),
+        _t: Date.now().toString(), // Cache buster
       });
 
-      const response = await fetch(`/api/admin/list-profiles?${params}`);
+      const response = await fetch(`/api/admin/list-profiles?${params}`, {
+        cache: 'no-store', // Disable caching
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+          'Pragma': 'no-cache',
+        },
+      });
       const data = await response.json();
 
       if (response.ok) {
@@ -215,9 +222,10 @@ function ManageProfilesTab() {
     setEditingProfile(profile);
   };
 
-  const handleCloseEdit = () => {
+  const handleCloseEdit = async () => {
     setEditingProfile(null);
-    fetchProfiles(); // Refresh list after edit
+    // Force a complete refresh with cache bypass
+    await fetchProfiles();
   };
 
   return (
@@ -268,7 +276,10 @@ function ManageProfilesTab() {
 
       {/* Profile List */}
       {loading ? (
-        <div className="text-white text-center py-10">Loading profiles...</div>
+        <div className="text-white text-center py-10">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2"></div>
+          <p>Loading fresh profile data...</p>
+        </div>
       ) : profiles.length === 0 ? (
         <div className="text-white text-center py-10">No profiles found</div>
       ) : (
@@ -367,7 +378,12 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
 
   const fetchProfileQA = async () => {
     try {
-      const response = await fetch(`/api/admin/get-profile/${profile.id}`);
+      const response = await fetch(`/api/admin/get-profile/${profile.id}?_t=${Date.now()}`, {
+        cache: 'no-store', // Disable caching
+        headers: {
+          'Cache-Control': 'no-cache, no-store, must-revalidate',
+        },
+      });
       const data = await response.json();
 
       if (response.ok) {
@@ -461,8 +477,8 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
 
       setMessage({ type: 'success', text: 'Profile and Q&A updated successfully!' });
       setTimeout(() => {
-        onClose();
-      }, 2000);
+        onClose(); // This will trigger fetchProfiles() to reload with fresh data
+      }, 1500);
 
     } catch (error: any) {
       setMessage({ type: 'error', text: error.message || 'Failed to update profile' });
@@ -689,6 +705,11 @@ function BulkUpdateTab() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  // Complete Slambook Upload State
+  const [slambookFile, setSlambookFile] = useState<File | null>(null);
+  const [slambookLoading, setSlambookLoading] = useState(false);
+  const [slambookMessage, setSlambookMessage] = useState<{ type: 'success' | 'error' | 'warning'; text: string } | null>(null);
+
   // Bulk Image Upload State
   const [zipFile, setZipFile] = useState<File | null>(null);
   const [imageLoading, setImageLoading] = useState(false);
@@ -895,6 +916,102 @@ function BulkUpdateTab() {
     }
   };
 
+  // Complete Slambook Upload Handlers
+  const handleSlambookFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSlambookFile(file);
+      setSlambookMessage(null);
+    }
+  };
+
+  const handleSlambookUpload = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!slambookFile) return;
+
+    setSlambookLoading(true);
+    setSlambookMessage(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('csvFile', slambookFile);
+
+      const response = await fetch('/api/admin/upload-complete-slambook', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        const profilesMatched = data.profiles?.matched || 0;
+        const exactMatch = data.profiles?.exactMatch || 0;
+        const nameOnlyMatch = data.profiles?.nameOnlyMatch || 0;
+        const partialMatch = data.profiles?.partialMatch || 0;
+        const unmatched = data.profiles?.unmatched || 0;
+        const qaCreated = data.qaAnswers?.created || 0;
+        const qaDeleted = data.qaAnswers?.deleted || 0;
+        const matchRate = data.matchingDetails?.matchRate || '0%';
+
+        let messageText = '✅ Upload Complete!\n\n';
+
+        // Matching summary
+        messageText += `📊 Matching Results (${matchRate} matched):\n`;
+        if (exactMatch > 0) messageText += `  ✓ ${exactMatch} exact matches (100%)\n`;
+        if (nameOnlyMatch > 0) messageText += `  ≈ ${nameOnlyMatch} name-only matches (90%)\n`;
+        if (partialMatch > 0) messageText += `  ~ ${partialMatch} partial matches (75%)\n`;
+        if (unmatched > 0) messageText += `  + ${unmatched} new profiles created\n`;
+        messageText += '\n';
+
+        // Q&A summary
+        if (qaDeleted > 0) {
+          messageText += `📝 Replaced ${qaDeleted} old Q&A answers with ${qaCreated} new answers\n`;
+        } else {
+          messageText += `📝 Added ${qaCreated} Q&A answers\n`;
+        }
+
+        // Warnings
+        if (data.warnings && data.warnings.length > 0) {
+          messageText += '\n⚠️ Warnings:\n';
+          data.warnings.forEach((warning: string) => {
+            messageText += `  • ${warning}\n`;
+          });
+        }
+
+        // Details about unmatched profiles
+        if (unmatched > 0 && data.matchingDetails?.unmatchedProfiles) {
+          messageText += '\n❓ Unmatched Profiles (created as new):\n';
+          data.matchingDetails.unmatchedProfiles.slice(0, 5).forEach((p: any) => {
+            messageText += `  • ${p.name} (${p.year || 'no year'}) - ID ${p.newProfileId}\n`;
+          });
+          if (data.matchingDetails.unmatchedProfiles.length > 5) {
+            messageText += `  ... and ${data.matchingDetails.unmatchedProfiles.length - 5} more\n`;
+          }
+        }
+
+        setSlambookMessage({
+          type: unmatched > 0 || partialMatch > 0 ? 'warning' as 'success' : 'success',
+          text: messageText
+        });
+        setSlambookFile(null);
+        // Refresh the page after a short delay
+        setTimeout(() => router.refresh(), 3000);
+      } else {
+        setSlambookMessage({
+          type: 'error',
+          text: `❌ ${data.error || 'Upload failed'}${data.details ? ': ' + data.details : ''}`
+        });
+      }
+    } catch (error) {
+      setSlambookMessage({
+        type: 'error',
+        text: '❌ Network error during upload. Please try again.'
+      });
+    } finally {
+      setSlambookLoading(false);
+    }
+  };
+
   // Bulk Image Upload Handlers
   const handleZipFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -1081,7 +1198,78 @@ function BulkUpdateTab() {
         </button>
       </div>
 
-      <div className="border-t border-white/20 pt-6">
+      {/* Complete Slambook Upload Section */}
+      <div className="border-t border-white/20 pt-6 mt-6">
+        <h3 className="text-xl font-bold text-white mb-4">📚 Complete Slambook Upload (Create/Update Profiles)</h3>
+
+        <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-green-100 mb-6">
+          <p className="font-semibold mb-2">✨ Smart Single-File Upload:</p>
+          <ol className="list-decimal list-inside space-y-1 text-sm">
+            <li>Upload your original slambook CSV file (17 columns: 7 profile fields + 10 Q&A answers)</li>
+            <li>System automatically <strong>matches existing profiles by name + graduation year</strong></li>
+            <li>Updates existing profiles or creates new ones as needed</li>
+            <li>Q&A answers are refreshed (old answers replaced with new ones)</li>
+          </ol>
+          <div className="mt-3 pt-3 border-t border-green-500/30">
+            <p className="text-xs text-green-200">
+              ℹ️ <strong>Expected format:</strong> S.No, Full Name, Nickname, Address, Job, Tenure, Company, + 10 Q&A columns
+            </p>
+            <p className="text-xs text-green-200 mt-1">
+              🔍 <strong>Matching:</strong> Profiles are matched by normalized name (case-insensitive, whitespace-tolerant) + year graduated
+            </p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSlambookUpload} className="space-y-4">
+          <div>
+            <label className="block text-white font-semibold mb-2">Upload Complete Slambook CSV</label>
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleSlambookFileChange}
+              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-green-600 file:text-white file:cursor-pointer hover:file:bg-green-700"
+            />
+            {slambookFile && <p className="text-white/70 mt-2">Selected: {slambookFile.name}</p>}
+          </div>
+
+          {slambookMessage && (
+            <div
+              className={`flex items-start gap-2 p-4 rounded-lg ${
+                slambookMessage.type === 'success'
+                  ? 'bg-green-500/20 text-green-100'
+                  : slambookMessage.type === 'warning'
+                  ? 'bg-yellow-500/20 text-yellow-100'
+                  : 'bg-red-500/20 text-red-100'
+              }`}
+            >
+              {slambookMessage.type === 'success' ? (
+                <CheckCircle size={20} className="mt-0.5 flex-shrink-0" />
+              ) : slambookMessage.type === 'warning' ? (
+                <AlertCircle size={20} className="mt-0.5 flex-shrink-0" />
+              ) : (
+                <AlertCircle size={20} className="mt-0.5 flex-shrink-0" />
+              )}
+              <span className="whitespace-pre-line text-sm leading-relaxed flex-1">{slambookMessage.text}</span>
+            </div>
+          )}
+
+          <button
+            type="submit"
+            disabled={slambookLoading || !slambookFile}
+            className="w-full bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2"
+          >
+            {slambookLoading ? 'Processing...' : (
+              <>
+                <Upload size={20} />
+                Upload & Process Slambook CSV
+              </>
+            )}
+          </button>
+        </form>
+      </div>
+
+      <div className="border-t border-white/20 pt-6 mt-6">
+        <h3 className="text-xl font-bold text-white mb-4">✏️ Update Existing Profiles</h3>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-white font-semibold mb-2">Upload Updated CSV</label>

@@ -27,11 +27,11 @@ const MobileBottomNav = () => {
     <>
       {/* Main Navigation Container - 4 Navigation Items */}
       <nav
-        className="fixed bottom-4 left-4 right-16 bg-[rgba(78,46,140,0.75)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-full lg:hidden z-50"
+        className="fixed bottom-4 left-4 right-16 bg-gradient-to-r from-[rgba(78,46,140,0.85)] to-[rgba(108,66,160,0.75)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-full lg:hidden z-50"
         role="navigation"
         aria-label="Mobile navigation"
       >
-        <div className="flex items-center justify-around h-12 px-2">
+        <div className="flex items-center justify-around h-10 px-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -44,8 +44,8 @@ const MobileBottomNav = () => {
               >
                 {/* Active: Horizontal Pill (Icon + Label) | Inactive: Just Icon */}
                 {active ? (
-                  <div className="flex flex-row items-center justify-center gap-1.5 px-3 py-2 rounded-2xl bg-[rgba(50,30,90,0.8)] backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300">
-                    <Icon size={20} strokeWidth={2.5} className="text-white transition-all duration-300" />
+                  <div className="flex flex-row items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-2xl bg-[rgba(50,30,90,0.8)] backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300">
+                    <Icon size={16} strokeWidth={2.5} className="text-white transition-all duration-300" />
                     <span className="text-xs font-semibold text-white whitespace-nowrap">
                       {item.label}
                     </span>
@@ -53,7 +53,7 @@ const MobileBottomNav = () => {
                 ) : (
                   <div className="flex items-center justify-center p-1">
                     <Icon
-                      size={20}
+                      size={16}
                       strokeWidth={2}
                       className="text-white/70 hover:text-white/90 transition-all duration-300"
                     />
@@ -69,13 +69,13 @@ const MobileBottomNav = () => {
       <div className="fixed bottom-4 right-4 lg:hidden z-50">
         <button
           onClick={() => setShowMenu(!showMenu)}
-          className="relative flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
           aria-label="More options"
         >
           {showMenu ? (
-            <X size={18} strokeWidth={2.5} className="text-white" />
+            <X size={14} strokeWidth={2.5} className="text-white" />
           ) : (
-            <Plus size={18} strokeWidth={2.5} className="text-white" />
+            <Plus size={14} strokeWidth={2.5} className="text-white" />
           )}
         </button>
       </div>
@@ -96,7 +96,7 @@ const MobileBottomNav = () => {
                 onClick={() => setShowMenu(false)}
                 className="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-all duration-200 active:scale-95"
               >
-                <Info size={20} className="text-white/90" />
+                <Info size={16} className="text-white/90" />
                 <span className="text-sm font-medium text-white">About</span>
               </Link>
             </div>

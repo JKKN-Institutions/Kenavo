@@ -9,22 +9,24 @@ export default function ContactPage() {
     <div className="bg-[rgba(78,46,140,1)] flex flex-col overflow-hidden items-stretch min-h-screen">
       <Header />
 
-      <main className="self-center w-full max-w-[931px] mt-12 sm:mt-16 md:mt-20 lg:mt-[142px] px-4 sm:px-6 md:px-8 lg:px-5" id="contact">
-        <div className="gap-4 sm:gap-5 flex flex-col md:flex-row md:items-stretch">
-          <div className="w-full md:w-6/12">
+      <main className="self-center w-full max-w-[1000px] lg:max-w-[1200px] xl:max-w-[1400px] mt-6 sm:mt-8 md:mt-10 lg:mt-16 xl:mt-20 px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16" id="contact">
+        <div className="gap-6 sm:gap-8 flex flex-col md:flex-row md:items-start lg:gap-12 xl:gap-16">
+          <div className="w-full md:w-[45%] lg:w-[42%] xl:w-[40%]">
             <ContactInfo />
           </div>
-          <div className="w-full md:w-6/12 md:ml-4 lg:ml-5">
+          <div className="w-full md:w-[55%] lg:w-[58%] xl:w-[60%]">
             <ContactForm />
           </div>
         </div>
       </main>
 
-      <img
-        src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/d933706fc6f1627b8029a479a1ce04ba3355c432?placeholderIfAbsent=true"
-        alt="Decorative background"
-        className="aspect-[2.7] object-contain w-full bg-blend-lighten mt-16 sm:mt-20 md:mt-24 lg:mt-[141px] px-4 sm:px-6"
-      />
+      <div className="w-full mt-4 sm:mt-5 md:mt-6 lg:mt-8 relative">
+        <img
+          src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/d933706fc6f1627b8029a479a1ce04ba3355c432?placeholderIfAbsent=true"
+          alt="Decorative background"
+          className="w-full h-auto object-cover object-center max-h-[300px] sm:max-h-[400px] md:max-h-[500px] bg-blend-lighten"
+        />
+      </div>
 
       <Footer />
     </div>

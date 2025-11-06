@@ -4,6 +4,8 @@ import { supabaseAdmin } from '@/lib/supabase-admin';
 import { protectAdminRoute } from '@/lib/auth/api-protection';
 import {
   extractProfileIdFromFilename,
+  extractNameFromFilename,
+  matchNameToProfile,
   validateImageFile,
   createImageDataUrl,
   hasValidProfileId,
@@ -75,6 +77,13 @@ export async function POST(request: NextRequest) {
     const mappings: ImageMapping[] = [];
     const errors: ImageError[] = [];
     const profileIds: number[] = [];
+    const nameBasedFiles: Array<{
+      filename: string;
+      extractedName: string;
+      blob: Blob;
+      previewUrl: string;
+      fileSize: number;
+    }> = [];
 
     // Extract images from ZIP
     const imageFiles = Object.keys(zipContent.files)
@@ -118,35 +127,48 @@ export async function POST(request: NextRequest) {
           continue;
         }
 
-        // Extract profile ID from filename
-        const profileId = extractProfileIdFromFilename(baseFilename);
-        if (!profileId) {
-          errors.push({
-            fileName: baseFilename,
-            error: 'Could not extract profile ID from filename. Use format: {id}.jpg or {id}-name.jpg'
-          });
-          continue;
-        }
-
-        // Store profile ID for batch lookup
-        if (!profileIds.includes(profileId)) {
-          profileIds.push(profileId);
-        }
-
         // Create preview data URL
         const mimeType = fileBlob.type || 'image/jpeg';
         const previewUrl = await createImageDataUrl(fileBlob, mimeType);
 
-        // Temporarily store mapping (will validate against DB later)
-        mappings.push({
-          profileId,
-          profileName: '', // Will be filled after DB query
-          currentImageUrl: null, // Will be filled after DB query
-          newImagePreview: previewUrl,
-          fileName: baseFilename,
-          fileSize: fileBlob.size,
-          status: 'ready',
-        });
+        // Try extracting profile ID first (numeric format)
+        const profileId = extractProfileIdFromFilename(baseFilename);
+
+        if (profileId) {
+          // ID-based matching
+          if (!profileIds.includes(profileId)) {
+            profileIds.push(profileId);
+          }
+
+          mappings.push({
+            profileId,
+            profileName: '', // Will be filled after DB query
+            currentImageUrl: null, // Will be filled after DB query
+            newImagePreview: previewUrl,
+            fileName: baseFilename,
+            fileSize: fileBlob.size,
+            status: 'ready',
+          });
+        } else {
+          // Try name-based matching
+          const extractedName = extractNameFromFilename(baseFilename);
+
+          if (extractedName) {
+            // Store for name-based matching
+            nameBasedFiles.push({
+              filename: baseFilename,
+              extractedName,
+              blob: fileBlob,
+              previewUrl,
+              fileSize: fileBlob.size,
+            });
+          } else {
+            errors.push({
+              fileName: baseFilename,
+              error: 'Could not extract profile ID or name. Use format: {id}.jpg or Img-{Name}.jpg'
+            });
+          }
+        }
 
       } catch (error) {
         const baseFilename = filename.split('/').pop() || filename;
@@ -157,9 +179,27 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Query database to validate profile IDs and get current data
-    if (profileIds.length > 0) {
-      const { data: profiles, error: dbError } = await supabaseAdmin
+    // Query database for profiles
+    let allProfiles: Array<{ id: number; name: string; profile_image_url: string | null }> = [];
+
+    // Need to fetch all profiles if we have name-based files
+    if (nameBasedFiles.length > 0) {
+      const { data: allProfilesData, error: allProfilesError } = await supabaseAdmin
+        .from('profiles')
+        .select('id, name, profile_image_url');
+
+      if (allProfilesError) {
+        console.error('Database error fetching all profiles:', allProfilesError);
+        return NextResponse.json(
+          { error: 'Failed to fetch profiles from database' },
+          { status: 500 }
+        );
+      }
+
+      allProfiles = allProfilesData || [];
+    } else if (profileIds.length > 0) {
+      // Only fetch specific profiles if no name-based files
+      const { data: specificProfiles, error: dbError } = await supabaseAdmin
         .from('profiles')
         .select('id, name, profile_image_url')
         .in('id', profileIds);
@@ -172,59 +212,70 @@ export async function POST(request: NextRequest) {
         );
       }
 
-      // Create lookup map for profiles
-      const profileMap = new Map(
-        profiles?.map(p => [p.id, p]) || []
-      );
-
-      // Update mappings with profile data and validate
-      const validatedMappings: ImageMapping[] = [];
-
-      for (const mapping of mappings) {
-        const profile = profileMap.get(mapping.profileId);
-
-        if (!profile) {
-          // Profile ID doesn't exist in database
-          errors.push({
-            fileName: mapping.fileName,
-            error: `Profile ID ${mapping.profileId} not found in database`
-          });
-          continue;
-        }
-
-        // Update mapping with profile data
-        validatedMappings.push({
-          ...mapping,
-          profileName: profile.name,
-          currentImageUrl: profile.profile_image_url || null,
-          status: 'ready',
-        });
-      }
-
-      // Prepare response
-      const response: BulkUploadResponse = {
-        mappings: validatedMappings,
-        errors,
-        stats: {
-          total: imageFiles.length,
-          matched: validatedMappings.length,
-          errors: errors.length,
-        },
-      };
-
-      return NextResponse.json(response, { status: 200 });
+      allProfiles = specificProfiles || [];
     }
 
-    // No valid profile IDs found
-    return NextResponse.json({
-      mappings: [],
+    // Create lookup map for ID-based profiles
+    const profileMap = new Map(
+      allProfiles.map(p => [p.id, p])
+    );
+
+    // Validate ID-based mappings
+    const validatedMappings: ImageMapping[] = [];
+
+    for (const mapping of mappings) {
+      const profile = profileMap.get(mapping.profileId);
+
+      if (!profile) {
+        errors.push({
+          fileName: mapping.fileName,
+          error: `Profile ID ${mapping.profileId} not found in database`
+        });
+        continue;
+      }
+
+      validatedMappings.push({
+        ...mapping,
+        profileName: profile.name,
+        currentImageUrl: profile.profile_image_url || null,
+        status: 'ready',
+      });
+    }
+
+    // Process name-based files
+    for (const nameFile of nameBasedFiles) {
+      const match = matchNameToProfile(nameFile.extractedName, allProfiles);
+
+      if (match) {
+        validatedMappings.push({
+          profileId: match.id,
+          profileName: `${match.name} (matched from "${nameFile.extractedName}")`,
+          currentImageUrl: match.profile_image_url,
+          newImagePreview: nameFile.previewUrl,
+          fileName: nameFile.filename,
+          fileSize: nameFile.fileSize,
+          status: 'ready',
+        });
+      } else {
+        errors.push({
+          fileName: nameFile.filename,
+          error: `Could not match "${nameFile.extractedName}" to any profile in database`
+        });
+      }
+    }
+
+    // Prepare response
+    const response: BulkUploadResponse = {
+      mappings: validatedMappings,
       errors,
       stats: {
         total: imageFiles.length,
-        matched: 0,
+        matched: validatedMappings.length,
         errors: errors.length,
       },
-    }, { status: 200 });
+    };
+
+    return NextResponse.json(response, { status: 200 });
 
   } catch (error) {
     console.error('Error processing ZIP file:', error);

@@ -92,3 +92,432 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* About Page Image Fixes & Content Tightening */
+@layer components {
+  /* CRITICAL: Ensure no purple patches around ANY images */
+  .image-frame,
+  .photo-frame,
+  .gallery-item,
+  .section-image,
+  .batch-photos,
+  .batch-photos .photo-wrapper,
+  .batch-photos .photo-wrapper:first-child,
+  .batch-photos .image-frame:first-child,
+  .class-section .first-image,
+  .first-photo-container,
+  [class*="image"],
+  [class*="photo"],
+  div[class*="order-2"],
+  div[class*="order-1"] {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* Remove any backgrounds that might show purple through images */
+  img {
+    display: block !important;
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* Specifically target first section image container */
+  section div div img[alt="Class photo"],
+  section div div div img[alt="Class photo"] {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+  }
+
+  /* Remove rounded corners and shadows that might show purple */
+  .rounded-lg,
+  .shadow-lg {
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+
+  /* Restore circles for stats section */
+  [aria-labelledby="stats-heading"] .rounded-full {
+    border-radius: 9999px !important;
+  }
+
+  [aria-labelledby="stats-heading"] .shadow-lg {
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1) !important;
+  }
+
+  /* Remove border from stats section */
+  [aria-labelledby="stats-heading"],
+  [aria-labelledby="stats-heading"] * {
+    border: none !important;
+  }
+
+  /* Hero section styles - ensure full image display without cropping */
+  [aria-label="Hero section"] {
+    width: 100% !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  [aria-label="Hero section"] img:first-child {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    object-fit: contain !important;
+  }
+
+  /* Specific fix for first image in batch section */
+  .batch-photos img:first-of-type {
+    display: block !important;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin: 0;
+    padding: 0;
+    background: transparent !important;
+  }
+
+  /* Remove pseudo elements that cause purple patches */
+  .photo-wrapper:first-child::before,
+  .photo-wrapper:first-child::after,
+  .mascot-images::before,
+  .mascot-images::after,
+  .image-grid::before,
+  .image-grid::after {
+    display: none !important;
+  }
+
+  /* Mobile-specific fixes for header banner */
+  @media (max-width: 768px) {
+    .header-banner,
+    [aria-label="Hero section"] {
+      overflow: visible !important;
+      min-height: auto;
+      width: 100vw !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
+      padding-left: 0 !important;
+      padding-right: 0 !important;
+    }
+
+    .header-banner img:first-child,
+    [aria-label="Hero section"] img:first-child {
+      width: 100% !important;
+      height: auto !important;
+      object-fit: contain !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    /* Ensure full image visibility on mobile */
+    .polaroid-collage,
+    .photo-collage {
+      transform: scale(1);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Force first section image to have no purple background */
+    section[aria-labelledby="about-heading"] div div div {
+      background: transparent !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      box-shadow: none !important;
+    }
+
+    section[aria-labelledby="about-heading"] img {
+      background: transparent !important;
+      box-shadow: none !important;
+      border-radius: 0 !important;
+    }
+
+    /* Very tight spacing on mobile (375px - 767px) */
+    .content-section,
+    section {
+      padding: 12px 8px !important;
+      margin-bottom: 8px !important;
+    }
+
+    p {
+      margin-bottom: 8px !important;
+      line-height: 1.3 !important;
+    }
+
+    h1, h2, h3, .section-title {
+      margin-bottom: 10px !important;
+      margin-top: 0 !important;
+      line-height: 1.1 !important;
+    }
+
+    .photo-grid,
+    .image-grid {
+      gap: 6px !important;
+    }
+
+    .main-container,
+    main {
+      padding: 8px !important;
+      padding-top: 0 !important;
+    }
+
+    /* Override main padding for full-width hero sections on mobile */
+    main > [aria-label="Hero section"],
+    main > .hero-section,
+    main > section:first-child[aria-label="Hero section"] {
+      margin-left: -8px !important;
+      margin-right: -8px !important;
+      margin-top: 0 !important;
+      width: calc(100% + 16px) !important;
+      max-width: calc(100% + 16px) !important;
+    }
+
+    /* Remove gap between header and hero section on mobile */
+    .hero-section {
+      margin-top: 0 !important;
+      padding-top: 0 !important;
+    }
+  }
+
+  /* Remove gap between header and hero section on ALL viewports */
+  main {
+    padding-top: 0 !important;
+  }
+
+  main > [aria-label="Hero section"],
+  main > .hero-section,
+  main > section:first-child[aria-label="Hero section"] {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+  /* Force ALL section images to have no purple patches - all viewports */
+  section[aria-labelledby="about-heading"] div,
+  section[aria-labelledby="about-heading"] div div,
+  section[aria-labelledby="about-heading"] div div div {
+    background: transparent !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  section[aria-labelledby="about-heading"] img {
+    background: transparent !important;
+    box-shadow: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Remove purple patches from ContentSection images */
+  section[class*="z-10"] div,
+  section[class*="z-10"] div div,
+  section[class*="relative z-10"] div {
+    background: transparent !important;
+  }
+
+  section[class*="z-10"] img,
+  section[class*="relative z-10"] img {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    outline: none !important;
+    border-radius: 0 !important;
+  }
+
+  /* Target all ContentSection images specifically */
+  section div[class*="order-2"],
+  section div[class*="order-1"] {
+    background: transparent !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  section div[class*="order-2"] img,
+  section div[class*="order-1"] img {
+    background: transparent !important;
+    box-shadow: none !important;
+    border: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  /* Exception: Preserve stats section backgrounds */
+  [aria-labelledby="stats-heading"] div[class*="flex"] {
+    background: revert !important;
+  }
+
+  /* Crop purple edges from THE CLASS BATCH OF 2000 image */
+  section img[alt="Montfort School students from Class of 2000"] {
+    transform: scale(1.08) !important;
+    object-fit: cover !important;
+    object-position: center !important;
+  }
+
+  section div:has(img[alt="Montfort School students from Class of 2000"]) {
+    overflow: hidden !important;
+  }
+
+  /* Tablet tightening (768px - 1023px) */
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .content-section,
+    section {
+      padding: 20px 12px !important;
+      margin-bottom: 25px !important;
+    }
+
+    p {
+      margin-bottom: 10px !important;
+      line-height: 1.45 !important;
+    }
+
+    h1, h2, h3, .section-title {
+      margin-bottom: 12px !important;
+    }
+
+    .photo-grid,
+    .image-grid {
+      gap: 8px !important;
+    }
+  }
+
+  /* Desktop tightening (1024px and up) */
+  @media (min-width: 1024px) {
+    .content-section,
+    section {
+      padding: 20px 15px !important;
+      margin-bottom: 25px !important;
+    }
+
+    p {
+      margin-bottom: 10px !important;
+      line-height: 1.45 !important;
+    }
+
+    h1, h2, h3, .section-title {
+      margin-bottom: 12px !important;
+      margin-top: 0 !important;
+    }
+
+    .photo-grid,
+    .image-grid {
+      gap: 10px !important;
+      margin: 12px 0 !important;
+    }
+  }
+
+  /* Global content tightening across all viewports */
+  section + section {
+    margin-top: 8px !important;
+  }
+
+  .wrapper,
+  .container {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+
+  ul, ol {
+    margin: 8px 0 !important;
+    padding-left: 18px !important;
+  }
+
+  li {
+    margin-bottom: 4px !important;
+  }
+
+  /* Ensure image containers don't create purple patches */
+  .image-container,
+  .photo-wrapper,
+  .mascot-section .image-container,
+  .name-section .historical-photos {
+    background: transparent !important;
+    padding: 0 !important;
+  }
+
+  /* Clean polaroid frames - white background only */
+  .polaroid-frame {
+    background: white !important;
+    padding: 8px 8px 30px 8px !important;
+  }
+
+  .polaroid-frame img {
+    width: 100%;
+    height: auto;
+    display: block;
+    background: transparent !important;
+  }
+
+  /* Clean regular photo frames */
+  .photo-frame {
+    overflow: hidden;
+    background: transparent !important;
+    border: none !important;
+  }
+
+  .photo-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    background: transparent !important;
+  }
+
+  /* Specific section tightening */
+  .batch-section {
+    padding: 20px 12px !important;
+  }
+
+  .batch-description {
+    margin-bottom: 15px !important;
+    padding: 0 8px !important;
+  }
+
+  .mascot-section {
+    padding: 20px 12px !important;
+    margin-top: 25px !important;
+  }
+
+  .mascot-content {
+    margin: 12px 0 !important;
+  }
+
+  .name-section {
+    padding: 20px 12px !important;
+    margin-top: 25px !important;
+  }
+
+  .footer-section {
+    padding: 25px 12px !important;
+    margin-top: 30px !important;
+  }
+}
+
+/* Scroll Navigation Button Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Z-index utility for scroll buttons */
+.z-60 {
+  z-index: 60;
+}

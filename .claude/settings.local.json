@@ -43,7 +43,15 @@
       "Bash(npx supabase storage ls:*)",
       "Bash(npx supabase status)",
       "Bash(FINAL_SUMMARY.txt)",
-      "Bash(npm run build:*)"
+      "Bash(npm run build:*)",
+      "Bash(unzip:*)",
+      "Bash(timeout:*)",
+      "Bash(node scripts/run-migration-008.js:*)",
+      "Bash(tasklist /FI \"IMAGENAME eq node.exe\" /FO CSV)",
+      "Bash(node scripts/detect-duplicate-profiles.js:*)",
+      "Bash(node scripts/generate-cleanup-sql.js:*)",
+      "Bash(node scripts/show-before-after-cleanup.js:*)",
+      "Bash(ping:*)"
     ],
     "deny": [],
     "ask": []
