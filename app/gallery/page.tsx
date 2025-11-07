@@ -37,7 +37,6 @@ export default function GalleryPage() {
             autoLoadCount={galleryState.autoLoadCount}
             total={galleryState.total}
             currentCount={galleryState.albums.length}
-            buttonText="Load more albums"
           />
         </div>
       </main>

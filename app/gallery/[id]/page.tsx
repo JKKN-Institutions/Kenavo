@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { use } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GalleryImagesGrid from '@/components/GalleryImagesGrid';
@@ -9,13 +9,13 @@ import LoadMoreButton from '@/components/LoadMoreButton';
 import { useAlbumImages } from '@/lib/hooks/use-album-images';
 
 interface GalleryIndividualPageProps {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default function GalleryIndividualPage({ params }: GalleryIndividualPageProps) {
-  const { id } = params;
+  const { id } = use(params);
 
   // Manage album images state at page level
   const imagesState = useAlbumImages(id);

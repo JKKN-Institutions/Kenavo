@@ -8,8 +8,8 @@ export const GALLERY_CONFIG = {
   ITEMS_PER_PAGE: 6,
 
   // Maximum number of automatic loads before showing manual Load More button
-  // 1 auto-load × 6 items = 6 items loaded automatically (initial load only)
-  MAX_AUTO_LOADS: 1,
+  // 0 auto-loads = No automatic loading, Load More button shows immediately
+  MAX_AUTO_LOADS: 0,
 
   // Scroll threshold for triggering auto-load (0.0 to 1.0)
   // 0.8 means trigger when 80% scrolled to bottom
