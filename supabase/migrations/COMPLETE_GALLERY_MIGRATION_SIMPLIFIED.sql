@@ -1,0 +1,133 @@
+-- =====================================================
+-- COMPLETE GALLERY MIGRATION (SIMPLIFIED - ALL IN ONE)
+-- Run this entire script in one go
+-- =====================================================
+
+-- STEP 1: Cleanup (CASCADE removes all dependencies automatically)
+DROP TABLE IF EXISTS gallery_images CASCADE;
+DROP TABLE IF EXISTS gallery_albums CASCADE;
+DROP FUNCTION IF EXISTS update_gallery_updated_at() CASCADE;
+
+-- STEP 2: Create Tables
+CREATE TABLE gallery_albums (
+  id BIGSERIAL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL UNIQUE,
+  slug VARCHAR(100) NOT NULL UNIQUE,
+  description TEXT,
+  thumbnail_url TEXT,
+  display_order INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE TABLE gallery_images (
+  id BIGSERIAL PRIMARY KEY,
+  album_id BIGINT NOT NULL REFERENCES gallery_albums(id) ON DELETE CASCADE,
+  image_url TEXT NOT NULL,
+  caption TEXT,
+  display_order INTEGER DEFAULT 0,
+  is_active BOOLEAN DEFAULT true,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW()
+);
+
+-- STEP 3: Create Indexes
+CREATE INDEX idx_gallery_images_album_id ON gallery_images(album_id);
+CREATE INDEX idx_gallery_albums_slug ON gallery_albums(slug);
+CREATE INDEX idx_gallery_albums_display_order ON gallery_albums(display_order);
+CREATE INDEX idx_gallery_images_display_order ON gallery_images(display_order);
+CREATE INDEX idx_gallery_albums_is_active ON gallery_albums(is_active);
+CREATE INDEX idx_gallery_images_is_active ON gallery_images(is_active);
+
+-- STEP 4: Create Trigger Function and Triggers
+CREATE FUNCTION update_gallery_updated_at()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER gallery_albums_updated_at
+  BEFORE UPDATE ON gallery_albums
+  FOR EACH ROW
+  EXECUTE FUNCTION update_gallery_updated_at();
+
+CREATE TRIGGER gallery_images_updated_at
+  BEFORE UPDATE ON gallery_images
+  FOR EACH ROW
+  EXECUTE FUNCTION update_gallery_updated_at();
+
+-- STEP 5: Seed Album Data
+INSERT INTO gallery_albums (name, slug, description, display_order, is_active) VALUES
+  ('Group Photos', 'group', 'Class photos and group memories from our time together', 1, true),
+  ('Sports', 'sports', 'Athletic achievements, tournaments, and sports day celebrations', 2, true),
+  ('Hostel Life', 'hostel', 'Dormitory memories, late-night study sessions, and hostel fun', 3, true),
+  ('Tours & Trips', 'tours', 'Educational trips, excursions, and travel adventures', 4, true),
+  ('Events', 'events', 'School events, cultural programs, and special occasions', 5, true),
+  ('Annual Day', 'annual-day', 'Annual day celebrations, performances, and ceremonies', 6, true);
+
+-- STEP 6: Enable RLS
+ALTER TABLE gallery_albums ENABLE ROW LEVEL SECURITY;
+ALTER TABLE gallery_images ENABLE ROW LEVEL SECURITY;
+
+-- STEP 7: Create Album Policies
+CREATE POLICY "Public users can view active albums" ON gallery_albums
+  FOR SELECT USING (is_active = true);
+
+CREATE POLICY "Authenticated users can view all albums" ON gallery_albums
+  FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Admin users can insert albums" ON gallery_albums
+  FOR INSERT TO authenticated
+  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+
+CREATE POLICY "Admin users can update albums" ON gallery_albums
+  FOR UPDATE TO authenticated
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+
+CREATE POLICY "Admin users can delete albums" ON gallery_albums
+  FOR DELETE TO authenticated
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+
+-- STEP 8: Create Image Policies
+CREATE POLICY "Public users can view active images" ON gallery_images
+  FOR SELECT USING (
+    is_active = true
+    AND EXISTS (SELECT 1 FROM gallery_albums WHERE gallery_albums.id = gallery_images.album_id AND gallery_albums.is_active = true)
+  );
+
+CREATE POLICY "Authenticated users can view all images" ON gallery_images
+  FOR SELECT TO authenticated USING (true);
+
+CREATE POLICY "Admin users can insert images" ON gallery_images
+  FOR INSERT TO authenticated
+  WITH CHECK (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+
+CREATE POLICY "Admin users can update images" ON gallery_images
+  FOR UPDATE TO authenticated
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+
+CREATE POLICY "Admin users can delete images" ON gallery_images
+  FOR DELETE TO authenticated
+  USING (EXISTS (SELECT 1 FROM profiles WHERE profiles.id = auth.uid() AND profiles.role = 'admin'));
+
+-- STEP 9: Grant Permissions
+GRANT USAGE ON SEQUENCE gallery_albums_id_seq TO authenticated;
+GRANT USAGE ON SEQUENCE gallery_images_id_seq TO authenticated;
+GRANT SELECT ON gallery_albums TO anon, authenticated;
+GRANT SELECT ON gallery_images TO anon, authenticated;
+GRANT ALL ON gallery_albums TO authenticated;
+GRANT ALL ON gallery_images TO authenticated;
+
+-- STEP 10: Verification
+SELECT 'gallery_albums' as table_name, COUNT(*) as record_count FROM gallery_albums
+UNION ALL
+SELECT 'gallery_images' as table_name, COUNT(*) as record_count FROM gallery_images;
+
+-- Expected output:
+-- table_name        | record_count
+-- ------------------+-------------
+-- gallery_albums    | 6
+-- gallery_images    | 0

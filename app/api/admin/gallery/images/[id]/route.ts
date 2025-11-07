@@ -1,38 +1,23 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
+import { extractGalleryStoragePath, deleteGalleryImage } from '@/lib/gallery-storage-utils';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/admin/gallery/images/[id] - Get single image
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient();
+    const authCheck = await protectAdminRoute();
+    if (authCheck) return authCheck;
 
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const imageId = params.id;
+    const { id: imageId } = await params;
 
     // Fetch image with album details
-    const { data: image, error: imageError } = await supabase
+    const { data: image, error: imageError } = await supabaseAdmin
       .from('gallery_images')
       .select(`
         *,
@@ -55,7 +40,7 @@ export async function GET(
     return NextResponse.json({ image });
 
   } catch (error: any) {
-    console.error(`Error in GET /api/admin/gallery/images/${params.id}:`, error);
+    console.error(`Error in GET /api/admin/gallery/images/${imageId}:`, error);
     return NextResponse.json(
       { error: 'Failed to fetch image', details: error.message },
       { status: 500 }
@@ -66,30 +51,13 @@ export async function GET(
 // PUT /api/admin/gallery/images/[id] - Update image
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient();
+    const authCheck = await protectAdminRoute();
+    if (authCheck) return authCheck;
 
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const imageId = params.id;
+    const { id: imageId } = await params;
     const body = await request.json();
     const { album_id, image_url, caption, display_order, is_active } = body;
 
@@ -103,7 +71,7 @@ export async function PUT(
 
     // If album_id is being changed, verify the new album exists
     if (album_id !== undefined) {
-      const { data: album, error: albumError } = await supabase
+      const { data: album, error: albumError } = await supabaseAdmin
         .from('gallery_albums')
         .select('id')
         .eq('id', album_id)
@@ -118,7 +86,7 @@ export async function PUT(
     }
 
     // Update image
-    const { data: updatedImage, error: updateError } = await supabase
+    const { data: updatedImage, error: updateError } = await supabaseAdmin
       .from('gallery_images')
       .update(updateData)
       .eq('id', imageId)
@@ -149,7 +117,7 @@ export async function PUT(
     });
 
   } catch (error: any) {
-    console.error(`Error in PUT /api/admin/gallery/images/${params.id}:`, error);
+    console.error(`Error in PUT /api/admin/gallery/images/${imageId}:`, error);
     return NextResponse.json(
       { error: 'Failed to update image', details: error.message },
       { status: 500 }
@@ -160,33 +128,16 @@ export async function PUT(
 // DELETE /api/admin/gallery/images/[id] - Delete image
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const supabase = await createClient();
+    const authCheck = await protectAdminRoute();
+    if (authCheck) return authCheck;
 
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const imageId = params.id;
+    const { id: imageId } = await params;
 
     // Check if image exists
-    const { data: image, error: checkError } = await supabase
+    const { data: image, error: checkError } = await supabaseAdmin
       .from('gallery_images')
       .select('id, image_url')
       .eq('id', imageId)
@@ -199,29 +150,35 @@ export async function DELETE(
       throw checkError;
     }
 
+    // Extract storage path from image_url
+    const storagePath = extractGalleryStoragePath(image.image_url);
+
+    // Delete from storage first (if path is valid)
+    if (storagePath) {
+      const deleted = await deleteGalleryImage(storagePath);
+      if (!deleted) {
+        console.warn(`Failed to delete image from storage: ${storagePath}`);
+      }
+    }
+
     // Delete image from database
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await supabaseAdmin
       .from('gallery_images')
       .delete()
       .eq('id', imageId);
 
     if (deleteError) {
-      console.error('Error deleting image:', deleteError);
+      console.error('Error deleting image from database:', deleteError);
       throw deleteError;
     }
 
-    // TODO: Optionally delete the actual image file from Supabase Storage
-    // This would require parsing the image_url to extract the storage path
-    // and calling supabase.storage.from('gallery-images').remove([path])
-
     return NextResponse.json({
       success: true,
-      message: 'Image deleted successfully',
-      note: 'Image file remains in storage (manual cleanup required if needed)'
+      message: 'Image and file deleted successfully'
     });
 
   } catch (error: any) {
-    console.error(`Error in DELETE /api/admin/gallery/images/${params.id}:`, error);
+    console.error(`Error in DELETE /api/admin/gallery/images/${imageId}:`, error);
     return NextResponse.json(
       { error: 'Failed to delete image', details: error.message },
       { status: 500 }

@@ -1,33 +1,17 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/admin/gallery/albums - List all albums
 export async function GET(request: Request) {
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
     // Fetch all albums with image count
-    const { data: albums, error: albumsError } = await supabase
+    const { data: albums, error: albumsError } = await supabaseAdmin
       .from('gallery_albums')
       .select(`
         *,
@@ -63,27 +47,10 @@ export async function GET(request: Request) {
 
 // POST /api/admin/gallery/albums - Create new album
 export async function POST(request: Request) {
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
     // Parse request body
     const body = await request.json();
     const { name, slug, description, thumbnail_url, display_order, is_active } = body;
@@ -97,7 +64,7 @@ export async function POST(request: Request) {
     }
 
     // Create album
-    const { data: newAlbum, error: createError } = await supabase
+    const { data: newAlbum, error: createError } = await supabaseAdmin
       .from('gallery_albums')
       .insert({
         name,

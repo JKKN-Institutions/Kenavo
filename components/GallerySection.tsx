@@ -6,18 +6,18 @@ import Link from 'next/link';
 const GallerySection = () => {
   return (
     <section
-      className="bg-neutral-100 flex w-full flex-col py-2 sm:py-4 md:py-5 lg:py-6 xl:py-7"
+      className="bg-neutral-100 flex w-full flex-col pt-2 sm:pt-4 md:pt-5 lg:pt-6 xl:pt-7 pb-0"
       aria-labelledby="gallery-heading"
     >
       <div className="w-full px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16">
         <div className="text-center">
           <h2
             id="gallery-heading"
-            className="text-[rgba(88,43,143,1)] text-[28px] sm:text-[36px] md:text-[48px] lg:text-[58px] xl:text-[64px] font-bold leading-tight"
+            className="text-[rgba(88,43,143,1)] text-[28px] sm:text-[32px] md:text-[36px] lg:text-[38px] xl:text-[40px] font-bold leading-tight"
           >
             Snapshots from the Hill
           </h2>
-          <p className="text-[rgba(217,81,100,1)] text-[16px] sm:text-[18px] md:text-[22px] lg:text-[26px] xl:text-[30px] font-normal leading-snug mt-2">
+          <p className="text-[rgba(217,81,100,1)] text-[16px] sm:text-[17px] md:text-[18px] lg:text-[18px] xl:text-[19px] font-normal leading-snug mt-2">
             School days. Reunions.
             <br />
             Everything in between.
@@ -30,10 +30,10 @@ const GallerySection = () => {
             className="aspect-[2.7] object-contain w-full block border-0 shadow-lg mx-auto"
           />
         </div>
-        <div className="flex justify-center w-full">
+        <div className="flex justify-center w-full mb-0">
           <Link href="/gallery">
             <button
-              className="bg-[rgba(217,81,100,1)] flex items-center justify-center w-[140px] sm:w-[160px] md:w-[170px] max-w-full text-sm sm:text-base text-neutral-100 font-black px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-[50px] mt-3 sm:mt-4 md:mt-5 lg:mt-6 xl:mt-7 hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all"
+              className="bg-[rgba(217,81,100,1)] flex items-center justify-center w-[140px] sm:w-[160px] md:w-[170px] max-w-full text-sm sm:text-base text-neutral-100 font-black px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 rounded-[50px] mt-0 hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all"
               aria-label="View complete photo gallery"
             >
               View Gallery

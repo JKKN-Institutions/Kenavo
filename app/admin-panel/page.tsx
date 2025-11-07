@@ -1,12 +1,13 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Upload, UserPlus, FileSpreadsheet, CheckCircle, AlertCircle, Edit2, Search, RefreshCw, X, Save, List, LogOut } from 'lucide-react';
+import { Upload, UserPlus, CheckCircle, AlertCircle, Edit2, Search, X, Save, List, LogOut, Image as ImageIcon, RefreshCw } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/lib/auth/client';
 import BulkImagePreviewModal, { ImageMapping } from '@/components/admin/BulkImagePreviewModal';
+import GalleryManagementTab from '@/components/admin/GalleryManagementTab';
 
-type TabType = 'manage' | 'bulkUpdate' | 'single' | 'bulk' | 'qa';
+type TabType = 'manage' | 'bulkUpdate' | 'single' | 'gallery';
 
 // Helper function to parse CSV line (handles quoted values with commas)
 function parseCSVLine(line: string): string[] {
@@ -88,7 +89,7 @@ export default function AdminPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-4xl font-bold text-white mb-2">Kenavo Admin Panel</h1>
-              <p className="text-purple-200">Manage alumni profiles, images, and Q&A data</p>
+              <p className="text-purple-200">Streamlined workflow: Import → Manage → Update</p>
             </div>
             <button
               onClick={handleLogout}
@@ -122,8 +123,8 @@ export default function AdminPanel() {
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
-            <RefreshCw size={20} />
-            Bulk Update
+            <Upload size={20} />
+            Import & Update
           </button>
           <button
             onClick={() => setActiveTab('single')}
@@ -137,26 +138,15 @@ export default function AdminPanel() {
             Create Profile
           </button>
           <button
-            onClick={() => setActiveTab('bulk')}
+            onClick={() => setActiveTab('gallery')}
             className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === 'bulk'
+              activeTab === 'gallery'
                 ? 'bg-white text-purple-900 shadow-lg'
                 : 'bg-white/10 text-white hover:bg-white/20'
             }`}
           >
-            <FileSpreadsheet size={20} />
-            Bulk Create
-          </button>
-          <button
-            onClick={() => setActiveTab('qa')}
-            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
-              activeTab === 'qa'
-                ? 'bg-white text-purple-900 shadow-lg'
-                : 'bg-white/10 text-white hover:bg-white/20'
-            }`}
-          >
-            <Upload size={20} />
-            Q&A Upload
+            <ImageIcon size={20} />
+            Gallery
           </button>
         </div>
 
@@ -165,8 +155,7 @@ export default function AdminPanel() {
           {activeTab === 'manage' && <ManageProfilesTab />}
           {activeTab === 'bulkUpdate' && <BulkUpdateTab />}
           {activeTab === 'single' && <SingleProfileForm />}
-          {activeTab === 'bulk' && <BulkUploadForm />}
-          {activeTab === 'qa' && <QAUploadForm />}
+          {activeTab === 'gallery' && <GalleryManagementTab />}
         </div>
       </div>
     </div>
@@ -1159,10 +1148,19 @@ function BulkUpdateTab() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-4">Bulk Update Profiles</h2>
+      <h2 className="text-2xl font-bold text-white mb-4">Import & Update Data</h2>
+
+      <div className="bg-purple-500/20 border border-purple-500/50 rounded-lg p-4 text-purple-100">
+        <p className="font-semibold mb-2">📋 This tab contains:</p>
+        <ul className="list-disc list-inside space-y-1 text-sm">
+          <li><strong>Import Profiles & Q&A:</strong> Upload complete slambook CSV (creates/updates profiles with Q&A answers)</li>
+          <li><strong>Update Profile Data:</strong> Bulk update specific profile fields using CSV with IDs</li>
+          <li><strong>Bulk Image Upload:</strong> Upload profile pictures via ZIP file</li>
+        </ul>
+      </div>
 
       <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4 text-blue-100">
-        <p className="font-semibold mb-2">How to bulk update:</p>
+        <p className="font-semibold mb-2">🔄 Update Existing Profiles Only:</p>
         <ol className="list-decimal list-inside space-y-1 text-sm">
           <li>Download template or export current profiles</li>
           <li>Edit the CSV file with new data (keep the "id" column!)</li>
@@ -1170,8 +1168,8 @@ function BulkUpdateTab() {
         </ol>
         <div className="mt-3 pt-3 border-t border-blue-500/30">
           <p className="text-xs text-blue-200">
-            📝 <strong>Note:</strong> This CSV updates profile data only (name, email, job, etc.).
-            To update profile images, use the <strong>"Bulk Image Upload"</strong> section below.
+            📝 <strong>Note:</strong> This updates profile data only (name, email, job, etc.).
+            Profile pictures are preserved. To change images, use <strong>"Bulk Image Upload"</strong> below.
           </p>
         </div>
       </div>
@@ -1198,9 +1196,9 @@ function BulkUpdateTab() {
         </button>
       </div>
 
-      {/* Complete Slambook Upload Section */}
+      {/* Import Profiles & Q&A Section */}
       <div className="border-t border-white/20 pt-6 mt-6">
-        <h3 className="text-xl font-bold text-white mb-4">📚 Complete Slambook Upload (Create/Update Profiles)</h3>
+        <h3 className="text-xl font-bold text-white mb-4">📥 Import Profiles & Q&A (CSV Upload)</h3>
 
         <div className="bg-green-500/20 border border-green-500/50 rounded-lg p-4 text-green-100 mb-6">
           <p className="font-semibold mb-2">✨ Smart Single-File Upload:</p>
@@ -1222,7 +1220,7 @@ function BulkUpdateTab() {
 
         <form onSubmit={handleSlambookUpload} className="space-y-4">
           <div>
-            <label className="block text-white font-semibold mb-2">Upload Complete Slambook CSV</label>
+            <label className="block text-white font-semibold mb-2">Upload Profiles & Q&A CSV File</label>
             <input
               type="file"
               accept=".csv"
@@ -1647,337 +1645,3 @@ function SingleProfileForm() {
   );
 }
 
-// Bulk Upload Form (EXISTING - unchanged)
-function BulkUploadForm() {
-  const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [showHelp, setShowHelp] = useState(false);
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCsvFile(file);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!csvFile) return;
-
-    setLoading(true);
-    setMessage(null);
-
-    try {
-      const formData = new FormData();
-      formData.append('file', csvFile);
-
-      const response = await fetch('/api/admin/bulk-upload-profiles', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: `✅ Successfully created ${result.count} profile${result.count !== 1 ? 's' : ''}! Next: Go to "Q&A Upload" tab to add answers for these profiles.`
-        });
-        setCsvFile(null);
-      } else {
-        setMessage({ type: 'error', text: result.error || 'Failed to upload profiles' });
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Network error. Please try again.' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const downloadTemplate = () => {
-    // Link to static template file instead of generating inline
-    const a = document.createElement('a');
-    a.href = '/templates/profiles_template.csv';
-    a.download = 'profiles_template.csv';
-    a.click();
-  };
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-4">Bulk Create Profiles</h2>
-
-      <div className="bg-yellow-500/20 border border-yellow-500/50 rounded-lg p-4 text-yellow-100">
-        <p className="font-semibold mb-2">CSV Format Instructions:</p>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Required column: <code className="bg-black/30 px-2 py-1 rounded">name</code></li>
-          <li>Optional columns: email, phone, location, year_graduated, current_job, company, bio, linkedin_url, nicknames, profile_image_url</li>
-          <li>Use direct URLs for profile_image_url (must be publicly accessible)</li>
-        </ul>
-      </div>
-
-      {/* Workflow Guide - Expandable */}
-      <div className="bg-green-500/20 border border-green-500/50 rounded-lg overflow-hidden">
-        <button
-          onClick={() => setShowHelp(!showHelp)}
-          className="w-full px-4 py-3 flex items-center justify-between text-left text-white hover:bg-green-500/30 transition-colors"
-        >
-          <span className="font-semibold">💡 Need Help? View Step-by-Step Workflow</span>
-          <span className="text-2xl">{showHelp ? '−' : '+'}</span>
-        </button>
-        {showHelp && (
-          <div className="p-4 bg-green-900/30 text-green-100">
-            <div className="space-y-4">
-              <div>
-                <h4 className="font-semibold mb-2">📋 Step-by-Step Workflow:</h4>
-                <ol className="list-decimal list-inside space-y-2 text-sm">
-                  <li><strong>Download Template:</strong> Click "Download CSV Template" button below</li>
-                  <li><strong>Open in Spreadsheet:</strong> Use Excel, Google Sheets, or any CSV editor</li>
-                  <li><strong>Fill Data:</strong> Add one profile per row (name is required, rest optional)</li>
-                  <li><strong>Save as CSV:</strong> Export/save your file as .csv format</li>
-                  <li><strong>Upload:</strong> Use the upload button below to import</li>
-                  <li><strong>Add Q&A (Optional):</strong> After creation, go to "Q&A Upload" tab to add answers</li>
-                </ol>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">💼 Field Format Guidelines:</h4>
-                <ul className="list-disc list-inside space-y-1 text-xs">
-                  <li><strong>name:</strong> Full name (e.g., "John Doe")</li>
-                  <li><strong>email:</strong> Valid email address</li>
-                  <li><strong>phone:</strong> Include country code (e.g., "+1-555-0123")</li>
-                  <li><strong>year_graduated:</strong> 4-digit year (e.g., "2010")</li>
-                  <li><strong>linkedin_url:</strong> Full URL starting with https://</li>
-                  <li><strong>profile_image_url:</strong> Public image URL (or upload images later via Bulk Update → Bulk Image Upload)</li>
-                </ul>
-              </div>
-              <div>
-                <h4 className="font-semibold mb-2">⚠️ Common Mistakes to Avoid:</h4>
-                <ul className="list-disc list-inside space-y-1 text-xs text-yellow-200">
-                  <li>Don't modify the header row (first row with column names)</li>
-                  <li>Don't leave name column empty</li>
-                  <li>Use commas only within quoted fields</li>
-                  <li>Save as CSV, not Excel (.xlsx)</li>
-                  <li>Q&A answers must be added separately after profile creation</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      <button
-        onClick={downloadTemplate}
-        className="w-full bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-      >
-        📥 Download CSV Template
-      </button>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-white font-semibold mb-2">Upload CSV File</label>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
-            className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-600 file:text-white file:cursor-pointer hover:file:bg-purple-700"
-          />
-          {csvFile && <p className="text-white/70 mt-2">Selected: {csvFile.name}</p>}
-        </div>
-
-        {message && (
-          <div
-            className={`flex items-center gap-2 p-4 rounded-lg ${
-              message.type === 'success' ? 'bg-green-500/20 text-green-100' : 'bg-red-500/20 text-red-100'
-            }`}
-          >
-            {message.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
-            <span>{message.text}</span>
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading || !csvFile}
-          className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all"
-        >
-          {loading ? 'Uploading...' : 'Upload Profiles'}
-        </button>
-      </form>
-    </div>
-  );
-}
-
-// Q&A Upload Form (EXISTING - unchanged)
-function QAUploadForm() {
-  const [csvFile, setCsvFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
-  const [showQuestions, setShowQuestions] = useState(false);
-
-  // The 10 standard questions
-  const questions = [
-    { id: 1, text: "A school memory that still makes you smile" },
-    { id: 2, text: "Your favourite spot in school" },
-    { id: 3, text: "If you get one full day in school today, what would you do..." },
-    { id: 4, text: "What advice would you give to the younger students entering the workforce today:" },
-    { id: 5, text: "A book / movie / experience that changed your perspective of life:" },
-    { id: 6, text: "A personal achievement that means a lot to you:" },
-    { id: 7, text: "Your favourite hobby that you pursue when off work:" },
-    { id: 8, text: "Your favourite go-to song(s) to enliven your spirits" },
-    { id: 9, text: "What does reconnecting with this alumini group mean to you at this stage of your life?" },
-    { id: 10, text: "Would you be open to mentoring younger students or collaborating with alumni?" }
-  ];
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCsvFile(file);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!csvFile) return;
-
-    setLoading(true);
-    setMessage(null);
-
-    try {
-      const formData = new FormData();
-      formData.append('file', csvFile);
-
-      const response = await fetch('/api/admin/upload-qa-answers', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        setMessage({
-          type: 'success',
-          text: `✅ Successfully uploaded ${result.count} Q&A answer${result.count !== 1 ? 's' : ''}! View profiles in "Manage Profiles" tab to see the answers.`
-        });
-        setCsvFile(null);
-      } else {
-        setMessage({ type: 'error', text: result.error || 'Failed to upload Q&A answers' });
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'Network error. Please try again.' });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const downloadTemplate = () => {
-    // Link to static template file instead of generating inline
-    const a = document.createElement('a');
-    a.href = '/templates/qa_answers_template.csv';
-    a.download = 'qa_answers_template.csv';
-    a.click();
-  };
-
-  const exportProfileIds = async () => {
-    try {
-      const response = await fetch('/api/admin/export-profile-ids');
-      if (response.ok) {
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `profile_ids_${new Date().toISOString().split('T')[0]}.csv`;
-        a.click();
-        window.URL.revokeObjectURL(url);
-      }
-    } catch (error) {
-      console.error('Error downloading profile IDs:', error);
-    }
-  };
-
-  return (
-    <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-4">Upload Q&A Answers</h2>
-
-      <div className="bg-blue-500/20 border border-blue-500/50 rounded-lg p-4 text-blue-100">
-        <p className="font-semibold mb-2">CSV Format Instructions:</p>
-        <ul className="list-disc list-inside space-y-1 text-sm">
-          <li>Required columns: <code className="bg-black/30 px-2 py-1 rounded">profile_id</code>, <code className="bg-black/30 px-2 py-1 rounded">question_id</code>, <code className="bg-black/30 px-2 py-1 rounded">answer</code></li>
-          <li>profile_id must match existing profile IDs</li>
-          <li>question_id: 1-10 (the 10 standard questions below)</li>
-        </ul>
-      </div>
-
-      {/* Questions Reference */}
-      <div className="bg-purple-500/20 border border-purple-500/50 rounded-lg overflow-hidden">
-        <button
-          onClick={() => setShowQuestions(!showQuestions)}
-          className="w-full px-4 py-3 flex items-center justify-between text-left text-white hover:bg-purple-500/30 transition-colors"
-        >
-          <span className="font-semibold">📋 View All 10 Questions & Their IDs</span>
-          <span className="text-2xl">{showQuestions ? '−' : '+'}</span>
-        </button>
-        {showQuestions && (
-          <div className="p-4 bg-purple-900/30">
-            <div className="space-y-3">
-              {questions.map((q) => (
-                <div key={q.id} className="flex gap-3 text-sm">
-                  <span className="bg-purple-600 text-white px-3 py-1 rounded-lg font-bold min-w-[3rem] text-center">
-                    ID: {q.id}
-                  </span>
-                  <span className="text-purple-100 flex-1">{q.text}</span>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      <div className="flex gap-3">
-        <button
-          onClick={downloadTemplate}
-          className="flex-1 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-        >
-          📥 Download CSV Template
-        </button>
-        <button
-          onClick={exportProfileIds}
-          className="flex-1 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold transition-all"
-        >
-          🆔 Export Profile IDs
-        </button>
-      </div>
-
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label className="block text-white font-semibold mb-2">Upload CSV File</label>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFileChange}
-            className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-600 file:text-white file:cursor-pointer hover:file:bg-purple-700"
-          />
-          {csvFile && <p className="text-white/70 mt-2">Selected: {csvFile.name}</p>}
-        </div>
-
-        {message && (
-          <div
-            className={`flex items-center gap-2 p-4 rounded-lg ${
-              message.type === 'success' ? 'bg-green-500/20 text-green-100' : 'bg-red-500/20 text-red-100'
-            }`}
-          >
-            {message.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
-            <span>{message.text}</span>
-          </div>
-        )}
-
-        <button
-          type="submit"
-          disabled={loading || !csvFile}
-          className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all"
-        >
-          {loading ? 'Uploading...' : 'Upload Q&A Answers'}
-        </button>
-      </form>
-    </div>
-  );
-}

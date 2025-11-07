@@ -233,30 +233,26 @@ export async function POST(request: NextRequest) {
     const findBestMatch = (csvName: string, csvYear: string, profileMap: Map<string, any>): MatchResult => {
       const csvNormalized = normalizeName(csvName);
 
-      // Level 1: Exact match (normalized name + year)
-      const exactKey = `${csvNormalized}|${csvYear}`;
-      if (profileMap.has(exactKey)) {
-        return {
-          profile: profileMap.get(exactKey),
-          confidence: 100,
-          matchType: 'exact'
-        };
-      }
-
-      // Level 2: Name-only match (ignore year differences or nulls)
+      // PRIORITY 1: Name-only match (ALWAYS prefer updating existing profile)
+      // This ensures we UPDATE existing profiles instead of creating duplicates
+      // Even if the year differs, we update the year rather than create new profile
       for (const [key, profile] of profileMap.entries()) {
         const [dbName, dbYear] = key.split('|');
         if (dbName === csvNormalized) {
+          const isExactMatch = dbYear === csvYear;
           return {
             profile,
-            confidence: 90,
-            matchType: 'name-only',
-            reason: `Name matches but year differs (CSV: "${csvYear}", DB: "${dbYear}")`
+            confidence: isExactMatch ? 100 : 95,
+            matchType: isExactMatch ? 'exact' : 'name-only',
+            reason: isExactMatch
+              ? 'Exact name and year match'
+              : `Name matches, year will be updated (DB: "${dbYear}" → CSV: "${csvYear}")`
           };
         }
       }
 
-      // Level 3: Partial match (first + last name only)
+      // PRIORITY 2: Partial match (first + last name only)
+      // Only used if full name doesn't match (e.g., middle name differences)
       const csvFirstLast = getFirstLastName(csvNormalized);
       if (csvFirstLast.split(' ').length >= 2) {
         for (const [key, profile] of profileMap.entries()) {
@@ -273,7 +269,8 @@ export async function POST(request: NextRequest) {
         }
       }
 
-      // No match found
+      // PRIORITY 3: No match found - create new profile
+      // Only create if name doesn't exist in database at all
       return {
         profile: null,
         confidence: 0,
@@ -287,9 +284,10 @@ export async function POST(request: NextRequest) {
     }));
 
     // Get all existing profiles to check for matches
+    // ENHANCED: Also fetch profile_image_url to preserve it during updates
     const { data: existingProfiles, error: existingError } = await supabaseAdmin
       .from('profiles')
-      .select('id, name, year_graduated');
+      .select('id, name, year_graduated, profile_image_url');
 
     if (existingError) {
       console.error('Error fetching existing profiles:', existingError);
@@ -400,12 +398,21 @@ export async function POST(request: NextRequest) {
           reason: matchResult.reason
         });
 
-        return {
+        // IMPORTANT: Preserve existing profile_image_url when updating
+        const updateData: any = {
           id: matchResult.profile.id,
           ...profileData
         };
+
+        // Only preserve profile_image_url if the existing profile has one
+        if (matchResult.profile.profile_image_url) {
+          updateData.profile_image_url = matchResult.profile.profile_image_url;
+          console.log(`  → Preserving profile image for "${row.name}"`);
+        }
+
+        return updateData;
       } else {
-        // New profile - assign new ID
+        // New profile - assign new ID (no profile_image_url)
         const newId = nextId++;
         return {
           id: newId,

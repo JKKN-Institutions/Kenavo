@@ -222,14 +222,24 @@ export async function POST(request: NextRequest) {
 
     // Validate ID-based mappings
     const validatedMappings: ImageMapping[] = [];
+    const PLACEHOLDER_IMAGE_URL = '/placeholder-profile.svg';
 
     for (const mapping of mappings) {
       const profile = profileMap.get(mapping.profileId);
 
       if (!profile) {
+        // Profile not found - use placeholder
         errors.push({
           fileName: mapping.fileName,
-          error: `Profile ID ${mapping.profileId} not found in database`
+          error: `Profile ID ${mapping.profileId} not found - will use placeholder image`
+        });
+
+        // Still add mapping but mark it to use placeholder
+        validatedMappings.push({
+          ...mapping,
+          profileName: `Unknown Profile (ID: ${mapping.profileId})`,
+          currentImageUrl: PLACEHOLDER_IMAGE_URL,
+          status: 'ready',
         });
         continue;
       }
@@ -257,9 +267,10 @@ export async function POST(request: NextRequest) {
           status: 'ready',
         });
       } else {
+        // Name not matched - create warning instead of skipping
         errors.push({
           fileName: nameFile.filename,
-          error: `Could not match "${nameFile.extractedName}" to any profile in database`
+          error: `Could not match "${nameFile.extractedName}" to any profile - image will be skipped. Use placeholder image manually if needed.`
         });
       }
     }

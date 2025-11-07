@@ -14,7 +14,7 @@ const StatCard: React.FC<StatCardProps> = ({ number, description, bgColor, textC
       style={{ backgroundColor: bgColor }}
     >
       <div
-        className="text-[32px] sm:text-[44px] md:text-[56px] lg:text-[64px] leading-none"
+        className="text-[32px] sm:text-[36px] md:text-[40px] lg:text-[44px] leading-none"
         style={{ color: textColor }}
       >
         {number}
@@ -37,7 +37,7 @@ const StatsSection = () => {
       number: "72",
       description: "Nicknames still remembered",
       bgColor: "rgba(217,81,100,1)",
-      textColor: "rgba(65,32,128,1)"
+      textColor: "#ffffff"
     },
     {
       number: "120+",
@@ -49,7 +49,7 @@ const StatsSection = () => {
       number: "150+",
       description: "Photos\nuploaded",
       bgColor: "rgba(217,81,100,1)",
-      textColor: "rgba(65,32,128,1)"
+      textColor: "#ffffff"
     },
     {
       number: "43",
@@ -60,17 +60,17 @@ const StatsSection = () => {
   ];
 
   return (
-    <section className="w-full mt-2 sm:mt-3 md:mt-4 lg:mt-6 xl:mt-8" aria-labelledby="stats-heading">
-      <div className="flex flex-col relative w-full items-center justify-center py-8 sm:py-10 md:py-12">
+    <section className="w-full mt-2 sm:mt-3 md:mt-4 lg:mt-5 xl:mt-6" aria-labelledby="stats-heading">
+      <div className="flex flex-col relative w-full items-center justify-center py-4 sm:py-5 md:py-6">
         <div className="relative flex w-full max-w-[1400px] mx-auto flex-col px-4 sm:px-6 md:px-8">
           <div className="text-center">
             <h2
               id="stats-heading"
-              className="text-[rgba(217,81,100,1)] text-[28px] sm:text-[36px] md:text-[48px] lg:text-[58px] xl:text-[64px] font-bold leading-tight"
+              className="text-[rgba(217,81,100,1)] text-[28px] sm:text-[32px] md:text-[36px] lg:text-[38px] xl:text-[40px] font-bold leading-tight"
             >
               Kenavo by the Numbers
             </h2>
-            <p className="text-white text-[18px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] font-normal leading-snug text-center mt-2">
+            <p className="text-white text-[18px] sm:text-[18px] md:text-[18px] lg:text-[19px] xl:text-[20px] font-normal leading-snug text-center mt-2">
               Some stats. Some smiles.
             </p>
           </div>

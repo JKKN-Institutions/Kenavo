@@ -1,62 +1,58 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageLightbox from './ImageLightbox';
 
-const GalleryImagesGrid: React.FC = () => {
+interface GalleryImage {
+  id: number;
+  image_url: string;
+  caption: string | null;
+  display_order: number;
+}
+
+interface GalleryImagesGridProps {
+  albumSlug: string;
+}
+
+const GalleryImagesGrid: React.FC<GalleryImagesGridProps> = ({ albumSlug }) => {
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [images, setImages] = useState<GalleryImage[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const galleryImages = [
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/8b9a6705c766f3c7905780c536941a5537bf9cd8?placeholderIfAbsent=true",
-      alt: "Gallery image 1"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/7761f1e2f2ffddbc4030e5f96bb746795a9ff03b?placeholderIfAbsent=true",
-      alt: "Gallery image 2"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/3068a9173209df2ea12b552caa3fa8084fbfac9d?placeholderIfAbsent=true",
-      alt: "Gallery image 3"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/0241344251d136e7c5debdb97fe58bb2a0ea545b?placeholderIfAbsent=true",
-      alt: "Gallery image 4"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/c24a9ccac27976dbd019cb8e5219cf071ac3abbb?placeholderIfAbsent=true",
-      alt: "Gallery image 5"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/ecddc2bef3848466a6fcf6416b246897a1031509?placeholderIfAbsent=true",
-      alt: "Gallery image 6"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/8fc6d03bfdbbdc34305e389b13919e169ab54f11?placeholderIfAbsent=true",
-      alt: "Gallery image 7"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/746e49ff20a8d11ae98b884782d3ec339b35c661?placeholderIfAbsent=true",
-      alt: "Gallery image 8"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/3f645a6392789c999114872f496c3298af705256?placeholderIfAbsent=true",
-      alt: "Gallery image 9"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/5aaa49cec17b68db8515115c2748e9857e584cca?placeholderIfAbsent=true",
-      alt: "Gallery image 10"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/4adb6cedf35ab0181f732a5d2c184dbd7e47b567?placeholderIfAbsent=true",
-      alt: "Gallery image 11"
-    },
-    {
-      src: "https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/0eb8a7f31247677c1c6e53edd435f1844f704c84?placeholderIfAbsent=true",
-      alt: "Gallery image 12"
+  useEffect(() => {
+    fetchImages();
+  }, [albumSlug]);
+
+  const fetchImages = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`/api/gallery/albums/${albumSlug}/images`, {
+        cache: 'no-store',
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch images');
+      }
+
+      const data = await response.json();
+      setImages(data.images || []);
+    } catch (err: any) {
+      console.error('Error fetching images:', err);
+      setError(err.message || 'Failed to load images');
+    } finally {
+      setLoading(false);
     }
-  ];
+  };
+
+  // Transform images for lightbox
+  const galleryImages = images.map(img => ({
+    src: img.image_url,
+    alt: img.caption || `Gallery image ${img.id}`,
+  }));
 
   const handleImageClick = (index: number) => {
     setCurrentImageIndex(index);
@@ -75,36 +71,81 @@ const GalleryImagesGrid: React.FC = () => {
     setLightboxOpen(false);
   };
 
-  const renderRow = (startIndex: number, marginTop: string) => (
-    <div className={`w-full ${marginTop}`}>
-      <div className="gap-3 sm:gap-4 md:gap-5 flex flex-wrap justify-center">
-        {galleryImages.slice(startIndex, startIndex + 4).map((image, index) => {
-          const imageIndex = startIndex + index;
-          return (
-            <div
-              key={imageIndex}
-              className="w-[calc(50%-0.375rem)] sm:w-[calc(50%-0.5rem)] md:w-[calc(25%-0.9375rem)] lg:w-[calc(25%-1.25rem)]"
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                onClick={() => handleImageClick(imageIndex)}
-                className="aspect-square object-cover w-full rounded-lg hover:opacity-80 hover:scale-105 transition-all cursor-pointer shadow-md"
-                loading="lazy"
-              />
-            </div>
-          );
-        })}
+  if (loading) {
+    return (
+      <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-12 lg:pb-8">
+        <div className="flex justify-center items-center py-20 mt-12">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-600"></div>
+        </div>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-12 lg:pb-8">
+        <div className="text-center py-20 mt-12">
+          <p className="text-red-600 text-lg mb-4">{error}</p>
+          <button
+            onClick={fetchImages}
+            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+          >
+            Try Again
+          </button>
+        </div>
+      </section>
+    );
+  }
+
+  if (galleryImages.length === 0) {
+    return (
+      <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-12 lg:pb-8">
+        <div className="text-center py-20 mt-12">
+          <p className="text-gray-600 text-lg">No images in this album yet.</p>
+        </div>
+      </section>
+    );
+  }
+
+  const renderRow = (startIndex: number, marginTop: string) => {
+    const rowImages = galleryImages.slice(startIndex, startIndex + 4);
+    if (rowImages.length === 0) return null;
+
+    return (
+      <div className={`w-full ${marginTop}`}>
+        <div className="gap-3 sm:gap-4 md:gap-5 flex flex-wrap justify-center">
+          {rowImages.map((image, index) => {
+            const imageIndex = startIndex + index;
+            return (
+              <div
+                key={imageIndex}
+                className="w-[calc(50%-0.375rem)] sm:w-[calc(50%-0.5rem)] md:w-[calc(25%-0.9375rem)] lg:w-[calc(25%-1.25rem)]"
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  onClick={() => handleImageClick(imageIndex)}
+                  className="aspect-square object-cover w-full rounded-lg hover:opacity-80 hover:scale-105 transition-all cursor-pointer shadow-md"
+                  loading="lazy"
+                />
+              </div>
+            );
+          })}
+        </div>
       </div>
-    </div>
-  );
+    );
+  };
+
+  // Calculate number of rows needed (4 images per row)
+  const numRows = Math.ceil(galleryImages.length / 4);
+  const rows = Array.from({ length: numRows }, (_, i) => i * 4);
 
   return (
     <>
       <section className="flex flex-col items-center w-full px-4 sm:px-6 md:px-8 pb-12 lg:pb-8">
-        {renderRow(0, "mt-12 sm:mt-16 md:mt-20 lg:mt-24")}
-        {renderRow(4, "mt-3 sm:mt-4")}
-        {renderRow(8, "mt-3 sm:mt-4")}
+        {rows.map((startIndex, rowIndex) =>
+          renderRow(startIndex, rowIndex === 0 ? "mt-12 sm:mt-16 md:mt-20 lg:mt-24" : "mt-3 sm:mt-4")
+        )}
       </section>
 
       <ImageLightbox

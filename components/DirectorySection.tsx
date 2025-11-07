@@ -5,8 +5,8 @@ import Link from 'next/link';
 
 const DirectorySection = () => {
   return (
-    <section className="w-full mt-2 sm:mt-3 md:mt-5 lg:mt-7 xl:mt-9 bg-[rgba(78,46,140,1)]" aria-labelledby="directory-heading">
-      <div className="flex flex-col relative min-h-[550px] sm:min-h-[600px] md:min-h-[650px] lg:min-h-[700px] xl:min-h-[750px] w-full py-3 sm:py-4 md:py-5 lg:py-6 xl:py-7 overflow-hidden">
+    <section className="w-full mt-2 sm:mt-3 md:mt-4 lg:mt-5 xl:mt-6 bg-[rgba(78,46,140,1)]" aria-labelledby="directory-heading">
+      <div className="flex flex-col relative min-h-[400px] sm:min-h-[450px] md:min-h-[500px] lg:min-h-[550px] xl:min-h-[600px] w-full py-3 sm:py-4 md:py-5 lg:py-6 xl:py-7 overflow-hidden">
         <div className="flex flex-col relative bg-blend-normal h-full w-full">
           <div className="relative z-10 py-2 sm:py-2 md:py-3 lg:py-3 xl:py-4 max-w-[1400px] mx-auto w-full h-full flex flex-col justify-center px-4 sm:px-10 md:px-16 lg:px-20 xl:px-24">
             {/* Mobile/Tablet Layout */}
@@ -186,13 +186,13 @@ const DirectorySection = () => {
                 <div className="flex flex-col items-stretch text-center">
                   <h2
                     id="directory-heading"
-                    className="text-[rgba(217,81,100,1)] text-[32px] md:text-[38px] lg:text-[50px] xl:text-[58px] font-bold leading-tight md:leading-[40px] lg:leading-[50px] xl:leading-[58px]"
+                    className="text-[rgba(217,81,100,1)] text-[32px] md:text-[32px] lg:text-[36px] xl:text-[38px] font-bold leading-tight md:leading-[40px] lg:leading-[50px] xl:leading-[58px]"
                   >
                     From Yercaud
                     <br />
                     to New York, here's what we're all up to now.
                   </h2>
-                  <p className="text-[rgba(254,249,232,1)] text-[18px] md:text-[20px] lg:text-[26px] xl:text-[30px] font-normal leading-relaxed md:leading-7 lg:leading-8 xl:leading-9 mt-2 md:mt-2 lg:mt-3 xl:mt-3">
+                  <p className="text-[rgba(254,249,232,1)] text-[18px] md:text-[18px] lg:text-[18px] xl:text-[19px] font-normal leading-relaxed md:leading-7 lg:leading-8 xl:leading-9 mt-2 md:mt-2 lg:mt-3 xl:mt-3">
                     Browse profiles, spot familiar faces,
                     <br />
                     revisit a few inside jokes. Whether you're

@@ -110,6 +110,20 @@ export async function POST(request: NextRequest) {
     // Process each mapping
     for (const mapping of mappings) {
       try {
+        // Check if this is a placeholder profile (unknown/missing profile)
+        const isPlaceholderProfile = mapping.profileName.startsWith('Unknown Profile');
+
+        if (isPlaceholderProfile) {
+          // Skip uploading for unknown profiles - they'll keep using placeholder
+          failed.push({
+            profileId: mapping.profileId,
+            profileName: mapping.profileName,
+            success: false,
+            error: `Profile ID ${mapping.profileId} not found in database - skipped`
+          });
+          continue;
+        }
+
         // Find file in ZIP
         let zipEntry = zipContent.files[mapping.fileName];
 

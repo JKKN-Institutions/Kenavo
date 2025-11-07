@@ -351,9 +351,9 @@
     margin: 0 !important;
   }
 
-  /* Exception: Preserve stats section backgrounds */
-  [aria-labelledby="stats-heading"] div[class*="flex"] {
-    background: revert !important;
+  /* Exception: Allow inline background colors for stats section circles */
+  [aria-labelledby="stats-heading"] .rounded-full[style] {
+    background: unset !important;
   }
 
   /* Crop purple edges from THE CLASS BATCH OF 2000 image */
@@ -520,4 +520,14 @@
 /* Z-index utility for scroll buttons */
 .z-60 {
   z-index: 60;
+}
+
+/* Hide scrollbar utility for mobile navigation */
+.scrollbar-hide {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, and Opera */
 }

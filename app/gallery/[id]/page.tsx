@@ -38,7 +38,7 @@ export default async function GalleryIndividualPage({ params }: { params: Promis
           </h1>
         </section>
 
-        <GalleryImagesGrid />
+        <GalleryImagesGrid albumSlug={id} />
 
         <BackToAlbumButton />
       </main>

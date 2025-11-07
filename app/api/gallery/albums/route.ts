@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -7,7 +7,7 @@ export const revalidate = 0;
 // GET /api/gallery/albums - List all active albums (Public endpoint)
 export async function GET(request: Request) {
   try {
-    const supabase = await createClient();
+    const supabase = supabaseAdmin;
 
     // Fetch all active albums with image count
     const { data: albums, error: albumsError } = await supabase

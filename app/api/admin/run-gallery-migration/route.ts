@@ -1,41 +1,19 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export const dynamic = 'force-dynamic';
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
-
-    // Check if user is admin
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json(
-        { error: 'Unauthorized' },
-        { status: 401 }
-      );
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json(
-        { error: 'Admin access required' },
-        { status: 403 }
-      );
-    }
+    const authCheck = await protectAdminRoute();
+    if (authCheck) return authCheck;
 
     console.log('🚀 Starting Gallery System Migration...');
 
     // Step 1: Create gallery_albums table
     console.log('📦 Creating gallery_albums table...');
-    const { error: albumsTableError } = await supabase.rpc('exec_sql', {
+    const { error: albumsTableError } = await supabaseAdmin.rpc('exec_sql', {
       sql: `
         CREATE TABLE IF NOT EXISTS gallery_albums (
           id BIGSERIAL PRIMARY KEY,
@@ -59,7 +37,7 @@ export async function POST(request: Request) {
 
     // Step 2: Create gallery_images table
     console.log('📦 Creating gallery_images table...');
-    const { error: imagesTableError } = await supabase.rpc('exec_sql', {
+    const { error: imagesTableError } = await supabaseAdmin.rpc('exec_sql', {
       sql: `
         CREATE TABLE IF NOT EXISTS gallery_images (
           id BIGSERIAL PRIMARY KEY,
@@ -92,7 +70,7 @@ export async function POST(request: Request) {
     ];
 
     for (const indexQuery of indexQueries) {
-      const { error: indexError } = await supabase.rpc('exec_sql', { sql: indexQuery });
+      const { error: indexError } = await supabaseAdmin.rpc('exec_sql', { sql: indexQuery });
       if (indexError) {
         console.warn('⚠️  Index creation warning:', indexError.message);
       }
@@ -101,7 +79,7 @@ export async function POST(request: Request) {
 
     // Step 4: Create trigger function
     console.log('⚡ Creating trigger function...');
-    const { error: triggerFunctionError } = await supabase.rpc('exec_sql', {
+    const { error: triggerFunctionError } = await supabaseAdmin.rpc('exec_sql', {
       sql: `
         CREATE OR REPLACE FUNCTION update_gallery_updated_at()
         RETURNS TRIGGER AS $$
@@ -135,7 +113,7 @@ export async function POST(request: Request) {
     ];
 
     for (const triggerQuery of triggerQueries) {
-      const { error: triggerError } = await supabase.rpc('exec_sql', { sql: triggerQuery });
+      const { error: triggerError } = await supabaseAdmin.rpc('exec_sql', { sql: triggerQuery });
       if (triggerError) {
         console.warn('⚠️  Trigger creation warning:', triggerError.message);
       }
@@ -154,7 +132,7 @@ export async function POST(request: Request) {
     ];
 
     for (const album of albums) {
-      const { error: seedError } = await supabase
+      const { error: seedError } = await supabaseAdmin
         .from('gallery_albums')
         .upsert(album, { onConflict: 'slug', ignoreDuplicates: true });
 
@@ -172,7 +150,7 @@ export async function POST(request: Request) {
     ];
 
     for (const rlsQuery of rlsQueries) {
-      const { error: rlsError } = await supabase.rpc('exec_sql', { sql: rlsQuery });
+      const { error: rlsError } = await supabaseAdmin.rpc('exec_sql', { sql: rlsQuery });
       if (rlsError) {
         console.warn('⚠️  RLS enable warning:', rlsError.message);
       }

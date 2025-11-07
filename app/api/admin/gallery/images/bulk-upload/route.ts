@@ -1,30 +1,14 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export const dynamic = 'force-dynamic';
 
 // POST /api/admin/gallery/images/bulk-upload - Bulk upload images to an album
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
+    const authCheck = await protectAdminRoute();
+    if (authCheck) return authCheck;
 
     // Parse request body
     const body = await request.json();
@@ -46,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     // Verify album exists
-    const { data: album, error: albumError } = await supabase
+    const { data: album, error: albumError } = await supabaseAdmin
       .from('gallery_albums')
       .select('id, name')
       .eq('id', album_id)
@@ -82,7 +66,7 @@ export async function POST(request: Request) {
     console.log(`📦 Bulk uploading ${insertData.length} images to album "${album.name}" (ID: ${album_id})`);
 
     // Bulk insert images
-    const { data: insertedImages, error: insertError } = await supabase
+    const { data: insertedImages, error: insertError } = await supabaseAdmin
       .from('gallery_images')
       .insert(insertData)
       .select();

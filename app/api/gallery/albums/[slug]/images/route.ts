@@ -1,4 +1,4 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
@@ -7,11 +7,11 @@ export const revalidate = 0;
 // GET /api/gallery/albums/[slug]/images - Get all images for an album (Public endpoint)
 export async function GET(
   request: Request,
-  { params }: { params: { slug: string } }
+  { params }: { params: Promise<{ slug: string }> }
 ) {
   try {
-    const supabase = await createClient();
-    const albumSlug = params.slug;
+    const { slug: albumSlug } = await params;
+    const supabase = supabaseAdmin;
 
     // First, get the album by slug
     const { data: album, error: albumError } = await supabase
@@ -61,7 +61,7 @@ export async function GET(
     return response;
 
   } catch (error: any) {
-    console.error(`Error in GET /api/gallery/albums/${params.slug}/images:`, error);
+    console.error(`Error in GET /api/gallery/albums/${albumSlug}/images:`, error);
     return NextResponse.json(
       { error: 'Failed to fetch album images', details: error.message },
       { status: 500 }

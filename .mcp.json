@@ -16,7 +16,7 @@
         "npx",
         "-y",
         "@modelcontextprotocol/server-filesystem",
-        "C:\\Users\\admin\\Downloads\\Facepluse"
+        "C:\\Users\\brabu\\Documents\\GitHub\\Kenavo"
       ]
     },
     "supabase": {
@@ -32,6 +32,7 @@
         "SUPABASE_ACCESS_TOKEN": "sbp_02a8ed6194297bdebeb4874abce1bbf5f83819ed"
       }
     },
+    
     "context7": {
       "command": "cmd",
       "args": [

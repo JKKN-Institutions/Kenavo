@@ -6,7 +6,7 @@ import Link from 'next/link';
 const StorySection = () => {
   return (
     <section
-      className="w-full mt-2 sm:mt-3 md:mt-5 lg:mt-7 xl:mt-9"
+      className="w-full mt-2 sm:mt-3 md:mt-4 lg:mt-5 xl:mt-6"
       aria-labelledby="story-heading"
     >
       <div className="max-w-[1400px] mx-auto px-4 sm:px-10 md:px-16 lg:px-24 xl:px-32">
@@ -15,7 +15,7 @@ const StorySection = () => {
             <div className="flex flex-col items-stretch text-center">
               <h2
                 id="story-heading"
-                className="text-[rgba(217,81,100,1)] text-[26px] sm:text-[42px] md:text-[52px] lg:text-[64px] xl:text-[72px] font-bold leading-tight sm:leading-[42px] md:leading-[52px] lg:leading-[62px] xl:leading-[70px]"
+                className="text-[rgba(217,81,100,1)] text-[26px] sm:text-[28px] md:text-[32px] lg:text-[36px] xl:text-[40px] font-bold leading-tight sm:leading-[42px] md:leading-[52px] lg:leading-[62px] xl:leading-[70px]"
               >
                 Who we are.
                 <br />
@@ -23,7 +23,7 @@ const StorySection = () => {
                 <br />
                 still showing up.
               </h2>
-              <p className="text-white text-[16px] sm:text-[20px] md:text-[24px] lg:text-[28px] xl:text-[32px] font-normal leading-snug sm:leading-6 md:leading-7 lg:leading-8 xl:leading-9 mt-2 sm:mt-3 md:mt-3 lg:mt-4 xl:mt-5">
+              <p className="text-white text-[16px] sm:text-[17px] md:text-[18px] lg:text-[18px] xl:text-[19px] font-normal leading-snug sm:leading-6 md:leading-7 lg:leading-8 xl:leading-9 mt-2 sm:mt-3 md:mt-3 lg:mt-4 xl:mt-5">
                 We're the Montfort School Class of 2000, a batch of 134 boys who grew up together on a hill in Yercaud. Some of us lived in dorms. Some walked in every morning. All of us walked out in 2000 with stories we still talk about.
               </p>
               <div className="flex justify-center mt-3 sm:mt-4 md:mt-5 lg:mt-6 xl:mt-7">

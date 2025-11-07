@@ -1,38 +1,22 @@
-import { createClient } from '@/lib/supabase/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 import { NextResponse } from 'next/server';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 
 export const dynamic = 'force-dynamic';
 
 // GET /api/admin/gallery/albums/[id] - Get single album
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const albumId = params.id;
+    const { id: albumId } = await params;
 
     // Fetch album with images
-    const { data: album, error: albumError } = await supabase
+    const { data: album, error: albumError } = await supabaseAdmin
       .from('gallery_albums')
       .select(`
         *,
@@ -58,7 +42,7 @@ export async function GET(
     return NextResponse.json({ album });
 
   } catch (error: any) {
-    console.error(`Error in GET /api/admin/gallery/albums/${params.id}:`, error);
+    console.error(`Error in GET /api/admin/gallery/albums/${albumId}:`, error);
     return NextResponse.json(
       { error: 'Failed to fetch album', details: error.message },
       { status: 500 }
@@ -69,30 +53,13 @@ export async function GET(
 // PUT /api/admin/gallery/albums/[id] - Update album
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const albumId = params.id;
+    const { id: albumId } = await params;
     const body = await request.json();
     const { name, slug, description, thumbnail_url, display_order, is_active } = body;
 
@@ -106,7 +73,7 @@ export async function PUT(
     if (is_active !== undefined) updateData.is_active = is_active;
 
     // Update album
-    const { data: updatedAlbum, error: updateError } = await supabase
+    const { data: updatedAlbum, error: updateError } = await supabaseAdmin
       .from('gallery_albums')
       .update(updateData)
       .eq('id', albumId)
@@ -139,7 +106,7 @@ export async function PUT(
     });
 
   } catch (error: any) {
-    console.error(`Error in PUT /api/admin/gallery/albums/${params.id}:`, error);
+    console.error(`Error in PUT /api/admin/gallery/albums/${albumId}:`, error);
     return NextResponse.json(
       { error: 'Failed to update album', details: error.message },
       { status: 500 }
@@ -150,33 +117,16 @@ export async function PUT(
 // DELETE /api/admin/gallery/albums/[id] - Delete album
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
+
   try {
-    const supabase = await createClient();
-
-    // Check authentication
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
-
-    if (authError || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    // Verify admin role
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single();
-
-    if (profile?.role !== 'admin') {
-      return NextResponse.json({ error: 'Admin access required' }, { status: 403 });
-    }
-
-    const albumId = params.id;
+    const { id: albumId } = await params;
 
     // Check if album exists and get image count
-    const { data: album, error: checkError } = await supabase
+    const { data: album, error: checkError } = await supabaseAdmin
       .from('gallery_albums')
       .select('id, name, gallery_images(count)')
       .eq('id', albumId)
@@ -192,7 +142,7 @@ export async function DELETE(
     const imageCount = album.gallery_images?.[0]?.count || 0;
 
     // Delete album (CASCADE will delete related images)
-    const { error: deleteError } = await supabase
+    const { error: deleteError } = await supabaseAdmin
       .from('gallery_albums')
       .delete()
       .eq('id', albumId);
@@ -209,7 +159,7 @@ export async function DELETE(
     });
 
   } catch (error: any) {
-    console.error(`Error in DELETE /api/admin/gallery/albums/${params.id}:`, error);
+    console.error(`Error in DELETE /api/admin/gallery/albums/${albumId}:`, error);
     return NextResponse.json(
       { error: 'Failed to delete album', details: error.message },
       { status: 500 }

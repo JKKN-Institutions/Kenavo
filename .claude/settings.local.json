@@ -51,15 +51,31 @@
       "Bash(node scripts/detect-duplicate-profiles.js:*)",
       "Bash(node scripts/generate-cleanup-sql.js:*)",
       "Bash(node scripts/show-before-after-cleanup.js:*)",
-      "Bash(ping:*)"
+      "Bash(ping:*)",
+      "Bash(tree:*)",
+      "Bash(npm --version)",
+      "Bash(cmd /c \"npx -y @supabase/mcp-server-supabase@latest --help\")",
+      "Bash(cmd /c \"npx -y @modelcontextprotocol/server-memory --help\")",
+      "WebSearch",
+      "Bash(cmd /c \"npm view @supabase/mcp-server-supabase version\")",
+      "WebFetch(domain:github.com)",
+      "Bash(npx supabase db push:*)",
+      "Bash(npx:*)",
+      "Bash(node scripts/apply-gallery-migrations.js:*)",
+      "Bash(node scripts/run-gallery-migration-via-function.js:*)",
+      "Bash(del \"C:\\Users\\brabu\\Documents\\GitHub\\Kenavo\\app\\api\\admin\\bulk-upload-profiles\\route.ts\")",
+      "Bash(node scripts/check-exact-name-duplicates.js:*)",
+      "Bash(robocopy:*)",
+      "Bash(node -e:*)"
     ],
     "deny": [],
     "ask": []
   },
-  "disabledMcpjsonServers": [
+  "enabledMcpjsonServers": [
     "memory",
     "filesystem",
     "supabase",
     "context7"
-  ]
+  ],
+  "disabledMcpjsonServers": []
 }
