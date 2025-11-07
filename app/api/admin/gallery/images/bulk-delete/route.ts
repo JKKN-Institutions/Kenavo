@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@/lib/supabase/server';
-import { protectAdminRoute } from '@/lib/api/admin-auth';
+import { supabaseAdmin } from '@/lib/supabase-admin';
+import { protectAdminRoute } from '@/lib/auth/api-protection';
 import { extractGalleryStoragePath, deleteGalleryImagesBulk } from '@/lib/gallery-storage-utils';
+
+export const dynamic = 'force-dynamic';
 
 /**
  * Bulk Delete Gallery Images API
@@ -14,10 +16,8 @@ import { extractGalleryStoragePath, deleteGalleryImagesBulk } from '@/lib/galler
 export async function POST(request: NextRequest) {
   try {
     // Protect route - admin only
-    const authResult = await protectAdminRoute(request);
-    if (authResult.error) {
-      return NextResponse.json({ error: authResult.error }, { status: authResult.status });
-    }
+    const authCheck = await protectAdminRoute();
+    if (authCheck) return authCheck;
 
     // Parse request body
     const body = await request.json();
@@ -39,10 +39,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const supabase = await createClient();
-
     // Fetch all images to get their storage URLs
-    const { data: images, error: fetchError } = await supabase
+    const { data: images, error: fetchError } = await supabaseAdmin
       .from('gallery_images')
       .select('id, image_url')
       .in('id', image_ids);
@@ -96,7 +94,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Delete from database (even if storage deletion failed)
-    const { error: deleteError, count } = await supabase
+    const { error: deleteError, count } = await supabaseAdmin
       .from('gallery_images')
       .delete()
       .in('id', image_ids);
