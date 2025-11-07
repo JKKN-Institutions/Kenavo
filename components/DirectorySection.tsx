@@ -40,57 +40,62 @@ const DirectorySection = () => {
                 </div>
 
                 {/* Top Left - Profile 1 */}
-                <div className="absolute top-[22%] left-[10%] w-[52px] sm:w-[60px] h-[52px] sm:h-[60px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[22%] left-[10%] w-[52px] sm:w-[60px] h-[52px] sm:h-[60px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-1.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Top Center - Profile 2 */}
-                <div className="absolute top-[5%] left-[40%] w-[54px] sm:w-[62px] h-[54px] sm:h-[62px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[5%] left-[40%] w-[54px] sm:w-[62px] h-[54px] sm:h-[62px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-2.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
-                    style={{ objectPosition: 'center 20%' }}
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Top Right - Profile 3 */}
-                <div className="absolute top-[14%] right-[10%] w-[53px] sm:w-[61px] h-[53px] sm:h-[61px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[14%] right-[10%] w-[53px] sm:w-[61px] h-[53px] sm:h-[61px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-3.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Middle Left - Profile 4 */}
-                <div className="absolute top-[60%] left-[6%] -translate-y-1/2 w-[54px] sm:w-[62px] h-[54px] sm:h-[62px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[60%] left-[6%] -translate-y-1/2 w-[54px] sm:w-[62px] h-[54px] sm:h-[62px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-4.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Middle Right - Profile 5 */}
-                <div className="absolute top-[52%] right-[6%] -translate-y-1/2 w-[53px] sm:w-[61px] h-[53px] sm:h-[61px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[52%] right-[6%] -translate-y-1/2 w-[53px] sm:w-[61px] h-[53px] sm:h-[61px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-5.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Bottom Center - Profile 6 */}
-                <div className="absolute bottom-[6%] left-[43%] w-[55px] sm:w-[63px] h-[55px] sm:h-[63px] z-10 overflow-hidden rounded-full">
+                <div className="absolute bottom-[6%] left-[43%] w-[55px] sm:w-[63px] h-[55px] sm:h-[63px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-6.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
               </div>
@@ -126,57 +131,62 @@ const DirectorySection = () => {
                 </div>
 
                 {/* Top Left - Profile 1 */}
-                <div className="absolute top-[25%] left-[8%] w-[75px] md:w-[85px] lg:w-[95px] xl:w-[105px] h-[75px] md:h-[85px] lg:h-[95px] xl:h-[105px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[25%] left-[8%] w-[75px] md:w-[85px] lg:w-[95px] xl:w-[105px] h-[75px] md:h-[85px] lg:h-[95px] xl:h-[105px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-1.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Top Center - Profile 2 */}
-                <div className="absolute top-[5%] left-[38%] w-[78px] md:w-[88px] lg:w-[98px] xl:w-[108px] h-[78px] md:h-[88px] lg:h-[98px] xl:h-[108px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[5%] left-[38%] w-[78px] md:w-[88px] lg:w-[98px] xl:w-[108px] h-[78px] md:h-[88px] lg:h-[98px] xl:h-[108px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-2.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
-                    style={{ objectPosition: 'center 20%' }}
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Top Right - Profile 3 */}
-                <div className="absolute top-[15%] right-[8%] w-[76px] md:w-[86px] lg:w-[96px] xl:w-[106px] h-[76px] md:h-[86px] lg:h-[96px] xl:h-[106px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[15%] right-[8%] w-[76px] md:w-[86px] lg:w-[96px] xl:w-[106px] h-[76px] md:h-[86px] lg:h-[96px] xl:h-[106px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-3.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Middle Left - Profile 4 */}
-                <div className="absolute top-[60%] left-[4%] -translate-y-1/2 w-[78px] md:w-[88px] lg:w-[98px] xl:w-[108px] h-[78px] md:h-[88px] lg:h-[98px] xl:h-[108px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[60%] left-[4%] -translate-y-1/2 w-[78px] md:w-[88px] lg:w-[98px] xl:w-[108px] h-[78px] md:h-[88px] lg:h-[98px] xl:h-[108px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-4.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Middle Right - Profile 5 */}
-                <div className="absolute top-[52%] right-[5%] -translate-y-1/2 w-[77px] md:w-[87px] lg:w-[97px] xl:w-[107px] h-[77px] md:h-[87px] lg:h-[97px] xl:h-[107px] z-10 overflow-hidden rounded-full">
+                <div className="absolute top-[52%] right-[5%] -translate-y-1/2 w-[77px] md:w-[87px] lg:w-[97px] xl:w-[107px] h-[77px] md:h-[87px] lg:h-[97px] xl:h-[107px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-5.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
 
                 {/* Bottom Center - Profile 6 */}
-                <div className="absolute bottom-[8%] left-[42%] w-[79px] md:w-[89px] lg:w-[99px] xl:w-[109px] h-[79px] md:h-[89px] lg:h-[99px] xl:h-[109px] z-10 overflow-hidden rounded-full">
+                <div className="absolute bottom-[8%] left-[42%] w-[79px] md:w-[89px] lg:w-[99px] xl:w-[109px] h-[79px] md:h-[89px] lg:h-[99px] xl:h-[109px] z-10 overflow-hidden rounded-full bg-[rgba(217,81,100,0.2)]">
                   <img
                     src="/images/alumni/profile-6.png"
                     alt="Classmate profile"
-                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg scale-110"
+                    className="rounded-full aspect-square object-cover w-full h-full shadow-lg"
+                    style={{ objectPosition: 'center top' }}
                   />
                 </div>
               </div>

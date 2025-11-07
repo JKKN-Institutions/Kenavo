@@ -111,11 +111,13 @@ export default function DirectoryPage() {
 
     return (
       <article className="bg-[rgba(44,23,82,1)] flex grow flex-col font-normal w-full px-4 sm:px-5 py-5 sm:py-6 max-md:mt-6">
-        <img
-          src={getImageUrl(profile.profile_image_url)}
-          className="aspect-[0.97] object-cover w-full self-stretch rounded-sm"
-          alt={`${profile.name} profile`}
-        />
+        <div className="aspect-[0.97] w-full self-stretch rounded-sm bg-[rgba(78,46,140,0.4)] overflow-hidden">
+          <img
+            src={getImageUrl(profile.profile_image_url)}
+            className="w-full h-full object-contain"
+            alt={`${profile.name} profile`}
+          />
+        </div>
         <div className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] leading-tight mt-3 sm:mt-4">
           {profile.name}
         </div>

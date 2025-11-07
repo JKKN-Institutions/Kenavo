@@ -17,7 +17,7 @@ export async function POST(request: NextRequest) {
     const location = formData.get('location') as string || null;
     const year_graduated = formData.get('year_graduated') as string || null;
     const current_job = formData.get('current_job') as string || null;
-    const company = formData.get('company') as string || null;
+    const designation_organisation = formData.get('designation_organisation') as string || null;
     const bio = formData.get('bio') as string || null;
     const linkedin_url = formData.get('linkedin_url') as string || null;
     const nicknames = formData.get('nicknames') as string || null;
@@ -76,7 +76,7 @@ export async function POST(request: NextRequest) {
         location,
         year_graduated,
         current_job,
-        company,
+        designation_organisation,
         bio,
         linkedin_url,
         nicknames,

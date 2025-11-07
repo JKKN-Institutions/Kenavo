@@ -32,15 +32,36 @@ function escapeCSV(value) {
   return str;
 }
 
-// Helper function to extract graduation year from tenure
+// Helper function to extract graduation year from tenure - handles ranges and single years
 function extractGradYear(tenure) {
   if (!tenure || tenure.trim() === '') {
     return '';
   }
 
-  // Extract the last 4 digits (graduation year)
-  const match = tenure.match(/(\d{4})$/);
-  return match ? match[1] : '';
+  // PRIORITY 1: Year range (e.g., "1993-2000" or "1993 - 2000")
+  const rangeMatch = tenure.match(/(\d{4})\s*[-–]\s*(\d{4})/);
+  if (rangeMatch) {
+    return `${rangeMatch[1]}-${rangeMatch[2]}`;  // Return full range
+  }
+
+  // PRIORITY 2: Single year patterns
+  const singleYearPatterns = [
+    /class of (\d{4})/i,                 // Matches "Class of 1995"
+    /batch[:\s]+(\d{4})/i,               // Matches "Batch: 1995" or "Batch 1995"
+    /(\d{4})[:\s]*batch/i,               // Matches "1995 Batch"
+    /graduated[:\s]+(\d{4})/i,           // Matches "Graduated: 1995"
+    /(\d{4})$/,                          // Matches "1995" at end
+    /\b(\d{4})\b/,                       // Any 4-digit number (fallback)
+  ];
+
+  for (const pattern of singleYearPatterns) {
+    const match = tenure.match(pattern);
+    if (match) {
+      return match[1];
+    }
+  }
+
+  return '';
 }
 
 // Read and parse the source CSV

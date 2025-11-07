@@ -1,10 +1,16 @@
+'use client';
+
 import React from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import GalleryGrid from '@/components/GalleryGrid';
 import LoadMoreButton from '@/components/LoadMoreButton';
+import { useGalleryAlbums } from '@/lib/hooks/use-gallery-albums';
 
 export default function GalleryPage() {
+  // Manage gallery state at page level
+  const galleryState = useGalleryAlbums();
+
   return (
     <div className="bg-[rgba(78,46,140,1)] flex flex-col overflow-hidden items-center min-h-screen">
       <Header />
@@ -19,8 +25,18 @@ export default function GalleryPage() {
           </p>
         </section>
 
-        <GalleryGrid />
-        <LoadMoreButton />
+        {/* Pass shared state to GalleryGrid */}
+        <GalleryGrid externalState={galleryState} />
+
+        {/* Load More Button - shows after 3 auto-loads */}
+        <LoadMoreButton
+          onLoadMore={galleryState.loadMore}
+          loading={galleryState.loading}
+          hasMore={galleryState.hasMore}
+          autoLoadCount={galleryState.autoLoadCount}
+          total={galleryState.total}
+          currentCount={galleryState.albums.length}
+        />
       </main>
 
       <Footer />

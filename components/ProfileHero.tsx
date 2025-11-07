@@ -5,7 +5,7 @@ interface ProfileHeroProps {
   name: string;
   profileImageUrl: string | null;
   yearGraduated: string | null;
-  company: string | null;
+  designationOrganisation: string | null;
   currentJob: string | null;
   location: string | null;
   nicknames: string | null;
@@ -16,7 +16,7 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
   name,
   profileImageUrl,
   yearGraduated,
-  company,
+  designationOrganisation,
   currentJob,
   location,
   nicknames,
@@ -54,11 +54,11 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12 xl:gap-8">
           {/* Left Column - Profile Image */}
           <div className="w-full">
-            <div className="relative w-full overflow-hidden rounded-lg shadow-xl">
+            <div className="relative w-full overflow-hidden rounded-lg shadow-xl bg-[rgba(44,23,82,0.3)]">
               <img
                 src={imageUrl}
                 alt={`${name} Profile`}
-                className="aspect-[0.95] object-cover object-center w-full h-full"
+                className="aspect-[0.95] object-contain object-center w-full h-full"
               />
             </div>
           </div>
@@ -77,14 +77,14 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
               </div>
             )}
 
-            {/* Company / Organization */}
-            {(company || currentJob) && (
+            {/* Designation / Organisation */}
+            {(designationOrganisation || currentJob) && (
               <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-lg p-4 sm:p-5 md:p-6 xl:p-5 border border-[rgba(217,81,100,0.2)]">
                 <div className="text-[rgba(217,81,100,1)] text-xs sm:text-sm md:text-base font-medium uppercase tracking-wide mb-2 sm:mb-3">
-                  Company / Organization
+                  DESIGNATION / ORGANISATION
                 </div>
                 <div className="text-white text-lg sm:text-xl md:text-2xl lg:text-[28px] font-semibold leading-tight xl:leading-[1.25] break-words">
-                  {currentJob && company ? `${currentJob} at ${company}` : company || currentJob}
+                  {designationOrganisation || currentJob}
                 </div>
               </div>
             )}

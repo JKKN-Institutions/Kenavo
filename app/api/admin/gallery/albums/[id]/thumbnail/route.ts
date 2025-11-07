@@ -16,8 +16,9 @@ export async function PUT(
   const authCheck = await protectAdminRoute();
   if (authCheck) return authCheck;
 
+  const { id: albumId } = await params;
+
   try {
-    const { id: albumId } = await params;
     const { image_url } = await request.json();
 
     if (!image_url) {

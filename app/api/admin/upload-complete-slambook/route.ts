@@ -19,7 +19,7 @@ interface SlambookRow {
   location: string;
   currentJob: string;
   tenure: string;
-  company: string;
+  designationOrganisation: string;
   answers: string[]; // 10 Q&A answers
 }
 
@@ -84,26 +84,30 @@ function parseCSV(content: string): string[][] {
   return result;
 }
 
-// Extract graduation year from tenure - ENHANCED to handle multiple formats
+// Extract graduation year from tenure - ENHANCED to handle multiple formats including ranges
 function extractGradYear(tenure: string): string {
   if (!tenure) return '';
 
-  // Try different patterns in order of specificity
-  const patterns = [
-    /(\d{4})$/,                          // Matches "1990-1995" or "1995" at end
+  // PRIORITY 1: Year range (e.g., "1993-2000" or "1993 - 2000")
+  const rangeMatch = tenure.match(/(\d{4})\s*[-–]\s*(\d{4})/);
+  if (rangeMatch) {
+    return `${rangeMatch[1]}-${rangeMatch[2]}`;  // Return full range
+  }
+
+  // PRIORITY 2: Single year patterns
+  const singleYearPatterns = [
     /class of (\d{4})/i,                 // Matches "Class of 1995"
     /batch[:\s]+(\d{4})/i,               // Matches "Batch: 1995" or "Batch 1995"
     /(\d{4})[:\s]*batch/i,               // Matches "1995 Batch"
     /graduated[:\s]+(\d{4})/i,           // Matches "Graduated: 1995"
-    /(\d{4})[:\s]*[-–]\s*(\d{4})/,       // Matches "1990-1995" (takes second year)
+    /(\d{4})$/,                          // Matches "1995" at end
     /\b(\d{4})\b/,                       // Any 4-digit number (fallback)
   ];
 
-  for (const pattern of patterns) {
+  for (const pattern of singleYearPatterns) {
     const match = tenure.match(pattern);
     if (match) {
-      // For range patterns (1990-1995), take the last matched group
-      return match[match.length - 1] || match[1];
+      return match[1];
     }
   }
 
@@ -131,7 +135,7 @@ function parseSlambookData(rows: string[][]): SlambookRow[] {
       location: cleanValue(row[3]) || '', // Current Residential Address
       currentJob: cleanValue(row[4]) || '', // Current Profession
       tenure: cleanValue(row[5]) || '', // Tenure at Montfort
-      company: cleanValue(row[6]) || '', // Company
+      designationOrganisation: cleanValue(row[6]) || '', // Designation / Organisation
       answers: [
         cleanValue(row[7]) || '',  // Q1
         cleanValue(row[8]) || '',  // Q2
@@ -360,7 +364,7 @@ export async function POST(request: NextRequest) {
         location: row.location,
         current_job: row.currentJob,
         year_graduated: yearGraduated,
-        company: row.company,
+        designation_organisation: row.designationOrganisation,
       };
 
       // Track match type for statistics

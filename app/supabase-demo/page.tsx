@@ -180,12 +180,9 @@ export default function SupabaseDemoPage() {
                   </div>
                 )}
 
-                {profile.current_job && (
+                {(profile.designation_organisation || profile.current_job) && (
                   <div className="text-sm text-gray-700 mb-2 line-clamp-2">
-                    <strong>{profile.current_job}</strong>
-                    {profile.company && (
-                      <span className="text-gray-600"> at {profile.company}</span>
-                    )}
+                    <strong>{profile.designation_organisation || profile.current_job}</strong>
                   </div>
                 )}
 

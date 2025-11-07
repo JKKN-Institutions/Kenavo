@@ -1,27 +1,142 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
+import { GALLERY_CONFIG } from '@/lib/config/gallery-config';
 
-const LoadMoreButton: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+interface LoadMoreButtonProps {
+  /**
+   * Callback function executed when button is clicked
+   */
+  onLoadMore: () => void | Promise<void>;
 
-  const handleLoadMore = async () => {
-    setIsLoading(true);
-    // Simulate loading more content
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    setIsLoading(false);
-    // Here you would typically load more gallery items
-  };
+  /**
+   * Whether data is currently being loaded
+   */
+  loading: boolean;
+
+  /**
+   * Whether there are more items to load
+   * Button is hidden when false
+   */
+  hasMore: boolean;
+
+  /**
+   * Current number of auto-loads that have occurred
+   * Button only shows after maxAutoLoads is reached
+   */
+  autoLoadCount: number;
+
+  /**
+   * Maximum number of auto-loads before showing button
+   * Defaults to GALLERY_CONFIG.MAX_AUTO_LOADS
+   */
+  maxAutoLoads?: number;
+
+  /**
+   * Total number of items available
+   * Used to calculate remaining count
+   */
+  total?: number;
+
+  /**
+   * Number of items currently displayed
+   * Used to calculate remaining count
+   */
+  currentCount?: number;
+
+  /**
+   * Custom text for the button
+   * Defaults to "Load more"
+   */
+  buttonText?: string;
+}
+
+/**
+ * Functional Load More button for gallery pagination
+ *
+ * Features:
+ * - Only shows after auto-load limit reached
+ * - Shows remaining item count
+ * - Loading state with spinner
+ * - Responsive design
+ * - Accessible ARIA labels
+ *
+ * @example
+ * ```tsx
+ * <LoadMoreButton
+ *   onLoadMore={loadMore}
+ *   loading={loading}
+ *   hasMore={hasMore}
+ *   autoLoadCount={autoLoadCount}
+ *   total={total}
+ *   currentCount={albums.length}
+ * />
+ * ```
+ */
+const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
+  onLoadMore,
+  loading,
+  hasMore,
+  autoLoadCount,
+  maxAutoLoads = GALLERY_CONFIG.MAX_AUTO_LOADS,
+  total,
+  currentCount,
+  buttonText = 'Load more',
+}) => {
+  // Don't show button if:
+  // 1. No more items to load, OR
+  // 2. Auto-loading is still active (haven't reached maxAutoLoads yet)
+  if (!hasMore || autoLoadCount < maxAutoLoads) {
+    return null;
+  }
+
+  // Calculate remaining items
+  const remaining = total && currentCount ? total - currentCount : null;
 
   return (
-    <button
-      onClick={handleLoadMore}
-      disabled={isLoading}
-      className="bg-[rgba(217,81,100,1)] flex w-[160px] sm:w-[180px] md:w-[190px] max-w-full flex-col items-stretch text-base sm:text-lg text-white font-black text-center leading-none justify-center whitespace-nowrap mt-16 sm:mt-20 md:mt-24 lg:mt-32 mb-16 sm:mb-20 md:mb-24 lg:mb-32 px-8 sm:px-10 md:px-[42px] py-2.5 sm:py-3 rounded-[50px] hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-      aria-label="Load more gallery items"
-    >
-      {isLoading ? 'Loading...' : 'Load more'}
-    </button>
+    <div className="flex flex-col items-center gap-4">
+      <button
+        onClick={onLoadMore}
+        disabled={loading}
+        className="bg-[rgba(217,81,100,1)] flex w-[160px] sm:w-[180px] md:w-[190px] max-w-full flex-col items-stretch text-base sm:text-lg text-white font-black text-center leading-none justify-center whitespace-nowrap mt-16 sm:mt-20 md:mt-24 lg:mt-32 mb-4 px-8 sm:px-10 md:px-[42px] py-2.5 sm:py-3 rounded-[50px] hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+        aria-label={loading ? 'Loading more items' : `Load more items${remaining ? ` (${remaining} remaining)` : ''}`}
+      >
+        {loading ? (
+          <span className="flex items-center justify-center gap-2">
+            <svg
+              className="animate-spin h-5 w-5"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <circle
+                className="opacity-25"
+                cx="12"
+                cy="12"
+                r="10"
+                stroke="currentColor"
+                strokeWidth="4"
+              />
+              <path
+                className="opacity-75"
+                fill="currentColor"
+                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+              />
+            </svg>
+            Loading...
+          </span>
+        ) : (
+          buttonText
+        )}
+      </button>
+
+      {/* Show remaining count if available */}
+      {!loading && remaining !== null && remaining > 0 && (
+        <p className="text-white/70 text-sm">
+          {remaining} more {remaining === 1 ? 'item' : 'items'} available
+        </p>
+      )}
+    </div>
   );
 };
 

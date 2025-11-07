@@ -41,6 +41,7 @@ interface Profile {
   year_graduated: string | null;
   current_job: string | null;
   company: string | null;
+  designation_organisation: string | null;
   bio: string | null;
   linkedin_url: string | null;
   nicknames: string | null;
@@ -228,7 +229,7 @@ function ManageProfilesTab() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" size={20} />
             <input
               type="text"
-              placeholder="Search by name, location, or company..."
+              placeholder="Search by name, location, or designation/organisation..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);
@@ -279,20 +280,23 @@ function ManageProfilesTab() {
               className="bg-white/10 rounded-lg p-4 flex items-center justify-between hover:bg-white/15 transition-all"
             >
               <div className="flex items-center gap-4 flex-1">
-                <img
-                  src={profile.profile_image_url || '/placeholder-profile.svg'}
-                  alt={profile.name}
-                  className="w-12 h-12 rounded-full object-cover"
-                  onError={(e) => {
-                    e.currentTarget.src = '/placeholder-profile.svg';
-                  }}
-                />
+                <div className="w-12 h-12 rounded-full overflow-hidden bg-[rgba(147,51,234,0.2)] flex-shrink-0">
+                  <img
+                    src={profile.profile_image_url || '/placeholder-profile.svg'}
+                    alt={profile.name}
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: 'center top' }}
+                    onError={(e) => {
+                      e.currentTarget.src = '/placeholder-profile.svg';
+                    }}
+                  />
+                </div>
                 <div className="flex-1">
                   <h3 className="text-white font-semibold">{profile.name}</h3>
                   <p className="text-purple-200 text-sm">
                     {profile.year_graduated && `Class of ${profile.year_graduated}`}
                     {profile.location && ` • ${profile.location}`}
-                    {profile.company && ` • ${profile.company}`}
+                    {profile.designation_organisation && ` • ${profile.designation_organisation}`}
                   </p>
                 </div>
               </div>
@@ -349,6 +353,7 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
     year_graduated: profile.year_graduated || '',
     current_job: profile.current_job || '',
     company: profile.company || '',
+    designation_organisation: profile.designation_organisation || '',
     bio: profile.bio || '',
     linkedin_url: profile.linkedin_url || '',
     nicknames: profile.nicknames || '',
@@ -499,7 +504,9 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
             <label className="block text-white font-semibold">Profile Image</label>
             <div className="flex items-center gap-4">
               {imagePreview && (
-                <img src={imagePreview} alt="Preview" className="w-24 h-24 rounded-full object-cover border-4 border-white/20" />
+                <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white/20 bg-[rgba(147,51,234,0.2)]">
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
+                </div>
               )}
               <label className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2">
                 <Upload size={20} />
@@ -1487,7 +1494,9 @@ function SingleProfileForm() {
         <label className="block text-white font-semibold">Profile Image</label>
         <div className="flex items-center gap-4">
           {imagePreview && (
-            <img src={imagePreview} alt="Preview" className="w-24 h-24 rounded-full object-cover border-4 border-white/20" />
+            <div className="w-24 h-24 rounded-full overflow-hidden border-4 border-white/20 bg-[rgba(147,51,234,0.2)]">
+              <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
+            </div>
           )}
           <label className="cursor-pointer bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2">
             <Upload size={20} />

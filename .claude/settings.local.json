@@ -66,7 +66,14 @@
       "Bash(del \"C:\\Users\\brabu\\Documents\\GitHub\\Kenavo\\app\\api\\admin\\bulk-upload-profiles\\route.ts\")",
       "Bash(node scripts/check-exact-name-duplicates.js:*)",
       "Bash(robocopy:*)",
-      "Bash(node -e:*)"
+      "Bash(node -e:*)",
+      "Bash(node scripts/fix-year-ranges-from-db.js:*)",
+      "Bash(node scripts/check-recent-uploads.js:*)",
+      "Bash(node scripts/check-latest-profiles.js:*)",
+      "Bash(copy:*)",
+      "Bash(powershell -Command \"(Get-Content ''app\\directory\\[id]\\page.tsx'') -replace ''isExpanded=\\{index === 0\\}'', ''isExpanded={true}'' | Set-Content ''app\\directory\\[id]\\page.tsx''\")",
+      "Bash(powershell -Command \"$file = ''C:\\Users\\brabu\\Documents\\GitHub\\Kenavo\\app\\directory\\[id]\\page.tsx''; (Get-Content $file) -replace ''isExpanded=\\{index === 0\\}'', ''isExpanded={true}'' | Set-Content $file\")",
+      "Bash(cmd /c \"del C:\\Users\\brabu\\Documents\\GitHub\\Kenavo\\temp-update.ps1\")"
     ],
     "deny": [],
     "ask": []

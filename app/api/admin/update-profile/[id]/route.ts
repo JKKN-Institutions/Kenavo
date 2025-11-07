@@ -29,7 +29,7 @@ export async function PUT(
     const location = formData.get('location') as string || null;
     const year_graduated = formData.get('year_graduated') as string || null;
     const current_job = formData.get('current_job') as string || null;
-    const company = formData.get('company') as string || null;
+    const designation_organisation = formData.get('designation_organisation') as string || null;
     const bio = formData.get('bio') as string || null;
     const linkedin_url = formData.get('linkedin_url') as string || null;
     const nicknames = formData.get('nicknames') as string || null;
@@ -104,7 +104,7 @@ export async function PUT(
     if (formData.has('location')) updateData.location = location;
     if (formData.has('year_graduated')) updateData.year_graduated = year_graduated;
     if (formData.has('current_job')) updateData.current_job = current_job;
-    if (formData.has('company')) updateData.company = company;
+    if (formData.has('designation_organisation')) updateData.designation_organisation = designation_organisation;
     if (formData.has('bio')) updateData.bio = bio;
     if (formData.has('linkedin_url')) updateData.linkedin_url = linkedin_url;
     if (formData.has('nicknames')) updateData.nicknames = nicknames;

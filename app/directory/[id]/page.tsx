@@ -56,7 +56,7 @@ export default async function DirectoryIndividualPage({ params }: { params: Prom
             name={profile.name}
             profileImageUrl={profile.profile_image_url}
             yearGraduated={profile.year_graduated}
-            company={profile.company}
+            designationOrganisation={profile.designation_organisation}
             currentJob={profile.current_job}
             location={profile.location}
             nicknames={profile.nicknames}

@@ -1,51 +1,44 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import GalleryCard from './GalleryCard';
+import { useGalleryAlbums } from '@/lib/hooks/use-gallery-albums';
+import { useInfiniteScroll } from '@/lib/hooks/use-infinite-scroll';
+import { GALLERY_CONFIG } from '@/lib/config/gallery-config';
 
-interface GalleryAlbum {
-  id: number;
-  name: string;
-  slug: string;
-  description: string | null;
-  thumbnail_url: string | null;
-  display_order: number;
-  image_count: number;
+interface GalleryGridProps {
+  /**
+   * Expose hook return values for parent component integration
+   * Optional - if not provided, component manages its own state
+   */
+  externalState?: ReturnType<typeof useGalleryAlbums>;
 }
 
-const GalleryGrid: React.FC = () => {
-  const [albums, setAlbums] = useState<GalleryAlbum[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
+  // Use external state if provided, otherwise use internal hook
+  const internalState = useGalleryAlbums();
+  const {
+    albums,
+    loading,
+    error,
+    hasMore,
+    total,
+    autoLoadCount,
+    loadMore,
+    retry,
+  } = externalState || internalState;
 
-  useEffect(() => {
-    fetchAlbums();
-  }, []);
+  // Setup infinite scroll sentinel
+  const sentinelRef = useInfiniteScroll({
+    onLoadMore: loadMore,
+    enabled: autoLoadCount < GALLERY_CONFIG.MAX_AUTO_LOADS,
+    loading,
+    hasMore,
+    autoLoadCount,
+  });
 
-  const fetchAlbums = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-
-      const response = await fetch('/api/gallery/albums', {
-        cache: 'no-store',
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch albums');
-      }
-
-      const data = await response.json();
-      setAlbums(data.albums || []);
-    } catch (err: any) {
-      console.error('Error fetching albums:', err);
-      setError(err.message || 'Failed to load gallery');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (loading) {
+  // Initial loading state (no albums loaded yet)
+  if (loading && albums.length === 0) {
     return (
       <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
         <div className="flex justify-center items-center py-20">
@@ -55,13 +48,14 @@ const GalleryGrid: React.FC = () => {
     );
   }
 
-  if (error) {
+  // Error state
+  if (error && albums.length === 0) {
     return (
       <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
         <div className="text-center py-20">
           <p className="text-red-400 text-lg">{error}</p>
           <button
-            onClick={fetchAlbums}
+            onClick={retry}
             className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
           >
             Try Again
@@ -71,7 +65,8 @@ const GalleryGrid: React.FC = () => {
     );
   }
 
-  if (albums.length === 0) {
+  // Empty state
+  if (!loading && albums.length === 0) {
     return (
       <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
         <div className="text-center py-20">
@@ -94,6 +89,39 @@ const GalleryGrid: React.FC = () => {
           </div>
         ))}
       </div>
+
+      {/* Infinite scroll sentinel - invisible trigger for auto-loading */}
+      <div ref={sentinelRef} className="h-px" aria-hidden="true" />
+
+      {/* Loading indicator during auto-scroll */}
+      {loading && albums.length > 0 && autoLoadCount < GALLERY_CONFIG.MAX_AUTO_LOADS && (
+        <div className="flex flex-col items-center gap-3 mt-12 mb-8">
+          <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-white"></div>
+          <p className="text-white/70 text-sm">Loading more albums...</p>
+        </div>
+      )}
+
+      {/* End of results message */}
+      {!loading && !hasMore && albums.length > 0 && (
+        <div className="text-center mt-12 mb-8">
+          <p className="text-white/60 text-sm">
+            You've reached the end - All {total} albums shown
+          </p>
+        </div>
+      )}
+
+      {/* Error message during loading more */}
+      {error && albums.length > 0 && (
+        <div className="text-center mt-12 mb-8">
+          <p className="text-red-400 text-sm mb-3">{error}</p>
+          <button
+            onClick={retry}
+            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+          >
+            Try Again
+          </button>
+        </div>
+      )}
     </section>
   );
 };

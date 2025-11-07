@@ -12,8 +12,9 @@ export async function GET(
   const authCheck = await protectAdminRoute();
   if (authCheck) return authCheck;
 
+  const { id: albumId } = await params;
+
   try {
-    const { id: albumId } = await params;
 
     // Fetch album with images
     const { data: album, error: albumError } = await supabaseAdmin
@@ -58,8 +59,9 @@ export async function PUT(
   const authCheck = await protectAdminRoute();
   if (authCheck) return authCheck;
 
+  const { id: albumId } = await params;
+
   try {
-    const { id: albumId } = await params;
     const body = await request.json();
     const { name, slug, description, thumbnail_url, display_order, is_active } = body;
 
@@ -122,8 +124,9 @@ export async function DELETE(
   const authCheck = await protectAdminRoute();
   if (authCheck) return authCheck;
 
+  const { id: albumId } = await params;
+
   try {
-    const { id: albumId } = await params;
 
     // Check if album exists and get image count
     const { data: album, error: checkError } = await supabaseAdmin

@@ -221,8 +221,8 @@ export async function getProfileBySlug(slug: string): Promise<ProfileWithAnswers
 
     // Prefer profile with most complete data
     profile = matchedProfiles.reduce((best, current) => {
-      const bestScore = (best.company ? 1 : 0) + (best.current_job ? 1 : 0) + (best.location ? 1 : 0)
-      const currentScore = (current.company ? 1 : 0) + (current.current_job ? 1 : 0) + (current.location ? 1 : 0)
+      const bestScore = (best.designation_organisation ? 1 : 0) + (best.current_job ? 1 : 0) + (best.location ? 1 : 0)
+      const currentScore = (current.designation_organisation ? 1 : 0) + (current.current_job ? 1 : 0) + (current.location ? 1 : 0)
 
       if (currentScore > bestScore) return current
       if (currentScore === bestScore) {

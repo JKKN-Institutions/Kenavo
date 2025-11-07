@@ -10,11 +10,12 @@ export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const authCheck = await protectAdminRoute();
-    if (authCheck) return authCheck;
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
 
-    const { id: imageId } = await params;
+  const { id: imageId } = await params;
+
+  try {
 
     // Fetch image with album details
     const { data: image, error: imageError } = await supabaseAdmin
@@ -53,11 +54,12 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const authCheck = await protectAdminRoute();
-    if (authCheck) return authCheck;
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
 
-    const { id: imageId } = await params;
+  const { id: imageId } = await params;
+
+  try {
     const body = await request.json();
     const { album_id, image_url, caption, display_order, is_active } = body;
 
@@ -130,11 +132,12 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  try {
-    const authCheck = await protectAdminRoute();
-    if (authCheck) return authCheck;
+  const authCheck = await protectAdminRoute();
+  if (authCheck) return authCheck;
 
-    const { id: imageId } = await params;
+  const { id: imageId } = await params;
+
+  try {
 
     // Check if image exists
     const { data: image, error: checkError } = await supabaseAdmin
