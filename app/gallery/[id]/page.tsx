@@ -30,8 +30,9 @@ export default function GalleryIndividualPage({ params }: GalleryIndividualPageP
       <Header />
 
       <main className="flex flex-col items-center w-full max-w-[1200px] mx-auto">
-        <section className="flex w-full flex-col items-center text-[40px] sm:text-[50px] md:text-[64px] lg:text-[78px] text-[rgba(78,46,140,1)] font-bold whitespace-nowrap text-center leading-[1.1] pt-8 sm:pt-12 md:pt-16 lg:pt-20 px-4 sm:px-6 md:px-8">
-          <h1 className="z-10 mb-[-25px] max-md:mb-2.5">
+        {/* Album Title Section */}
+        <section className="flex w-full flex-col items-center text-[rgba(78,46,140,1)] font-bold text-center pt-6 sm:pt-8 md:pt-12 lg:pt-16 px-4 sm:px-6 md:px-8">
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-[78px] leading-tight sm:leading-tight md:leading-tight lg:leading-[1.1] mb-0 text-balance break-words max-w-full">
             {albumTitle}
           </h1>
         </section>
@@ -40,7 +41,7 @@ export default function GalleryIndividualPage({ params }: GalleryIndividualPageP
         <GalleryImagesGrid albumSlug={id} externalState={imagesState} />
 
         {/* Load More Button - shows after 3 auto-loads */}
-        <div className="pb-12">
+        <div className="pb-10 sm:pb-12 md:pb-16">
           <LoadMoreButton
             onLoadMore={imagesState.loadMore}
             loading={imagesState.loading}

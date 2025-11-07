@@ -171,6 +171,7 @@ function ManageProfilesTab() {
   const [yearFilter, setYearFilter] = useState('');
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
   const [editingProfile, setEditingProfile] = useState<Profile | null>(null);
 
   useEffect(() => {
@@ -200,6 +201,7 @@ function ManageProfilesTab() {
       if (response.ok) {
         setProfiles(data.profiles);
         setTotalPages(data.totalPages);
+        setTotalCount(data.total);
       }
     } catch (error) {
       console.error('Error fetching profiles:', error);
@@ -220,7 +222,7 @@ function ManageProfilesTab() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-4">Manage Profiles (134 Total)</h2>
+      <h2 className="text-2xl font-bold text-white mb-4">Manage Profiles ({totalCount} Total)</h2>
 
       {/* Search and Filter */}
       <div className="flex gap-4 flex-wrap">

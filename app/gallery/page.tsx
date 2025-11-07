@@ -28,15 +28,18 @@ export default function GalleryPage() {
         {/* Pass shared state to GalleryGrid */}
         <GalleryGrid externalState={galleryState} />
 
-        {/* Load More Button - shows after 3 auto-loads */}
-        <LoadMoreButton
-          onLoadMore={galleryState.loadMore}
-          loading={galleryState.loading}
-          hasMore={galleryState.hasMore}
-          autoLoadCount={galleryState.autoLoadCount}
-          total={galleryState.total}
-          currentCount={galleryState.albums.length}
-        />
+        {/* Load More Button - shows after initial load when more albums available */}
+        <div className="w-full flex justify-center mb-12 sm:mb-16">
+          <LoadMoreButton
+            onLoadMore={galleryState.loadMore}
+            loading={galleryState.loading}
+            hasMore={galleryState.hasMore}
+            autoLoadCount={galleryState.autoLoadCount}
+            total={galleryState.total}
+            currentCount={galleryState.albums.length}
+            buttonText="Load more albums"
+          />
+        </div>
       </main>
 
       <Footer />

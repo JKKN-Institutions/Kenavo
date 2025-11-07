@@ -94,17 +94,17 @@ const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
   const remaining = total && currentCount ? total - currentCount : null;
 
   return (
-    <div className="flex flex-col items-center gap-4">
+    <div className="flex flex-col items-center gap-3 sm:gap-4">
       <button
         onClick={onLoadMore}
         disabled={loading}
-        className="bg-[rgba(217,81,100,1)] flex w-[160px] sm:w-[180px] md:w-[190px] max-w-full flex-col items-stretch text-base sm:text-lg text-white font-black text-center leading-none justify-center whitespace-nowrap mt-16 sm:mt-20 md:mt-24 lg:mt-32 mb-4 px-8 sm:px-10 md:px-[42px] py-2.5 sm:py-3 rounded-[50px] hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+        className="bg-[rgba(217,81,100,1)] flex w-[170px] sm:w-[190px] md:w-[200px] lg:w-[210px] max-w-full flex-col items-stretch text-base sm:text-lg md:text-xl text-white font-black text-center leading-none justify-center whitespace-nowrap mt-12 sm:mt-16 md:mt-20 lg:mt-24 mb-3 sm:mb-4 px-6 sm:px-8 md:px-10 py-3 sm:py-3.5 md:py-4 min-h-[44px] rounded-[50px] hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         aria-label={loading ? 'Loading more items' : `Load more items${remaining ? ` (${remaining} remaining)` : ''}`}
       >
         {loading ? (
           <span className="flex items-center justify-center gap-2">
             <svg
-              className="animate-spin h-5 w-5"
+              className="animate-spin h-5 w-5 sm:h-5 sm:w-5 md:h-6 md:w-6"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 24 24"
@@ -132,7 +132,7 @@ const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
 
       {/* Show remaining count if available */}
       {!loading && remaining !== null && remaining > 0 && (
-        <p className="text-white/70 text-sm">
+        <p className="text-white/70 text-sm sm:text-base">
           {remaining} more {remaining === 1 ? 'item' : 'items'} available
         </p>
       )}

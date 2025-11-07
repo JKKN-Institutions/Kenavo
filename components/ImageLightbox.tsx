@@ -94,51 +94,51 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
       {/* Close Button */}
       <button
         onClick={onClose}
-        className="absolute top-4 right-4 z-[101] p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+        className="absolute top-3 right-3 sm:top-4 sm:right-4 md:top-6 md:right-6 z-[101] p-2 sm:p-2.5 md:p-3 min-h-[44px] min-w-[44px] rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
         aria-label="Close lightbox"
       >
-        <X className="w-6 h-6 text-white" />
+        <X className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-white" />
       </button>
 
       {/* Image Counter */}
-      <div className="absolute top-4 left-4 z-[101] bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-        <span className="text-white text-sm font-medium">
+      <div className="absolute top-3 left-3 sm:top-4 sm:left-4 md:top-6 md:left-6 z-[101] bg-white/10 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-full">
+        <span className="text-white text-xs sm:text-sm md:text-base font-medium">
           {currentIndex + 1} / {images.length}
         </span>
       </div>
 
-      {/* Previous Button */}
+      {/* Previous Button - Hidden on mobile, visible on tablet+ */}
       {hasPrevious && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             onPrevious();
           }}
-          className="absolute left-4 top-1/2 -translate-y-1/2 z-[101] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          className="hidden sm:flex absolute left-3 sm:left-4 md:left-6 top-1/2 -translate-y-1/2 z-[101] p-2 sm:p-3 md:p-4 min-h-[44px] min-w-[44px] rounded-full bg-white/10 hover:bg-white/20 transition-colors items-center justify-center"
           aria-label="Previous image"
         >
-          <ChevronLeft className="w-8 h-8 text-white" />
+          <ChevronLeft className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
         </button>
       )}
 
-      {/* Next Button */}
+      {/* Next Button - Hidden on mobile, visible on tablet+ */}
       {hasNext && (
         <button
           onClick={(e) => {
             e.stopPropagation();
             onNext();
           }}
-          className="absolute right-4 top-1/2 -translate-y-1/2 z-[101] p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          className="hidden sm:flex absolute right-3 sm:right-4 md:right-6 top-1/2 -translate-y-1/2 z-[101] p-2 sm:p-3 md:p-4 min-h-[44px] min-w-[44px] rounded-full bg-white/10 hover:bg-white/20 transition-colors items-center justify-center"
           aria-label="Next image"
         >
-          <ChevronRight className="w-8 h-8 text-white" />
+          <ChevronRight className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
         </button>
       )}
 
       {/* Image Container */}
       <div
         ref={imageContainerRef}
-        className="relative w-full h-full flex items-center justify-center p-4 sm:p-8 md:p-12"
+        className="relative w-full h-full flex items-center justify-center p-4 sm:p-6 md:p-10 lg:p-12"
         onClick={(e) => e.stopPropagation()}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
@@ -147,15 +147,20 @@ const ImageLightbox: React.FC<ImageLightboxProps> = ({
         <img
           src={currentImage.src}
           alt={currentImage.alt}
-          className="max-w-full max-h-full object-contain rounded-lg select-none"
+          className="max-w-full max-h-full object-contain rounded-lg select-none shadow-2xl"
           loading="eager"
           draggable={false}
         />
       </div>
 
       {/* Swipe Instructions (Mobile Only) */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-[101] bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full md:hidden">
-        <span className="text-white text-xs">Swipe to navigate</span>
+      <div className="absolute bottom-3 sm:bottom-4 left-1/2 -translate-x-1/2 z-[101] bg-white/10 backdrop-blur-sm px-4 py-2 sm:px-5 sm:py-2.5 rounded-full sm:hidden">
+        <span className="text-white text-xs sm:text-sm">Swipe left/right to navigate</span>
+      </div>
+
+      {/* Keyboard Instructions (Desktop Only) */}
+      <div className="hidden lg:block absolute bottom-4 left-1/2 -translate-x-1/2 z-[101] bg-white/10 backdrop-blur-sm px-5 py-2.5 rounded-full">
+        <span className="text-white text-sm">Use arrow keys or click arrows to navigate</span>
       </div>
     </div>
   );

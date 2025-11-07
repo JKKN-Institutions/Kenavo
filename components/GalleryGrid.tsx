@@ -101,15 +101,6 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
         </div>
       )}
 
-      {/* End of results message */}
-      {!loading && !hasMore && albums.length > 0 && (
-        <div className="text-center mt-12 mb-8">
-          <p className="text-white/60 text-sm">
-            You've reached the end - All {total} albums shown
-          </p>
-        </div>
-      )}
-
       {/* Error message during loading more */}
       {error && albums.length > 0 && (
         <div className="text-center mt-12 mb-8">
