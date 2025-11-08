@@ -2,7 +2,8 @@ import React from 'react';
 import Header from '@/components/Header';
 import HeroSection from '@/components/lovable/HeroSection';
 import AboutSection from '@/components/lovable/AboutSection';
-import DirectorySection from '@/components/lovable/DirectorySection';
+// import DirectorySection from '@/components/lovable/DirectorySection'; // OLD VERSION
+import DirectorySectionV2 from '@/components/lovable/DirectorySectionV2'; // NEW CLEAN VERSION
 import StorySection from '@/components/lovable/StorySection';
 import StatsSection from '@/components/lovable/StatsSection';
 import GallerySection from '@/components/lovable/GallerySection';
@@ -14,7 +15,7 @@ export default function Home() {
       <Header />
       <HeroSection />
       <AboutSection />
-      <DirectorySection />
+      <DirectorySectionV2 />
       <StorySection />
       <StatsSection />
       <GallerySection />
