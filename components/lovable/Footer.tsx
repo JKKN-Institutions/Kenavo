@@ -8,7 +8,7 @@ const Footer = () => {
       className="bg-[rgba(217,81,100,1)] flex w-full flex-col items-center justify-center py-5 sm:py-6 md:py-7 lg:py-8"
       role="contentinfo"
     >
-      <div className="w-full px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
+      <div className="w-full px-2 sm:px-4 md:px-10 lg:px-16 xl:px-20">
         {/* Two-column layout: Text + Logo */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-6">
           {/* Left: Tagline */}

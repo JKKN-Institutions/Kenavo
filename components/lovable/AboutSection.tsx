@@ -7,7 +7,7 @@ const AboutSection = () => {
       className="w-full bg-[rgba(78,46,140,1)] py-12 sm:py-16 md:py-20 lg:py-24"
       aria-labelledby="about-heading"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
         {/* Main Content Grid */}
         <div className="grid grid-cols-1 md:grid-cols-5 gap-6 sm:gap-8 md:gap-10 lg:gap-12 items-center">
           {/* Image Column */}

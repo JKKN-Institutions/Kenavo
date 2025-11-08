@@ -9,7 +9,7 @@ const HeroSection = () => {
       <img
         src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/30b758abb6f1f9790a8cb900740efa46ee7e3338?placeholderIfAbsent=true"
         alt="Hero background"
-        className="w-full max-w-[40%] sm:max-w-[90%] md:max-w-[88%] lg:max-w-[86%] xl:max-w-[85%] object-contain relative brightness-90"
+        className="w-full max-w-full sm:max-w-full md:max-w-[88%] lg:max-w-[86%] xl:max-w-[85%] object-contain relative brightness-90"
       />
       <img
         src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/e2ebf4b66c657fc90801441604a035e59b991b3d?placeholderIfAbsent=true"

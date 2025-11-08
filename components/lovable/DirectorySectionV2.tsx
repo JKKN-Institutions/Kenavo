@@ -10,12 +10,12 @@ const DirectorySectionV2 = () => {
       className="w-full h-[420px] md:h-[480px] lg:h-[520px] bg-[rgba(78,46,140,1)] relative overflow-hidden"
       aria-labelledby="directory-heading"
     >
-      {/* Mountain Background - CONSTRAINED to bottom 60% of frame */}
+      {/* Mountain Background - Full Section */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img
           src="/images/mountain-background.png"
           alt=""
-          className="absolute bottom-0 left-0 w-full h-[60%] object-contain object-bottom opacity-30"
+          className="absolute w-full h-full object-contain object-bottom md:object-right-bottom opacity-60 md:opacity-70 scale-110 md:scale-100"
         />
       </div>
 
@@ -23,66 +23,66 @@ const DirectorySectionV2 = () => {
       <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto">
 
         {/* LEFT SIDE - Portrait Collage with Badge */}
-        <div className="relative h-full flex items-center justify-center">
-          <div className="relative w-full h-[85%] max-w-[500px]">
+        <div className="relative h-full flex items-start justify-center">
+          <div className="relative w-full h-full max-w-[500px]">
 
-            {/* Portrait 1 - Top Left (CUT OFF at edge) */}
-            <div className="absolute top-[8%] left-0 -translate-x-[35%] z-10">
+            {/* Portrait 1 - Top Left */}
+            <div className="absolute top-[2%] left-[4%] z-10">
               <img
                 src="/images/profile-1.png"
                 alt="Classmate 1"
-                className="w-[75px] h-[75px] md:w-[95px] md:h-[95px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[80px] h-[80px] md:w-[120px] md:h-[120px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 2 - Top Center-Left (small) */}
-            <div className="absolute top-[5%] left-[22%] z-10">
+            {/* Portrait 2 - Top Center-Left */}
+            <div className="absolute top-[8%] left-[18%] z-10">
               <img
                 src="/images/profile-2.png"
                 alt="Classmate 2"
-                className="w-[70px] h-[70px] md:w-[85px] md:h-[85px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[75px] h-[75px] md:w-[110px] md:h-[110px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 3 - Top Center (small) */}
-            <div className="absolute top-[8%] left-[42%] z-10">
-              <img
-                src="/images/profile-6.png"
-                alt="Classmate 3"
-                className="w-[65px] h-[65px] md:w-[80px] md:h-[80px] rounded-full object-cover border-4 border-white shadow-xl"
-              />
-            </div>
-
-            {/* Portrait 4 - Top Center-Right (LARGEST - MAIN FOCAL POINT) */}
-            <div className="absolute top-[15%] right-[8%] z-10">
+            {/* Portrait 3 - Top Center-Right (Largest) */}
+            <div className="absolute top-[5%] left-[32%] z-10">
               <img
                 src="/images/profile-3.png"
-                alt="Classmate 4"
-                className="w-[130px] h-[130px] md:w-[165px] md:h-[165px] rounded-full object-cover border-4 border-white shadow-xl"
+                alt="Classmate 3"
+                className="w-[95px] h-[95px] md:w-[140px] md:h-[140px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 5 - Bottom Center-Left (medium) */}
-            <div className="absolute bottom-[18%] left-[25%] z-10">
+            {/* Portrait 4 - Left Side */}
+            <div className="absolute top-[28%] left-[0%] z-10">
+              <img
+                src="/images/profile-6.png"
+                alt="Classmate 4"
+                className="w-[85px] h-[85px] md:w-[130px] md:h-[130px] rounded-full object-cover border-4 border-white shadow-xl"
+              />
+            </div>
+
+            {/* Portrait 5 - Bottom-Left */}
+            <div className="absolute top-[58%] left-[7%] z-10">
               <img
                 src="/images/profile-5.png"
                 alt="Classmate 5"
-                className="w-[95px] h-[95px] md:w-[120px] md:h-[120px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[75px] h-[75px] md:w-[115px] md:h-[115px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 6 - Bottom Center (medium-large) */}
-            <div className="absolute bottom-[15%] right-[22%] z-10">
+            {/* Portrait 6 - Bottom-Center (overlays mountain background) */}
+            <div className="absolute top-[48%] left-[23%] z-10">
               <img
                 src="/images/profile-4.png"
                 alt="Classmate 6"
-                className="w-[105px] h-[105px] md:w-[135px] md:h-[135px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[85px] h-[85px] md:w-[125px] md:h-[125px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Center Badge - "CLASS OF MONTFORT 2000" (near top-left portrait) */}
-            <div className="absolute top-[32%] left-[18%] z-20">
-              <div className="relative w-[95px] h-[95px] md:w-[125px] md:h-[125px]">
+            {/* Badge - "CLASS OF 2000 MONTFORT" */}
+            <div className="absolute top-[35%] left-[16%] z-20">
+              <div className="relative w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
                 {/* Starburst background */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -104,13 +104,13 @@ const DirectorySectionV2 = () => {
 
                 {/* Badge text */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-[rgba(217,81,100,1)] text-[8px] md:text-[11px] font-bold tracking-wider">
+                  <div className="text-[rgba(217,81,100,1)] text-[9px] md:text-[11px] font-bold tracking-wider">
                     CLASS OF
                   </div>
                   <div className="text-[rgba(217,81,100,1)] text-[32px] md:text-[42px] font-black leading-none">
                     2000
                   </div>
-                  <div className="text-[rgba(217,81,100,1)] text-[7px] md:text-[10px] font-bold tracking-widest">
+                  <div className="text-[rgba(217,81,100,1)] text-[8px] md:text-[10px] font-bold tracking-widest">
                     MONTFORT
                   </div>
                 </div>
@@ -132,7 +132,7 @@ const DirectorySectionV2 = () => {
           </div>
 
           {/* Text Content */}
-          <div className="px-6 md:px-12 lg:px-16 py-10 md:py-0 space-y-6 md:space-y-8">
+          <div className="px-2 md:px-12 lg:px-16 py-10 md:py-0 space-y-6 md:space-y-8">
 
             {/* Heading */}
             <h2

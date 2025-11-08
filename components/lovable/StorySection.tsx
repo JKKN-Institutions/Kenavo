@@ -9,7 +9,7 @@ const StorySection = () => {
       className="w-full bg-[rgba(78,46,140,1)] py-12 sm:py-16 md:py-20 lg:py-24"
       aria-labelledby="story-heading"
     >
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto px-2 sm:px-4 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-10 lg:gap-12 items-center">
           {/* Left Column - Text */}
           <div className="text-center md:text-left space-y-6 sm:space-y-8">
