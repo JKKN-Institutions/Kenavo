@@ -7,7 +7,7 @@ const DirectorySectionV2 = () => {
   return (
     <section
       id="directory"
-      className="w-full h-[420px] md:h-[480px] lg:h-[520px] bg-[rgba(78,46,140,1)] relative overflow-hidden"
+      className="w-full h-[320px] md:h-[380px] lg:h-[420px] bg-[rgba(78,46,140,1)] relative overflow-hidden"
       aria-labelledby="directory-heading"
     >
       {/* Mountain Background - Full Section */}
@@ -27,62 +27,62 @@ const DirectorySectionV2 = () => {
           <div className="relative w-full h-full max-w-[500px]">
 
             {/* Portrait 1 - Top Left */}
-            <div className="absolute top-[2%] left-[4%] z-10">
+            <div className="absolute top-[-10%] left-[-15%] z-10">
               <img
                 src="/images/profile-1.png"
                 alt="Classmate 1"
-                className="w-[80px] h-[80px] md:w-[120px] md:h-[120px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[85px] h-[85px] md:w-[140px] md:h-[140px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 2 - Top Center-Left */}
-            <div className="absolute top-[8%] left-[18%] z-10">
+            {/* Portrait 2 - Top Center */}
+            <div className="absolute top-[4%] left-[31%] z-10">
               <img
                 src="/images/profile-2.png"
                 alt="Classmate 2"
-                className="w-[75px] h-[75px] md:w-[110px] md:h-[110px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[95px] h-[95px] md:w-[150px] md:h-[150px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 3 - Top Center-Right (Largest) */}
-            <div className="absolute top-[5%] left-[32%] z-10">
+            {/* Portrait 3 - Top Right (LARGEST) */}
+            <div className="absolute top-[6%] left-[65%] z-10">
               <img
                 src="/images/profile-3.png"
                 alt="Classmate 3"
-                className="w-[95px] h-[95px] md:w-[140px] md:h-[140px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[120px] h-[120px] md:w-[190px] md:h-[190px] rounded-full object-cover border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 4 - Left Side */}
-            <div className="absolute top-[28%] left-[0%] z-10">
+            {/* Portrait 4 - Bottom Left */}
+            <div className="absolute bottom-[25%] left-[-31%] z-10">
               <img
                 src="/images/profile-6.png"
                 alt="Classmate 4"
-                className="w-[85px] h-[85px] md:w-[130px] md:h-[130px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[150px] h-[150px] md:w-[220px] md:h-[220px] rounded-full object-contain border-4 border-white shadow-xl"
               />
             </div>
 
-            {/* Portrait 5 - Bottom-Left */}
-            <div className="absolute top-[58%] left-[7%] z-10">
+            {/* Portrait 5 - Bottom Center */}
+            <div className="absolute bottom-[-20px] md:bottom-[-35px] left-[22%] z-10">
               <img
                 src="/images/profile-5.png"
                 alt="Classmate 5"
-                className="w-[75px] h-[75px] md:w-[115px] md:h-[115px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-[100px] h-[100px] md:w-[160px] md:h-[160px] rounded-full object-contain border-4 border-white shadow-xl scale-90"
               />
             </div>
 
-            {/* Portrait 6 - Bottom-Center (overlays mountain background) */}
-            <div className="absolute top-[48%] left-[23%] z-10">
+            {/* Portrait 6 - Bottom Right */}
+            <div className="absolute bottom-[-70px] md:bottom-[-110px] left-[72%] z-10 w-[140px] h-[140px] md:w-[220px] md:h-[220px]">
               <img
                 src="/images/profile-4.png"
                 alt="Classmate 6"
-                className="w-[85px] h-[85px] md:w-[125px] md:h-[125px] rounded-full object-cover border-4 border-white shadow-xl"
+                className="w-full h-full rounded-full object-cover border-4 border-white shadow-xl aspect-square"
               />
             </div>
 
             {/* Badge - "CLASS OF 2000 MONTFORT" */}
-            <div className="absolute top-[35%] left-[16%] z-20">
-              <div className="relative w-[70px] h-[70px] md:w-[90px] md:h-[90px]">
+            <div className="absolute top-[38%] left-[18%] z-20" style={{transform: 'rotate(-15deg)'}}>
+              <div className="relative w-[85px] h-[85px] md:w-[110px] md:h-[110px]">
                 {/* Starburst background */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   <svg viewBox="0 0 200 200" className="w-full h-full">
@@ -104,13 +104,13 @@ const DirectorySectionV2 = () => {
 
                 {/* Badge text */}
                 <div className="absolute inset-0 flex flex-col items-center justify-center">
-                  <div className="text-[rgba(217,81,100,1)] text-[9px] md:text-[11px] font-bold tracking-wider">
+                  <div className="text-[rgba(217,81,100,1)] text-[8px] md:text-[10px] font-bold tracking-wider">
                     CLASS OF
                   </div>
-                  <div className="text-[rgba(217,81,100,1)] text-[32px] md:text-[42px] font-black leading-none">
+                  <div className="text-[rgba(217,81,100,1)] text-[28px] md:text-[38px] font-black leading-none">
                     2000
                   </div>
-                  <div className="text-[rgba(217,81,100,1)] text-[8px] md:text-[10px] font-bold tracking-widest">
+                  <div className="text-[rgba(217,81,100,1)] text-[7px] md:text-[9px] font-bold tracking-widest">
                     MONTFORT
                   </div>
                 </div>

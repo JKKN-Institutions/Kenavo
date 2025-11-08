@@ -29,11 +29,11 @@ const GallerySection = () => {
         </div>
 
         {/* Gallery Preview Image */}
-        <div className="w-full flex justify-center mb-8 sm:mb-10 md:mb-12">
+        <div className="w-full flex justify-center mb-8 sm:mb-10 md:mb-12 overflow-hidden">
           <img
             src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/93ac5ec72bbc1db90c9a7382fddaa6ace2c20646?placeholderIfAbsent=true"
             alt="Gallery preview showing various school and reunion photos"
-            className="w-full max-w-5xl aspect-[2.4] object-contain rounded-lg shadow-lg"
+            className="w-full sm:w-auto max-w-full mx-auto aspect-[2.4] object-cover rounded-lg shadow-lg scale-110"
           />
         </div>
 

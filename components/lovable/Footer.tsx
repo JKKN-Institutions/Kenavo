@@ -33,26 +33,28 @@ const Footer = () => {
           © {new Date().getFullYear()} Kenavo. All rights reserved.
         </div>
 
-        {/* Divider and navigation */}
-        <hr className="border w-full h-px mt-4 lg:mt-5 border-white border-solid" />
-        <nav
-          className="flex flex-col sm:flex-row items-center sm:items-stretch gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-[10px] sm:text-xs md:text-sm text-white font-normal leading-none mt-4 lg:mt-5 justify-center md:justify-start"
-          role="navigation"
-          aria-label="Footer navigation"
-        >
-          <Link href="/about" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
-            ABOUT KENAVO
-          </Link>
-          <Link href="/directory" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
-            DIRECTORY
-          </Link>
-          <Link href="/gallery" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
-            GALLERY
-          </Link>
-          <Link href="/contact" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
-            CONTACT
-          </Link>
-        </nav>
+        {/* Divider and navigation - Hidden on mobile, visible on desktop */}
+        <div className="hidden lg:block">
+          <hr className="border w-full h-px mt-4 lg:mt-5 border-white border-solid" />
+          <nav
+            className="flex flex-col sm:flex-row items-center sm:items-stretch gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-[10px] sm:text-xs md:text-sm text-white font-normal leading-none mt-4 lg:mt-5 justify-center md:justify-start"
+            role="navigation"
+            aria-label="Footer navigation"
+          >
+            <Link href="/about" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
+              ABOUT KENAVO
+            </Link>
+            <Link href="/directory" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
+              DIRECTORY
+            </Link>
+            <Link href="/gallery" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
+              GALLERY
+            </Link>
+            <Link href="/contact" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
+              CONTACT
+            </Link>
+          </nav>
+        </div>
       </div>
     </footer>
   );
