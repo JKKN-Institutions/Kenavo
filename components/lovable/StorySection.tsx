@@ -16,7 +16,7 @@ const StorySection = () => {
             <h2
               id="story-heading"
               className="text-[rgba(217,81,100,1)] font-bold leading-tight"
-              style={{ fontSize: 'clamp(32px, 5vw, 64px)', lineHeight: '1.1' }}
+              style={{ fontSize: 'clamp(32px, 5vw, 64px)', lineHeight: '1.25' }}
             >
               Who we are.
               <br />
@@ -33,7 +33,7 @@ const StorySection = () => {
               Some of us lived in dorms. Some walked in every morning. All of us walked out in 2000 with stories we still talk about.
             </p>
 
-            <div className="pt-2">
+            <div className="pt-4 sm:pt-6">
               <Link href="/about">
                 <button className="bg-white text-[rgba(78,46,140,1)] font-black text-base sm:text-lg px-8 sm:px-10 md:px-12 py-3 sm:py-4 rounded-full hover:bg-gray-100 active:scale-95 transition-all shadow-lg">
                   Our Story
@@ -47,7 +47,7 @@ const StorySection = () => {
             <img
               src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/f7128c57aa28e3dfcba51c7ffa2fe11814b7129c?placeholderIfAbsent=true"
               alt="School memories collage"
-              className="w-full max-w-[320px] sm:max-w-[400px] md:max-w-full aspect-[0.79] object-cover rounded-lg shadow-xl"
+              className="w-full max-w-[360px] sm:max-w-[420px] md:max-w-full aspect-[0.79] object-cover rounded-lg shadow-xl"
             />
           </div>
         </div>

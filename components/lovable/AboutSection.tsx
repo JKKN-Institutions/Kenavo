@@ -15,7 +15,7 @@ const AboutSection = () => {
             <img
               src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/b07c93a4fb548cd640b788c38cbfe06311634054?placeholderIfAbsent=true"
               alt="Class photo"
-              className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-full aspect-square object-cover rounded-lg shadow-lg"
+              className="w-full max-w-[280px] sm:max-w-[380px] md:max-w-full aspect-square object-cover rounded-lg shadow-lg"
             />
           </div>
 
@@ -24,7 +24,7 @@ const AboutSection = () => {
             <h1
               id="about-heading"
               className="text-[rgba(217,81,100,1)] font-bold leading-tight"
-              style={{ fontSize: 'clamp(32px, 5vw, 78px)', lineHeight: '1.1' }}
+              style={{ fontSize: 'clamp(32px, 5vw, 78px)', lineHeight: '1.25' }}
             >
               134 boys.
               <br />
@@ -32,7 +32,7 @@ const AboutSection = () => {
             </h1>
             <p
               className="text-[rgba(254,249,232,1)] font-bold leading-snug"
-              style={{ fontSize: 'clamp(20px, 3vw, 34px)', lineHeight: '1.2' }}
+              style={{ fontSize: 'clamp(20px, 3vw, 34px)', lineHeight: '1.3' }}
             >
               This isn't just a website.
               <br />

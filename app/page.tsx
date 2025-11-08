@@ -1,11 +1,12 @@
+import React from 'react';
 import Header from '@/components/Header';
-import HeroSection from '@/components/HeroSection';
-import AboutSection from '@/components/AboutSection';
-import DirectorySection from '@/components/DirectorySection';
-import StorySection from '@/components/StorySection';
-import StatsSection from '@/components/StatsSection';
-import GallerySection from '@/components/GallerySection';
-import Footer from '@/components/Footer';
+import HeroSection from '@/components/lovable/HeroSection';
+import AboutSection from '@/components/lovable/AboutSection';
+import DirectorySection from '@/components/lovable/DirectorySection';
+import StorySection from '@/components/lovable/StorySection';
+import StatsSection from '@/components/lovable/StatsSection';
+import GallerySection from '@/components/lovable/GallerySection';
+import Footer from '@/components/lovable/Footer';
 
 export default function Home() {
   return (

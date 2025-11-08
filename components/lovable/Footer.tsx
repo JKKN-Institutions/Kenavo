@@ -1,49 +1,58 @@
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 const Footer = () => {
   return (
     <footer
-      id="contact"
-      className="w-full bg-[rgba(217,81,100,1)] py-12 sm:py-16 md:py-20"
+      className="bg-[rgba(217,81,100,1)] flex w-full flex-col items-center justify-center py-5 sm:py-6 md:py-7 lg:py-8"
       role="contentinfo"
     >
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Main Message */}
-        <h2
-          className="text-[rgba(254,249,232,1)] font-bold leading-tight text-center md:text-left mb-6 sm:mb-8"
-          style={{ fontSize: 'clamp(28px, 4.5vw, 54px)', lineHeight: '1.2' }}
-        >
-          Built by the boys of Kenavo with grown-up skills and leftover nostalgia.
-        </h2>
+      <div className="w-full px-4 sm:px-6 md:px-10 lg:px-16 xl:px-20">
+        {/* Two-column layout: Text + Logo */}
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5 md:gap-6">
+          {/* Left: Tagline */}
+          <h2 className="text-[rgba(254,249,232,1)] text-[18px] sm:text-[24px] md:text-[30px] lg:text-[36px] xl:text-[42px] font-bold leading-[1.2] sm:leading-[1.25] md:leading-[1.3] text-center md:text-left md:flex-1">
+            Built by the boys of Kenavo with grown-up skills and leftover nostalgia.
+          </h2>
 
-        {/* Divider */}
-        <hr className="border-white border-t w-full my-6 sm:my-8" />
+          {/* Right: Logo */}
+          <div className="flex justify-center md:justify-end flex-shrink-0">
+            <Image
+              src="/kenavo-logo.png"
+              alt="Kenavo 25 Year Reunion 2025 Logo"
+              width={180}
+              height={180}
+              className="w-[100px] h-auto sm:w-[120px] md:w-[140px] lg:w-[160px]"
+            />
+          </div>
+        </div>
 
-        {/* Navigation Links */}
+        {/* Copyright for mobile view */}
+        <div className="lg:hidden text-center mt-4 text-white/80 text-xs">
+          © {new Date().getFullYear()} Kenavo. All rights reserved.
+        </div>
+
+        {/* Divider and navigation */}
+        <hr className="border w-full h-px mt-4 lg:mt-5 border-white border-solid" />
         <nav
-          className="flex flex-wrap justify-center md:justify-start items-center gap-4 sm:gap-6 md:gap-8 text-sm sm:text-base text-white font-normal"
+          className="flex flex-col sm:flex-row items-center sm:items-stretch gap-3 sm:gap-4 md:gap-6 lg:gap-8 text-[10px] sm:text-xs md:text-sm text-white font-normal leading-none mt-4 lg:mt-5 justify-center md:justify-start"
           role="navigation"
           aria-label="Footer navigation"
         >
-          <Link href="#about" className="hover:text-gray-200 transition-colors whitespace-nowrap">
+          <Link href="/about" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
             ABOUT KENAVO
           </Link>
-          <Link href="#directory" className="hover:text-gray-200 transition-colors whitespace-nowrap">
+          <Link href="/directory" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
             DIRECTORY
           </Link>
-          <Link href="#gallery" className="hover:text-gray-200 transition-colors whitespace-nowrap">
+          <Link href="/gallery" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
             GALLERY
           </Link>
-          <Link href="#contact" className="hover:text-gray-200 transition-colors whitespace-nowrap">
+          <Link href="/contact" className="hover:text-gray-200 hover:underline transition-all whitespace-nowrap">
             CONTACT
           </Link>
         </nav>
-
-        {/* Copyright or Additional Info (Optional) */}
-        <div className="text-center md:text-left mt-8 text-white/80 text-xs sm:text-sm">
-          <p>© {new Date().getFullYear()} Montfort School Class of 2000. All rights reserved.</p>
-        </div>
       </div>
     </footer>
   );

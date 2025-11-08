@@ -9,7 +9,7 @@ export default function AboutPage() {
     <div className="bg-[rgba(78,46,140,1)] flex flex-col items-center min-h-screen overflow-x-hidden">
       <Header />
 
-      <main role="main" className="flex-1 w-full pb-10 sm:pb-12 md:pb-16">
+        <main role="main" className="flex-1 w-full pb-10 sm:pb-12 md:pb-16">
         <AboutHeroSection />
 
         {/* THE CLASS Section */}

@@ -27,16 +27,32 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
 
   const onSubmit = async (data: ContactFormData) => {
     try {
-      // Simulate form submission
-      console.log('Form submitted:', data);
-      console.log('Uploaded files:', uploadedFiles);
-      
-      // Here you would typically send the data to your backend
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      alert('Message sent successfully!');
-      reset();
-      setUploadedFiles([]);
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append('full_name', data.fullName);
+      formData.append('email', data.email);
+      formData.append('message', data.message);
+
+      // Append all files
+      uploadedFiles.forEach((file) => {
+        formData.append('files', file);
+      });
+
+      // Submit to API
+      const response = await fetch('/api/contact/submit', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        alert('Message sent successfully! We will get back to you soon.');
+        reset();
+        setUploadedFiles([]);
+      } else {
+        alert(result.error || 'Error sending message. Please try again.');
+      }
     } catch (error) {
       console.error('Error submitting form:', error);
       alert('Error sending message. Please try again.');

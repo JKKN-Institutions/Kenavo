@@ -9,11 +9,11 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ number, description, bgColor, textColor }) => {
   return (
-    <div className={`${bgColor} flex flex-col items-center justify-center font-bold aspect-square w-full max-w-[180px] sm:max-w-[200px] mx-auto p-6 sm:p-8 md:p-10 rounded-full shadow-xl hover:scale-105 transition-transform`}>
-      <div className={`${textColor} text-4xl sm:text-5xl md:text-6xl leading-none`}>
+    <div className={`${bgColor} flex flex-col items-center justify-center font-bold aspect-square w-full max-w-[220px] sm:max-w-[240px] md:max-w-[260px] mx-auto p-5 sm:p-6 md:p-8 rounded-full shadow-xl hover:scale-105 transition-transform`}>
+      <div className={`${textColor} text-2xl sm:text-3xl md:text-4xl leading-snug`}>
         {number}
       </div>
-      <div className="text-white text-sm sm:text-base md:text-lg leading-tight text-center mt-4 sm:mt-6">
+      <div className="text-white text-[10px] sm:text-xs md:text-sm leading-normal text-center mt-2 sm:mt-3">
         {description.split('\n').map((line, index) => (
           <React.Fragment key={index}>
             {line}
@@ -35,7 +35,7 @@ const StatsSection = () => {
     },
     {
       number: "120+",
-      description: "Happy\nclassmates",
+      description: "At Alumni",
       bgColor: "bg-[rgba(137,58,190,1)]",
       textColor: "text-neutral-100"
     },
@@ -73,12 +73,12 @@ const StatsSection = () => {
           <h2
             id="stats-heading"
             className="text-[rgba(217,81,100,1)] font-bold leading-tight"
-            style={{ fontSize: 'clamp(32px, 5vw, 54px)' }}
+            style={{ fontSize: 'clamp(32px, 5vw, 54px)', lineHeight: '1.25' }}
           >
             Kenavo by the Numbers
           </h2>
           <p
-            className="text-white font-normal mt-2"
+            className="text-white font-normal mt-4"
             style={{ fontSize: 'clamp(18px, 2.5vw, 28px)' }}
           >
             Some stats. Some smiles.
@@ -86,7 +86,7 @@ const StatsSection = () => {
         </div>
 
         {/* Stats Grid - Responsive */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
           {stats.map((stat, index) => (
             <div key={index} className="flex justify-center">
               <StatCard {...stat} />

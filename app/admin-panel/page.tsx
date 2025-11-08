@@ -1,13 +1,14 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Upload, UserPlus, CheckCircle, AlertCircle, Edit2, Search, X, Save, List, LogOut, Image as ImageIcon, RefreshCw } from 'lucide-react';
+import { Upload, UserPlus, CheckCircle, AlertCircle, Edit2, Search, X, Save, List, LogOut, Image as ImageIcon, RefreshCw, Mail } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/lib/auth/client';
 import BulkImagePreviewModal, { ImageMapping } from '@/components/admin/BulkImagePreviewModal';
 import GalleryManagementTab from '@/components/admin/GalleryManagementTab';
+import ContactSubmissionsTab from '@/components/ContactSubmissionsTab';
 
-type TabType = 'manage' | 'bulkUpdate' | 'single' | 'gallery';
+type TabType = 'manage' | 'bulkUpdate' | 'single' | 'gallery' | 'contact';
 
 // Helper function to parse CSV line (handles quoted values with commas)
 function parseCSVLine(line: string): string[] {
@@ -149,6 +150,17 @@ export default function AdminPanel() {
             <ImageIcon size={20} />
             Gallery
           </button>
+          <button
+            onClick={() => setActiveTab('contact')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'contact'
+                ? 'bg-white text-purple-900 shadow-lg'
+                : 'bg-white/10 text-white hover:bg-white/20'
+            }`}
+          >
+            <Mail size={20} />
+            Contact Forms
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -157,6 +169,7 @@ export default function AdminPanel() {
           {activeTab === 'bulkUpdate' && <BulkUpdateTab />}
           {activeTab === 'single' && <SingleProfileForm />}
           {activeTab === 'gallery' && <GalleryManagementTab />}
+          {activeTab === 'contact' && <ContactSubmissionsTab />}
         </div>
       </div>
     </div>

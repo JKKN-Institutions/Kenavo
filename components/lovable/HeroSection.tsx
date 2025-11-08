@@ -3,27 +3,19 @@ import React from 'react';
 const HeroSection = () => {
   return (
     <section
-      className="relative w-full flex items-center justify-center overflow-hidden bg-[rgba(78,46,140,1)]"
-      style={{ minHeight: 'clamp(400px, 60vh, 800px)' }}
+      className="flex flex-col relative w-full items-center justify-center py-3 sm:py-4 md:py-5 lg:py-6 xl:py-7 bg-[rgba(78,46,140,1)]"
       aria-label="Hero section"
     >
-      {/* Background Image */}
-      <div className="absolute inset-0 w-full h-full">
-        <img
-          src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/30b758abb6f1f9790a8cb900740efa46ee7e3338?placeholderIfAbsent=true"
-          alt="Hero background"
-          className="w-full h-full object-cover opacity-90"
-        />
-      </div>
-
-      {/* Logo - Centered and Responsive */}
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 md:py-20 lg:py-24 flex items-center justify-center">
-        <img
-          src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/e2ebf4b66c657fc90801441604a035e59b991b3d?placeholderIfAbsent=true"
-          alt="Kenavo main logo"
-          className="w-full max-w-[280px] sm:max-w-[400px] md:max-w-[600px] lg:max-w-[800px] xl:max-w-[876px] h-auto object-contain"
-        />
-      </div>
+      <img
+        src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/30b758abb6f1f9790a8cb900740efa46ee7e3338?placeholderIfAbsent=true"
+        alt="Hero background"
+        className="w-full max-w-[92%] sm:max-w-[90%] md:max-w-[88%] lg:max-w-[86%] xl:max-w-[85%] object-contain relative brightness-90"
+      />
+      <img
+        src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/e2ebf4b66c657fc90801441604a035e59b991b3d?placeholderIfAbsent=true"
+        alt="Kenavo main logo"
+        className="aspect-[3.01] object-contain w-[60%] sm:w-[65%] md:w-[65%] lg:w-[60%] xl:w-[58%] max-w-[280px] sm:max-w-[300px] md:max-w-[380px] lg:max-w-[450px] xl:max-w-[520px] absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 drop-shadow-lg"
+      />
     </section>
   );
 };
