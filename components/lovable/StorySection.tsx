@@ -35,7 +35,7 @@ const StorySection = () => {
 
             <div className="pt-4 sm:pt-6">
               <Link href="/about">
-                <button className="bg-white text-[rgba(78,46,140,1)] font-black text-base sm:text-lg px-8 sm:px-10 md:px-12 py-3 sm:py-4 rounded-full hover:bg-gray-100 active:scale-95 transition-all shadow-lg">
+                <button className="bg-white text-[rgba(78,46,140,1)] font-black text-base sm:text-lg px-12 sm:px-16 md:px-20 py-3 sm:py-4 rounded-full hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg focus:outline-none focus:ring-4 focus:ring-white/50 focus:ring-offset-2 focus:ring-offset-[rgba(78,46,140,1)]">
                   Our Story
                 </button>
               </Link>

@@ -34,7 +34,7 @@ const StatsSection = () => {
       textColor: "text-[rgba(65,32,128,1)]"
     },
     {
-      number: "120+",
+      number: "70+",
       description: "At Alumni",
       bgColor: "bg-[rgba(137,58,190,1)]",
       textColor: "text-neutral-100"
@@ -46,7 +46,7 @@ const StatsSection = () => {
       textColor: "text-[rgba(65,32,128,1)]"
     },
     {
-      number: "43",
+      number: "41",
       description: "Cities Represented",
       bgColor: "bg-[rgba(137,58,190,1)]",
       textColor: "text-neutral-100"

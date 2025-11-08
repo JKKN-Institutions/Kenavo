@@ -40,7 +40,7 @@ const GallerySection = () => {
         {/* View Gallery Button */}
         <div className="flex justify-center">
           <Link href="/gallery">
-            <button className="bg-[rgba(217,81,100,1)] text-neutral-100 font-black text-base sm:text-lg px-8 sm:px-10 py-3 sm:py-4 rounded-full hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all shadow-lg">
+            <button className="bg-[rgba(217,81,100,1)] text-neutral-100 font-black text-base sm:text-lg px-12 sm:px-16 md:px-20 py-3 sm:py-4 rounded-full hover:bg-[rgba(197,61,80,1)] hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg focus:outline-none focus:ring-4 focus:ring-[rgba(217,81,100,0.3)] focus:ring-offset-2 focus:ring-offset-neutral-100">
               View Gallery
             </button>
           </Link>

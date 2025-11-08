@@ -26,7 +26,7 @@ const AboutSection = () => {
               className="text-[rgba(217,81,100,1)] font-bold leading-tight"
               style={{ fontSize: 'clamp(32px, 5vw, 78px)', lineHeight: '1.25' }}
             >
-              134 boys.
+              151 Boys.
               <br />
               One shared story.
             </h1>

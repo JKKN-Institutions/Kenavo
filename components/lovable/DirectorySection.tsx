@@ -11,22 +11,22 @@ const DirectorySection = () => {
       aria-labelledby="directory-heading"
     >
       {/* Mountain Background - Full Section */}
-      <div className="absolute inset-0 z-0">
+      <div className="absolute inset-0 z-0 overflow-hidden">
         <img
           src="/images/mountain-background.png"
           alt=""
-          className="w-full h-full object-cover object-center md:object-right opacity-80 md:opacity-90"
+          className="absolute w-full h-full object-contain object-bottom md:object-right-bottom opacity-60 md:opacity-70 scale-110 md:scale-100"
         />
       </div>
 
-      {/* Gradient Overlay for Text Readability */}
-      <div className="absolute inset-0 z-[1] bg-gradient-to-b md:bg-gradient-to-r from-transparent via-transparent to-[rgba(78,46,140,0.3)]"></div>
+      {/* Subtle Gradient Overlay - Vignette Effect */}
+      <div className="absolute inset-0 z-[1] bg-gradient-to-t md:bg-gradient-to-r from-[rgba(78,46,140,0.7)] via-[rgba(78,46,140,0.4)] to-[rgba(78,46,140,0.6)]"></div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 max-w-full relative z-10">
         {/* LEFT SIDE - Portrait Collage with Center Badge */}
         <div className="relative h-[280px] xs:h-[320px] sm:h-[380px] md:h-[525px] lg:h-[575px] xl:h-[625px] overflow-hidden order-1">
-          {/* Subtle background overlay for mobile */}
-          <div className="absolute inset-0 bg-[rgba(78,46,140,0.4)] md:bg-transparent z-[1]"></div>
+          {/* Light overlay for mobile - let background show */}
+          <div className="absolute inset-0 bg-[rgba(78,46,140,0.15)] md:bg-transparent z-[1]"></div>
 
           <div className="absolute inset-0 flex items-center justify-center z-[2]">
             <div className="relative w-full h-full max-w-[500px] transform translate-x-[20px] md:translate-x-[50px]">
@@ -129,8 +129,8 @@ const DirectorySection = () => {
 
         {/* RIGHT SIDE - Text Content */}
         <div className="relative min-h-[350px] md:h-[525px] lg:h-[575px] xl:h-[625px] order-2">
-          {/* Background overlay for mobile - ensures text is readable */}
-          <div className="absolute inset-0 bg-[rgba(78,46,140,0.65)] md:bg-transparent z-[1]"></div>
+          {/* Light overlay for mobile - let background show while keeping text readable */}
+          <div className="absolute inset-0 bg-[rgba(78,46,140,0.25)] md:bg-transparent z-[1]"></div>
 
           {/* Decorative Birds - Top Right */}
           <div className="absolute top-[8%] right-[12%] z-10 opacity-60 hidden sm:block">
