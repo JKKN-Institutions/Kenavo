@@ -24,10 +24,12 @@ const DirectorySectionV2 = () => {
 
         {/* LEFT SIDE - Portrait Collage with Badge */}
         <div className="relative h-full flex items-start justify-center">
+          {/* Light gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-white/5 to-transparent pointer-events-none z-5"></div>
           <div className="relative w-full h-full max-w-[500px]">
 
             {/* Portrait 1 - Top Left */}
-            <div className="absolute top-[-10%] left-[-15%] z-10">
+            <div className="absolute top-[-10%] left-[-4%] z-10">
               <img
                 src="/images/profile-1.png"
                 alt="Classmate 1"
@@ -54,25 +56,25 @@ const DirectorySectionV2 = () => {
             </div>
 
             {/* Portrait 4 - Bottom Left */}
-            <div className="absolute bottom-[25%] left-[-31%] z-10">
+            <div className="absolute bottom-[25%] left-[-33%] z-10 w-[150px] h-[150px] md:w-[220px] md:h-[220px]">
               <img
                 src="/images/profile-6.png"
                 alt="Classmate 4"
-                className="w-[150px] h-[150px] md:w-[220px] md:h-[220px] rounded-full object-contain border-4 border-white shadow-xl"
+                className="w-full h-full rounded-full object-contain border-10 border-white shadow-xl aspect-square"
               />
             </div>
 
             {/* Portrait 5 - Bottom Center */}
-            <div className="absolute bottom-[-20px] md:bottom-[-35px] left-[22%] z-10">
+            <div className="absolute bottom-[-30px] md:bottom-[-55px] left-[17%] z-10">
               <img
                 src="/images/profile-5.png"
                 alt="Classmate 5"
-                className="w-[100px] h-[100px] md:w-[160px] md:h-[160px] rounded-full object-contain border-4 border-white shadow-xl scale-90"
+                className="w-[100px] h-[100px] md:w-[220px] md:h-[210px] rounded-full object-contain border-4 border-white shadow-xl scale-90"
               />
             </div>
 
             {/* Portrait 6 - Bottom Right */}
-            <div className="absolute bottom-[-70px] md:bottom-[-110px] left-[72%] z-10 w-[140px] h-[140px] md:w-[220px] md:h-[220px]">
+            <div className="absolute bottom-[-50px] md:bottom-[-20px] left-[67%] z-10 w-[140px] h-[140px] md:w-[220px] md:h-[220px]">
               <img
                 src="/images/profile-4.png"
                 alt="Classmate 6"
