@@ -20,16 +20,16 @@ const DirectorySectionV2 = () => {
       </div>
 
       {/* Main Content Grid - FILLS the frame */}
-      <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-2 max-w-7xl mx-auto">
+      <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-2 w-full">
 
         {/* LEFT SIDE - Portrait Collage with Badge */}
-        <div className="relative h-full flex items-start justify-center">
+        <div className="relative h-full flex items-start justify-center overflow-hidden px-4 md:px-8">
           {/* Light gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-white/5 to-transparent pointer-events-none z-5"></div>
-          <div className="relative w-full h-full max-w-[500px]">
+          <div className="relative w-full h-full max-w-[600px]">
 
             {/* Portrait 1 - Top Left */}
-            <div className="absolute top-[-10%] left-[-4%] z-10">
+            <div className="absolute top-[-4%] left-[-10%] z-10">
               <img
                 src="/images/profile-1.png"
                 alt="Classmate 1"
@@ -65,11 +65,11 @@ const DirectorySectionV2 = () => {
             </div>
 
             {/* Portrait 5 - Bottom Center */}
-            <div className="absolute bottom-[-30px] md:bottom-[-55px] left-[17%] z-10">
+            <div className="absolute bottom-[-20px] md:bottom-[-35px] left-[22%] z-10">
               <img
                 src="/images/profile-5.png"
                 alt="Classmate 5"
-                className="w-[100px] h-[100px] md:w-[220px] md:h-[210px] rounded-full object-contain border-4 border-white shadow-xl scale-90"
+                className="w-[100px] h-[100px] md:w-[160px] md:h-[160px] rounded-full object-contain border-4 border-white shadow-xl scale-90"
               />
             </div>
 
