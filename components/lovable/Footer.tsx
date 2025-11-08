@@ -29,7 +29,7 @@ const Footer = () => {
         </div>
 
         {/* Copyright for mobile view */}
-        <div className="lg:hidden text-center mt-4 text-white/80 text-xs">
+        <div className="lg:hidden text-center mt-4 text-white/80 text-xs" suppressHydrationWarning>
           © {new Date().getFullYear()} Kenavo. All rights reserved.
         </div>
 

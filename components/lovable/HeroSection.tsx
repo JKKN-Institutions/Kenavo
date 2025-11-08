@@ -14,7 +14,7 @@ const HeroSection = () => {
       <img
         src="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/e2ebf4b66c657fc90801441604a035e59b991b3d?placeholderIfAbsent=true"
         alt="Kenavo main logo"
-        className="aspect-[3.01] object-contain w-[60%] sm:w-[65%] md:w-[65%] lg:w-[60%] xl:w-[58%] max-w-[280px] sm:max-w-[300px] md:max-w-[380px] lg:max-w-[450px] xl:max-w-[520px] absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 drop-shadow-lg"
+        className="aspect-[3.01] object-contain w-[55%] sm:w-[58%] md:w-[60%] lg:w-[62%] xl:w-[65%] 2xl:w-[65%] max-w-[240px] sm:max-w-[300px] md:max-w-[380px] lg:max-w-[450px] xl:max-w-[520px] 2xl:max-w-[580px] absolute top-[28%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 drop-shadow-lg"
       />
     </section>
   );
