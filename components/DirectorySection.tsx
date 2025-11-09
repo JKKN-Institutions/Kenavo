@@ -8,18 +8,18 @@ const DirectorySection = () => {
     <section className="w-full bg-gradient-to-br from-[#4e2e8c] to-[#3a1d7a]" aria-labelledby="directory-heading">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
         {/* Desktop Layout */}
-        <div className="hidden md:grid grid-cols-2 gap-12 items-center">
-          {/* Left Column - Profile Images */}
-          <div className="relative aspect-square">
-            {/* Center Badge */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120px] h-[120px] z-20">
+        <div className="hidden md:grid grid-cols-2 gap-16 items-center">
+          {/* Left Column - Profile Images - Increased size */}
+          <div className="relative w-[600px] h-[600px]">
+            {/* Center Badge - Increased size */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] z-20">
               <div className="relative w-full h-full">
                 <div className="absolute inset-0 rounded-full bg-[#d95164] shadow-lg flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-white text-xs font-bold uppercase tracking-wider">
+                    <div className="text-white text-sm font-bold uppercase tracking-wider">
                       CLASS OF
                     </div>
-                    <div className="text-white text-3xl font-black mt-1">
+                    <div className="text-white text-4xl font-black mt-1">
                       2000
                     </div>
                   </div>
@@ -27,21 +27,23 @@ const DirectorySection = () => {
               </div>
             </div>
 
-            {/* Profile Images - Circular Arrangement */}
+            {/* Profile Images - Adjusted size and positioning */}
             {[...Array(6)].map((_, index) => {
               const angle = (index * 60 * Math.PI) / 180;
-              const radius = 160;
-              const top = `${50 + Math.sin(angle) * radius}px`;
-              const left = `${50 + Math.cos(angle) * radius}px`;
+              const radius = 220; // Increased radius for better spacing
+              const centerX = 300; // Center X coordinate (half of container width)
+              const centerY = 300; // Center Y coordinate (half of container height)
+              const x = centerX + Math.cos(angle) * radius;
+              const y = centerY + Math.sin(angle) * radius;
 
               return (
                 <div
                   key={index}
-                  className="absolute w-[100px] h-[100px] -translate-x-1/2 -translate-y-1/2 z-10 rounded-full overflow-hidden shadow-xl"
+                  className="absolute w-[140px] h-[140px] z-10 rounded-full overflow-hidden shadow-xl transition-transform hover:scale-105"
                   style={{
-                    top,
-                    left,
-                    transform: `translate(-50%, -50%)`,
+                    top: `${y}px`,
+                    left: `${x}px`,
+                    transform: 'translate(-50%, -50%)',
                   }}
                 >
                   <img
@@ -55,20 +57,20 @@ const DirectorySection = () => {
             })}
           </div>
 
-          {/* Right Column - Text Content */}
-          <div className="flex flex-col items-start space-y-6">
+          {/* Right Column - Text Content - Adjusted spacing */}
+          <div className="flex flex-col items-start space-y-8">
             <h2
               id="directory-heading"
               className="text-[#d95164] text-4xl lg:text-5xl font-bold leading-tight"
             >
               From Yercaud to New York, here's what we're all up to now.
             </h2>
-            <p className="text-[#fef9e8] text-lg leading-relaxed">
+            <p className="text-[#fef9e8] text-lg leading-relaxed max-w-xl">
               Browse profiles, spot familiar faces, revisit a few inside jokes. Whether you're checking in or catching up, this is where it all comes together.
             </p>
             <Link href="/directory">
               <button
-                className="bg-white text-[#4e2e8c] px-8 py-3 rounded-full font-bold text-lg hover:bg-opacity-90 transition-all"
+                className="bg-white text-[#4e2e8c] px-10 py-4 rounded-full font-bold text-lg hover:bg-opacity-90 transition-all"
                 aria-label="Browse the directory of classmates"
               >
                 Browse the Directory
@@ -77,8 +79,8 @@ const DirectorySection = () => {
           </div>
         </div>
 
-        {/* Mobile Layout */}
-        <div className="md:hidden flex flex-col items-center text-center space-y-8">
+        {/* Mobile Layout - Adjusted for better proportions */}
+        <div className="md:hidden flex flex-col items-center text-center space-y-10">
           <h2
             id="directory-heading-mobile"
             className="text-[#d95164] text-3xl font-bold leading-tight px-4"
@@ -89,17 +91,17 @@ const DirectorySection = () => {
             Browse profiles, spot familiar faces, revisit a few inside jokes. Whether you're checking in or catching up, this is where it all comes together.
           </p>
 
-          {/* Mobile Circle Layout */}
-          <div className="relative w-[280px] h-[280px] my-8">
-            {/* Center Badge - Mobile */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[90px] h-[90px] z-20">
+          {/* Mobile Circle Layout - Increased size */}
+          <div className="relative w-[340px] h-[340px] my-8">
+            {/* Center Badge - Mobile - Adjusted size */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100px] h-[100px] z-20">
               <div className="relative w-full h-full">
                 <div className="absolute inset-0 rounded-full bg-[#d95164] shadow-lg flex items-center justify-center">
                   <div className="text-center">
-                    <div className="text-white text-[10px] font-bold uppercase tracking-wider">
+                    <div className="text-white text-xs font-bold uppercase tracking-wider">
                       CLASS OF
                     </div>
-                    <div className="text-white text-2xl font-black mt-0.5">
+                    <div className="text-white text-2xl font-black mt-1">
                       2000
                     </div>
                   </div>
@@ -107,20 +109,23 @@ const DirectorySection = () => {
               </div>
             </div>
 
-            {/* Mobile Profile Images */}
+            {/* Mobile Profile Images - Adjusted size and spacing */}
             {[...Array(6)].map((_, index) => {
               const angle = (index * 60 * Math.PI) / 180;
-              const radius = 100;
-              const top = `${50 + Math.sin(angle) * radius}%`;
-              const left = `${50 + Math.cos(angle) * radius}%`;
+              const radius = 120; // Increased radius for mobile
+              const centerX = 170; // Center X coordinate
+              const centerY = 170; // Center Y coordinate
+              const x = centerX + Math.cos(angle) * radius;
+              const y = centerY + Math.sin(angle) * radius;
 
               return (
                 <div
                   key={index}
-                  className="absolute w-[70px] h-[70px] -translate-x-1/2 -translate-y-1/2 z-10 rounded-full overflow-hidden shadow-xl"
+                  className="absolute w-[80px] h-[80px] z-10 rounded-full overflow-hidden shadow-xl"
                   style={{
-                    top,
-                    left,
+                    top: `${y}px`,
+                    left: `${x}px`,
+                    transform: 'translate(-50%, -50%)',
                   }}
                 >
                   <img
@@ -136,7 +141,7 @@ const DirectorySection = () => {
 
           <Link href="/directory">
             <button
-              className="bg-white text-[#4e2e8c] px-6 py-2.5 rounded-full font-bold text-base hover:bg-opacity-90 transition-all"
+              className="bg-white text-[#4e2e8c] px-8 py-3 rounded-full font-bold text-base hover:bg-opacity-90 transition-all"
               aria-label="Browse the directory of classmates"
             >
               Browse the Directory
