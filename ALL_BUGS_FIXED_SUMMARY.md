@@ -1,459 +1,318 @@
-# Complete Bug Fix Summary - 2025-11-06
-
-## Overview
-Fixed **3 critical bugs** in the Complete Slambook Upload feature that were causing data loss and inconsistencies.
-
----
-
-## Bug #1: updateCount Undefined Error ✅ FIXED
-
-### Issue
-**Error:** `ReferenceError: updateCount is not defined` at line 427
-**Impact:** Complete upload failure with 500 error (profiles NOT saved, Q&A NOT saved)
-
-### Root Cause
-Variable renaming during refactoring - missed updating one `console.log` statement
-
-### Fix
-**File:** `app/api/admin/upload-complete-slambook/route.ts` line 427
-
-```typescript
-// OLD (Buggy):
-console.log(`Upserted ${upsertedProfiles.length} profiles (${updateCount} updated, ${insertCount} created)`);
-
-// NEW (Fixed):
-console.log(`Upserted ${upsertedProfiles.length} profiles (${totalMatched} matched, ${noMatchCount} created)`);
-```
-
-### Result
-- ✅ Upload no longer crashes
-- ✅ All profiles save correctly
-- ✅ Q&A processing completes
-
----
-
-## Bug #2: Missing Q&A Data for 1 Profile ✅ FIXED
-
-### Issue
-**Problem:** Only 61 out of 62 profiles getting Q&A deletion/insertion
-**Impact:** 1 profile kept old stale Q&A data (not refreshed)
-
-### Root Cause
-Logic error: Only profiles with non-empty Q&A answers were included in deletion list
-
-**Original Buggy Code (Line 465):**
-```typescript
-const profileIdsWithQA = [...new Set(qaEntries.map(qa => qa.profile_id))];
-// Only includes profiles with at least 1 non-empty answer
-// Profile with ALL empty answers → Excluded!
-```
-
-### Fix
-**File:** `app/api/admin/upload-complete-slambook/route.ts` lines 464-476
-
-**Change 1: Added debug logging** (lines 464-470)
-```typescript
-// Debug: Find profiles with no Q&A answers
-const profilesWithQA = new Set(qaEntries.map(qa => qa.profile_id));
-const profilesWithoutQA = upsertedProfiles.filter(p => !profilesWithQA.has(p.id));
-if (profilesWithoutQA.length > 0) {
-  console.log(`⚠️  Warning: ${profilesWithoutQA.length} profile(s) have NO Q&A answers (all questions blank):`);
-  profilesWithoutQA.forEach(p => console.log(`   - ID ${p.id}: ${p.name}`));
-}
-```
-
-**Change 2: Fixed profile ID collection** (line 474)
-```typescript
-// NEW (Fixed):
-const profileIdsWithQA = upsertedProfiles.map(p => p.id);
-// Now includes ALL profiles, even those with no answers
-```
-
-### Result
-- ✅ All 62 profiles get Q&A processing (was 61)
-- ✅ Profile with no answers gets clean slate (no stale data)
-- ✅ Warning logs which profile has no Q&A
-- ✅ Data consistency maintained
-
-**Console Output After Fix:**
-```
-⚠️  Warning: 1 profile(s) have NO Q&A answers (all questions blank):
-   - ID 7: Abraham Francis
-Deleting old Q&A for 62 profiles...  ← Was 61, now 62!
-```
-
----
-
-## Bug #3: CSV Parser Losing 9 Profiles ✅ FIXED
-
-### Issue
-**Problem:** Only 62 out of 71 profiles being parsed from CSV
-**Missing:** 9 profiles (13% data loss!)
-**Impact:** Alumni with detailed/multiline responses completely excluded
-
-### Root Cause
-CSV parser split on newlines FIRST, then processed quotes. This broke multiline quoted content into incomplete rows.
-
-**Original Buggy Parser:**
-```typescript
-const lines = content.split('\n');  // ❌ FATAL FLAW!
-for (const line of lines) {
-  // Process quotes - too late, multiline content already broken
-}
-```
-
-**What Happened:**
-```csv
-"Name","Long answer:
-Line 2
-Line 3",Location,...
-```
-
-Became:
-- Row 1: `"Name","Long answer:` → 2 columns (< 17) → **SKIPPED**
-- Row 2: `Line 2` → 1 column → **SKIPPED**
-- Row 3: `Line 3",Location,...` → Malformed → **SKIPPED**
-
-Result: Profile lost!
-
-### Fix
-**File:** `app/api/admin/upload-complete-slambook/route.ts` lines 27-84
-
-Replaced entire `parseCSV` function with RFC 4180-compliant parser:
-
-**Key Improvements:**
-1. ✅ Processes entire content character-by-character (not line-by-line)
-2. ✅ Handles quotes BEFORE determining row boundaries
-3. ✅ Preserves newlines inside quoted fields
-4. ✅ Supports escaped quotes (`""`)
-5. ✅ Handles both `\r\n` and `\n` line endings
-
-**New Parser Logic:**
-```typescript
-// Process entire content character by character
-for (let i = 0; i < content.length; i++) {
-  if (char === '"') {
-    inQuotes = !inQuotes;  // Toggle quote state
-  } else if (char === '\n' && !inQuotes) {
-    // Only treat as row separator when OUTSIDE quotes
-  } else {
-    // Keep character (including newlines INSIDE quotes)
-  }
-}
-```
-
-### Result
-- ✅ All 71 profiles now parsed correctly (was 62)
-- ✅ Zero profiles lost (was losing 9)
-- ✅ Multiline content preserved
-- ✅ 100% data integrity
-
-**Console Output After Fix:**
-```
-Parsed 71 profiles from CSV  ← Was 62, now 71! 🎉
-Found 139 existing profiles in database
-Total matched: 71/71
-Upserted 71 profiles
-```
-
-**Missing Profiles Now Included:**
-These 9 profiles had multiline answers and are now saved:
-- ✅ Balaji Srimurugan (multiline power cut story)
-- ✅ Ashok kumar Rajendran (Ms. Nigly slap incident)
-- ✅ Vairavan Subramanian (detailed Charmettes memories)
-- ✅ Hariharan P (multi-paragraph reconnecting response)
-- ✅ And 5 more profiles with detailed responses
-
----
-
-## Combined Impact
-
-### Before All Fixes
-- ❌ Upload crashed with 500 error (Bug #1)
-- ❌ NO profiles saved, NO Q&A saved
-- ❌ Complete feature outage
-
-### After Bug #1 Fixed (but before #2 and #3)
-- ✅ Upload completes
-- ⚠️ Only 62/71 profiles processed (Bug #3 - 13% loss)
-- ⚠️ 1/62 profile had stale Q&A (Bug #2)
-
-### After All Fixes
-- ✅ Upload completes successfully
-- ✅ All 71/71 profiles processed (100% success)
-- ✅ All 71 profiles get Q&A processing
-- ✅ Complete data integrity
-- ✅ Clear warning for profiles with no Q&A
-- ✅ Multiline content preserved
-
----
-
-## Test Results
-
-### Upload Statistics
-
-**Before Fixes:**
-```
-❌ CRASH - 500 Internal Server Error
-Nothing saved
-```
-
-**After All Fixes:**
-```
-✅ Parsed 71 profiles from CSV
-✅ Total matched: 71/71
-✅ Upserted 71 profiles (71 matched, 0 created)
-✅ Prepared 557 Q&A entries
-
-⚠️  Warning: 1 profile(s) have NO Q&A answers:
-   - ID 7: Abraham Francis
-
-✅ Deleting old Q&A for 71 profiles...
-✅ Deleted 0 old Q&A answers
-✅ Inserting 557 new Q&A answers...
-✅ Q&A Summary: Deleted 0, Created 557
-
-✅ SUCCESS! All data saved correctly!
-```
-
----
-
-## Files Modified
-
-### 1. `app/api/admin/upload-complete-slambook/route.ts`
-
-**Changes:**
-- **Line 27-84:** Replaced `parseCSV` function (Bug #3)
-- **Line 427:** Fixed `updateCount` reference (Bug #1)
-- **Lines 464-476:** Added debug logging + fixed Q&A logic (Bug #2)
-
-**Lines Changed:** 65 lines modified
-**Functions Modified:** 2 (parseCSV, POST handler)
-**New Logging:** 2 new console warnings
-
----
-
-## Documentation Created
-
-1. **CRITICAL_BUG_FIX.md** - Bug #1 (updateCount error)
-2. **QA_MISSING_DATA_FIX.md** - Bug #2 (missing Q&A)
-3. **CSV_PARSER_FIX.md** - Bug #3 (missing 9 profiles)
-4. **ALL_BUGS_FIXED_SUMMARY.md** - This document
-
-Total documentation: **~4,000 lines** covering all aspects
-
----
-
-## Testing Instructions
-
-### Quick Test
-
-1. Go to: `http://localhost:3001/admin-panel`
-2. Navigate to **Bulk Update** tab
-3. Upload: `Kevavo2kSlambookRecord - Sheet1 (1).csv`
-4. Wait ~30 seconds
-
-### Expected Console Output
-
-```
-Supabase environment variables validated successfully
-Parsed 71 profiles from CSV  ← Check this number!
-Found 139 existing profiles in database
-Starting new profile IDs from: 151
-
-✓ Exact Match: "A Arjoon" -> Profile ID 1 (100%)
-✓ Exact Match: "A S SYED AHAMED KHAN" -> Profile ID 3 (100%)
-... (all 71 profiles matched)
-
-Matching Summary:
-  ✓ Exact matches: 71 (100% confidence)
-  ≈ Name-only matches: 0 (90% confidence)
-  ~ Partial matches: 0 (75% confidence)
-  + New profiles: 0
-  Total matched: 71/71  ← Check this!
-
-Upserted 71 profiles (71 matched, 0 created)  ← Check this!
-Prepared 557 Q&A entries
-
-⚠️  Warning: 1 profile(s) have NO Q&A answers (all questions blank):
-   - ID 7: Abraham Francis
-
-Deleting old Q&A for 71 profiles...  ← Check this (was 61)!
-Deleted 0 old Q&A answers
-Inserting 557 new Q&A answers...
-Q&A Summary: Deleted 0, Created 557
-
-POST /api/admin/upload-complete-slambook 200 in 2.1s
-```
-
-### Verification Checklist
-
-- [ ] Console shows "Parsed **71 profiles**" (not 62)
-- [ ] Console shows "Total matched: **71/71**"
-- [ ] Console shows "Upserted **71 profiles**"
-- [ ] Console shows "Deleting old Q&A for **71 profiles**" (not 61)
-- [ ] Warning appears for Abraham Francis (no Q&A)
-- [ ] No 500 errors
-- [ ] Success message in admin panel
-- [ ] All 71 names from list appear in database
-- [ ] Multiline content preserved in Q&A sections
-
----
-
-## Performance Impact
-
-### Parse Time
-- Before: ~10ms (62 profiles)
-- After: ~12ms (71 profiles)
-- Difference: +2ms (negligible)
-
-### Memory Usage
-- No significant change
-- Same O(n) complexity
-
-### Database Operations
-- Before: 62 profile upserts, 61 Q&A deletions
-- After: 71 profile upserts, 71 Q&A deletions
-- Difference: +9 profiles, +10 deletions
-
-### User Experience
-- Upload time: Still ~2-3 seconds total
-- No noticeable performance impact
-- **Benefit: 13% more data at same speed!**
-
----
-
-## Edge Cases Now Handled
-
-### 1. Multiline Quoted Fields ✅
-```csv
-"Name","Answer with
-multiple
-lines",Location
-```
-**Before:** 3 broken rows → Profile lost
-**After:** 1 complete row → Profile saved
-
-### 2. Escaped Quotes ✅
-```csv
-"He said ""hello"""
-```
-**Before:** Parsing error
-**After:** Correctly parsed as `He said "hello"`
-
-### 3. Empty Q&A Answers ✅
-**Before:** Profile excluded from Q&A processing
-**After:** Profile included, warning logged
-
-### 4. Different Line Endings ✅
-**Before:** Only `\n` handled correctly
-**After:** Both `\r\n` (Windows) and `\n` (Unix/Mac) handled
-
-### 5. No Trailing Newline ✅
-**Before:** Last row might be lost
-**After:** Last row handled correctly
-
----
-
-## Prevention Measures
-
-### For Future Uploads
-1. ✅ Validate parse count matches expected profile count
-2. ✅ Log warnings for profiles with no Q&A
-3. ✅ Handle multiline content in CSV
-4. ✅ Test with sample containing edge cases
-
-### For Code Maintenance
-1. ✅ Use TypeScript for variable references
-2. ✅ Test all logic paths (empty answers, multiline, etc.)
-3. ✅ Follow RFC 4180 for CSV parsing
-4. ✅ Add comprehensive logging
-
----
-
-## Status Summary
-
-| Bug | Severity | Status | Data Loss | Fix Complexity |
-|-----|----------|--------|-----------|----------------|
-| #1: updateCount undefined | Critical | ✅ Fixed | 100% | Trivial (1 line) |
-| #2: Missing Q&A for 1 profile | High | ✅ Fixed | ~1.6% | Simple (2 changes) |
-| #3: CSV parser losing 9 profiles | Critical | ✅ Fixed | 13% | Medium (parser rewrite) |
-
-**Overall Status:** ✅ **ALL BUGS FIXED**
-
----
-
-## Next Steps
-
-### Immediate
-1. ✅ Test upload with your CSV file
-2. ✅ Verify all 71 profiles are saved
-3. ✅ Check Q&A data for multiline content
-4. ✅ Review warning for Abraham Francis (no Q&A)
-
-### Short-term
-- Consider adding CSV validation before upload
-- Add progress indicator for large uploads
-- Implement retry logic for network failures
-
-### Long-term
-- Add duplicate detection during upload
-- Implement preview before final save
-- Add rollback capability for failed uploads
-
----
-
-## Lessons Learned
-
-### Bug #1 (updateCount)
-**Lesson:** Variable renames need comprehensive search-and-replace
-**Prevention:** Use IDE refactoring tools, not manual find-replace
-
-### Bug #2 (Missing Q&A)
-**Lesson:** Edge cases (empty data) need explicit handling
-**Prevention:** Always consider "what if ALL fields are empty?"
-
-### Bug #3 (CSV Parser)
-**Lesson:** Never split on delimiters before handling escape characters
-**Prevention:** Use standard-compliant parsers (RFC 4180)
-
----
-
-## Success Metrics
-
-### Data Integrity
-- **Before:** 62/71 profiles = 87% success rate
-- **After:** 71/71 profiles = 100% success rate ✅
-- **Improvement:** +13% more data, 0% loss
-
-### User Experience
-- **Before:** Silent failures, missing data, confusion
-- **After:** Complete data, clear warnings, transparency
-
-### System Reliability
-- **Before:** 500 errors, upload crashes
-- **After:** Stable, predictable, informative
-
----
-
-## Conclusion
-
-All three critical bugs in the Complete Slambook Upload feature have been successfully fixed:
-
-✅ **Upload now completes without errors**
-✅ **All 71 profiles are processed correctly**
-✅ **All profiles get Q&A data processing**
-✅ **Multiline content is preserved**
-✅ **Clear warnings for edge cases**
-✅ **100% data integrity maintained**
-
-**The feature is now production-ready and fully functional!** 🎉
-
----
-
-**Date:** 2025-11-06
-**Total Bugs Fixed:** 3
-**Total Lines Modified:** 65
-**Total Documentation:** 4 files, ~4,000 lines
-**Data Loss Eliminated:** 13% recovery
-**Status:** ✅ **COMPLETE**
+05:47:32.125 Running build in Washington, D.C., USA (East) – iad1
+05:47:32.126 Build machine configuration: 4 cores, 8 GB
+05:47:32.235 Cloning github.com/JKKN-Institutions/Kenavo (Branch: main, Commit: 245803e)
+05:47:33.156 Cloning completed: 920.000ms
+05:47:33.486 Restored build cache from previous deployment (5t7y3fuYqzJtP9gqSec4mFLMj4Td)
+05:47:34.296 Running "vercel build"
+05:47:34.708 Vercel CLI 48.9.0
+05:47:35.584 Installing dependencies...
+05:47:37.172 
+05:47:37.173 up to date in 1s
+05:47:37.173 
+05:47:37.173 176 packages are looking for funding
+05:47:37.173   run `npm fund` for details
+05:47:37.206 Detected Next.js version: 16.0.0
+05:47:37.206 Running "npm run build"
+05:47:37.323 
+05:47:37.323 > kenavo-app@0.1.0 build
+05:47:37.323 > next build
+05:47:37.323 
+05:47:38.462    ▲ Next.js 16.0.0 (Turbopack)
+05:47:38.462 
+05:47:38.539    Creating an optimized production build ...
+05:47:52.020  ✓ Compiled successfully in 12.9s
+05:47:52.023    Running TypeScript ...
+05:48:02.731    Collecting page data ...
+05:48:03.131 ✅ Supabase environment variables validated successfully
+05:48:03.131    Project: rihoufidmnqtffzqhplc
+05:48:03.132    Anon key: Valid (role: anon)
+05:48:03.133    Service key: Valid (role: service_role)
+05:48:03.212 ✅ Supabase environment variables validated successfully
+05:48:03.212    Project: rihoufidmnqtffzqhplc
+05:48:03.213    Anon key: Valid (role: anon)
+05:48:03.213    Service key: Valid (role: service_role)
+05:48:04.232    Generating static pages (0/170) ...
+05:48:04.713  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.713 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.728  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.728 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.730  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.730 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.732 ✅ Supabase environment variables validated successfully
+05:48:04.733    Project: rihoufidmnqtffzqhplc
+05:48:04.733    Anon key: Valid (role: anon)
+05:48:04.733    Service key: Valid (role: service_role)
+05:48:04.742  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.742 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.751  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.751 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.753  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.753 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.760  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.760 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.774  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.774 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.784  ⚠ Unsupported metadata viewport is configured in metadata export in /_not-found. Please move it to viewport export instead.
+05:48:04.784 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.784  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.784 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.793  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.793 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.800  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.801 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.805  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.806 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.810  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.810 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.814  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.815 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.820  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.821 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.826  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:04.826 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.845  ⚠ Unsupported metadata viewport is configured in metadata export in /about. Please move it to viewport export instead.
+05:48:04.846 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.890  ⚠ Unsupported metadata viewport is configured in metadata export in /admin-panel. Please move it to viewport export instead.
+05:48:04.890 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:04.998  ⚠ Unsupported metadata viewport is configured in metadata export in /contact. Please move it to viewport export instead.
+05:48:04.998 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.019  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.019 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.022  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.022 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.024  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.024 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.029  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.029 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.871  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.871 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.874  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.874 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.876  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.876 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.878  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.878 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.880  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.880 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.882  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.882 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.887  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.887 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.887  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.888 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.925  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.925 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.928  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.928 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.930  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.930 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.932  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.932 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.933  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.934 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.935  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.935 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.937  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.938 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:05.939  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:05.940 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.152  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.152 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.590  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.591 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.595  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.595 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.599  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.599 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.603  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.603 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.606  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.607 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.609  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.610 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.612  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.613 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.615  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.615 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.672    Generating static pages (42/170) 
+05:48:06.677  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.677 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.679  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.679 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.680  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.680 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.683  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.683 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.685  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.685 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.687  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.687 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.689  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.689 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.691  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.691 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.922  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.922 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.924  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.924 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.926  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.926 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.929  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.929 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.931  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.931 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.934  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.934 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.935  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.935 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:06.937  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:06.937 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.639  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.640 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.641  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.641 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.643  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.643 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.644  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.645 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.646  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.647 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.648  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.648 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.650  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.650 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.651  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.652 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.932  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.933 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.934  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.934 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.936  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.936 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.938  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.938 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.940  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.940 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.941  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.941 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.944  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.944 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:07.945  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:07.945 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.018  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.018 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.020  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.020 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.021  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.021 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.023  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.023 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.025  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.025 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.026  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.026 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.029  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.029 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.030  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.030 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.495    Generating static pages (84/170) 
+05:48:08.511  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.511 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.513  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.513 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.516  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.516 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.516  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.516 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.520  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.520 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.521  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.521 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.523  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.523 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.525  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.525 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.608  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.608 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.610  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.610 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.613  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.613 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.614  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.615 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.616  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.616 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.618  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.618 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.619  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.620 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:08.621  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:08.621 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.021  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.022 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.024  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.024 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.029  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.029 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.031  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.031 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.034  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.034 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.036  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.036 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.038  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.039 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.041  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.041 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.122  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.122 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.124  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.124 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.127  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.127 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.129  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.129 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.134  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.134 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.141  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.141 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.142  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.142 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.142  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.142 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.214  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.214 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.216  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.216 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.218  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.218 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.219  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.219 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.221  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.221 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.223  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.223 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.224  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.224 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.226  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.226 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.772    Generating static pages (127/170) 
+05:48:09.854  ⚠ Unsupported metadata viewport is configured in metadata export in /directory/[id]. Please move it to viewport export instead.
+05:48:09.854 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.856  ⚠ Unsupported metadata viewport is configured in metadata export in /directory. Please move it to viewport export instead.
+05:48:09.856 Read more: https://nextjs.org/docs/app/api-reference/functions/generate-viewport
+05:48:09.885  ⨯ useSearchParams() should be wrapped in a suspense boundary at page "/directory". Read more: https://nextjs.org/docs/messages/missing-suspense-with-csr-bailout
+05:48:09.885     at S (/vercel/path0/.next/server/chunks/ssr/node_modules_b88524b6._.js:2:2111)
+05:48:09.885     at p (/vercel/path0/.next/server/chunks/ssr/node_modules_b88524b6._.js:4:4847)
+05:48:09.885     at d5 (/vercel/path0/.next/server/chunks/ssr/app_directory_page_tsx_ea04403b._.js:11:4897)
+05:48:09.885     at ir (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:84433)
+05:48:09.885     at ia (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:86252)
+05:48:09.885     at il (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:107981)
+05:48:09.885     at is (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:105399)
+05:48:09.885     at ii (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:84785)
+05:48:09.885     at ia (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:86301)
+05:48:09.885     at ia (/vercel/path0/node_modules/next/dist/compiled/next-server/app-page-turbo.runtime.prod.js:2:104739)
+05:48:09.885 Error occurred prerendering page "/directory". Read more: https://nextjs.org/docs/messages/prerender-error
+05:48:09.886 Export encountered an error on /directory/page: /directory, exiting the build.
+05:48:09.907  ⨯ Next.js build worker exited with code: 1 and signal: null
+05:48:09.960 Error: Command "npm run build" exited with 1

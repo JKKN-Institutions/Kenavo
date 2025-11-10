@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import DirectoryHeroSection from '@/components/DirectoryHeroSection';
@@ -37,7 +37,7 @@ const groupByLetter = (profiles: Profile[]) => {
   return groups;
 };
 
-export default function DirectoryPage() {
+function DirectoryPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -403,5 +403,25 @@ export default function DirectoryPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function DirectoryPage() {
+  return (
+    <Suspense fallback={
+      <div className="bg-[rgba(64,34,120,1)] flex flex-col overflow-hidden items-stretch min-h-screen">
+        <Header />
+        <DirectoryHeroSection />
+        <main className="w-full max-w-[1011px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
+          <div className="text-[rgba(254,249,232,1)] text-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgba(217,81,100,1)] mx-auto mb-4"></div>
+            <p className="text-2xl">Loading alumni directory...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    }>
+      <DirectoryPageContent />
+    </Suspense>
   );
 }
