@@ -19,14 +19,20 @@ const DirectorySectionV2 = () => {
         />
       </div>
 
+      {/* Center vertical gradient - between sections */}
+      <div className="absolute top-0 left-1/2 transform -translate-x-1/2 h-full w-[2px] bg-gradient-to-b from-transparent via-white/20 to-transparent pointer-events-none z-20"></div>
+
+      {/* Bottom horizontal gradient */}
+      <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent pointer-events-none z-20"></div>
+
       {/* Main Content Grid - FILLS the frame */}
       <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-2 w-full">
 
         {/* LEFT SIDE - Portrait Collage with Badge */}
-        <div className="relative h-full flex items-start justify-center overflow-hidden px-4 md:px-8">
+        <div className="relative h-full flex items-start justify-center overflow-hidden">
           {/* Light gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-white/5 to-transparent pointer-events-none z-5"></div>
-          <div className="relative w-full h-full max-w-[600px]">
+          <div className="relative w-full h-full max-w-[500px]">
 
             {/* Portrait 1 - Top Left */}
             <div className="absolute top-[-4%] left-[-10%] z-10">
@@ -56,7 +62,7 @@ const DirectorySectionV2 = () => {
             </div>
 
             {/* Portrait 4 - Bottom Left */}
-            <div className="absolute bottom-[25%] left-[-33%] z-10 w-[150px] h-[150px] md:w-[220px] md:h-[220px]">
+            <div className="absolute bottom-[10%] left-[-30%] z-10 w-[150px] h-[150px] md:w-[220px] md:h-[220px]">
               <img
                 src="/images/profile-6.png"
                 alt="Classmate 4"

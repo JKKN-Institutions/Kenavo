@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import DirectoryHeroSection from '@/components/DirectoryHeroSection';
 import Footer from '@/components/Footer';
@@ -8,6 +9,15 @@ import ScrollNavigationButtons from '@/components/ScrollNavigationButtons';
 import Link from 'next/link';
 import { getAllProfiles } from '@/lib/api/profiles';
 import type { Profile } from '@/lib/types/database';
+import { DirectorySearch } from '@/components/directory/DirectorySearch';
+import { DirectoryFilters } from '@/components/directory/DirectoryFilters';
+import { HorizontalFilters } from '@/components/directory/HorizontalFilters';
+import { ActiveFilters } from '@/components/directory/ActiveFilters';
+import { useDebounce } from '@/hooks/useDebounce';
+import { useProfileSearch } from '@/hooks/useProfileSearch';
+import { useProfileFilters } from '@/hooks/useProfileFilters';
+import { Button } from '@/components/ui/button';
+import { Filter, X } from 'lucide-react';
 
 // Helper function to create slug from name
 const createSlug = (name: string) => {
@@ -28,10 +38,20 @@ const groupByLetter = (profiles: Profile[]) => {
 };
 
 export default function DirectoryPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  // Search state
+  const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
+  const debouncedSearchTerm = useDebounce(searchTerm, 300);
+
+  // Mobile filter drawer state
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Fetch profiles from Supabase
   useEffect(() => {
@@ -66,8 +86,43 @@ export default function DirectoryPage() {
     }
   }, []);
 
-  const alumniByLetter = groupByLetter(profiles);
+  // Apply filters first
+  const filterHook = useProfileFilters(profiles);
+  const filteredByFilters = filterHook.profiles;
+
+  // Then apply search on filtered results
+  const searchHook = useProfileSearch(filteredByFilters, debouncedSearchTerm);
+  const finalProfiles = searchHook.profiles;
+
+  // Sync URL with search/filter state
+  useEffect(() => {
+    const params = new URLSearchParams();
+
+    if (searchTerm) {
+      params.set('search', searchTerm);
+    }
+
+    if (filterHook.filters.years.length > 0) {
+      params.set('years', filterHook.filters.years.join(','));
+    }
+
+    if (filterHook.filters.locations.length > 0) {
+      params.set('locations', filterHook.filters.locations.join(','));
+    }
+
+    if (filterHook.filters.industries.length > 0) {
+      params.set('industries', filterHook.filters.industries.join(','));
+    }
+
+    const queryString = params.toString();
+    const newUrl = queryString ? `?${queryString}` : window.location.pathname;
+    window.history.replaceState({}, '', newUrl);
+  }, [searchTerm, filterHook.filters]);
+
+  const alumniByLetter = groupByLetter(finalProfiles);
   const letters = Object.keys(alumniByLetter).sort();
+
+  const hasActiveSearchOrFilters = searchHook.isSearching || filterHook.hasActiveFilters;
 
   const AlphabetNavigation = () => {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
@@ -177,13 +232,152 @@ export default function DirectoryPage() {
       <DirectoryHeroSection />
       <ScrollNavigationButtons />
 
-      <main className="w-full max-w-[1011px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
+      <main className="w-full max-w-[1200px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
         <p className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] font-normal leading-relaxed">
           Start exploring you might just reconnect with someone you forgot you
           missed.
         </p>
 
-        <AlphabetNavigation />
+        {/* Search and Filter Section */}
+        <div className="mt-8 lg:mt-12">
+          <div className="flex flex-col gap-4">
+            {/* Full Width - Search and Horizontal Filters */}
+            <div className="flex-1">
+              {/* Search Bar */}
+              <DirectorySearch
+                value={searchTerm}
+                onChange={setSearchTerm}
+                resultCount={searchHook.resultCount}
+                totalCount={profiles.length}
+              />
+
+              {/* Horizontal Filters (Desktop) */}
+              <div className="hidden lg:block mt-4">
+                <HorizontalFilters
+                  yearOptions={filterHook.filterOptions.availableYears}
+                  locationOptions={filterHook.filterOptions.availableLocations}
+                  industryOptions={filterHook.filterOptions.availableIndustries}
+                  selectedYears={filterHook.filters.years}
+                  selectedLocations={filterHook.filters.locations}
+                  selectedIndustries={filterHook.filters.industries}
+                  onToggleYear={filterHook.toggleYear}
+                  onToggleLocation={filterHook.toggleLocation}
+                  onToggleIndustry={filterHook.toggleIndustry}
+                  onClearYears={() => {
+                    filterHook.filters.years.forEach((year) => filterHook.toggleYear(year));
+                  }}
+                  onClearLocations={() => {
+                    filterHook.filters.locations.forEach((loc) => filterHook.toggleLocation(loc));
+                  }}
+                  onClearIndustries={() => {
+                    filterHook.filters.industries.forEach((ind) => filterHook.toggleIndustry(ind));
+                  }}
+                  getYearCount={filterHook.getYearCount}
+                  getLocationCount={filterHook.getLocationCount}
+                  getIndustryCount={filterHook.getIndustryCount}
+                />
+              </div>
+
+              {/* Mobile Filter Button */}
+              <div className="lg:hidden mt-4">
+                <Button
+                  variant="outline"
+                  onClick={() => setIsFilterOpen(!isFilterOpen)}
+                  className="w-full bg-[rgba(44,23,82,1)] border-[rgba(78,46,140,0.6)] text-[rgba(254,249,232,1)] hover:bg-[rgba(78,46,140,0.4)] hover:text-[rgba(254,249,232,1)] transition-all duration-200 shadow-lg"
+                >
+                  <Filter className="h-4 w-4 mr-2 text-[rgba(217,81,100,1)]" />
+                  Filters
+                  {filterHook.activeFilterCount > 0 && (
+                    <span className="ml-2 px-2 py-0.5 bg-[rgba(217,81,100,1)] text-white text-xs rounded-full">
+                      {filterHook.activeFilterCount}
+                    </span>
+                  )}
+                </Button>
+
+                {/* Mobile Filter Drawer */}
+                {isFilterOpen && (
+                  <div className="fixed inset-0 z-50 bg-[rgba(64,34,120,0.95)] backdrop-blur-md animate-in fade-in duration-200">
+                    <div className="fixed inset-y-0 right-0 w-full sm:w-96 bg-[rgba(44,23,82,1)] shadow-2xl border-l border-[rgba(78,46,140,0.6)] animate-in slide-in-from-right duration-300">
+                      <div className="flex items-center justify-between p-4 border-b border-[rgba(78,46,140,0.4)] bg-gradient-to-r from-[rgba(44,23,82,1)] to-[rgba(78,46,140,0.3)]">
+                        <h2 className="text-lg font-semibold text-[rgba(254,249,232,1)]">Filters</h2>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setIsFilterOpen(false)}
+                          className="hover:bg-[rgba(78,46,140,0.4)] text-[rgba(217,81,100,1)] transition-all duration-200"
+                        >
+                          <X className="h-5 w-5" />
+                        </Button>
+                      </div>
+                      <div className="overflow-auto h-[calc(100vh-5rem)]">
+                        <DirectoryFilters
+                          yearOptions={filterHook.filterOptions.availableYears}
+                          locationOptions={filterHook.filterOptions.availableLocations}
+                          industryOptions={filterHook.filterOptions.availableIndustries}
+                          selectedYears={filterHook.filters.years}
+                          selectedLocations={filterHook.filters.locations}
+                          selectedIndustries={filterHook.filters.industries}
+                          onToggleYear={filterHook.toggleYear}
+                          onToggleLocation={filterHook.toggleLocation}
+                          onToggleIndustry={filterHook.toggleIndustry}
+                          onClearAll={() => {
+                            filterHook.clearAllFilters();
+                            setIsFilterOpen(false);
+                          }}
+                          getYearCount={filterHook.getYearCount}
+                          getLocationCount={filterHook.getLocationCount}
+                          getIndustryCount={filterHook.getIndustryCount}
+                          activeFilterCount={filterHook.activeFilterCount}
+                          className="border-0"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Active Filters */}
+              {filterHook.hasActiveFilters && (
+                <div className="mt-4">
+                  <ActiveFilters
+                    selectedYears={filterHook.filters.years}
+                    selectedLocations={filterHook.filters.locations}
+                    selectedIndustries={filterHook.filters.industries}
+                    onRemoveFilter={filterHook.removeFilter}
+                    onClearAll={filterHook.clearAllFilters}
+                  />
+                </div>
+              )}
+
+              {/* Empty State */}
+              {finalProfiles.length === 0 && hasActiveSearchOrFilters && (
+                <div className="mt-12 text-center py-16 bg-[rgba(44,23,82,1)] rounded-lg border border-[rgba(78,46,140,0.6)] shadow-lg">
+                  <div className="text-6xl mb-6 opacity-80">🔍</div>
+                  <h3 className="text-2xl font-semibold text-[rgba(254,249,232,1)] mb-3">
+                    No alumni found
+                  </h3>
+                  <p className="text-[rgba(254,249,232,0.7)] mb-8 text-lg">
+                    {searchHook.isSearching
+                      ? <>No results for &ldquo;<span className="text-[rgba(217,81,100,1)] font-medium">{searchTerm}</span>&rdquo;</>
+                      : 'No alumni match the selected filters'}
+                  </p>
+                  <Button
+                    onClick={() => {
+                      setSearchTerm('');
+                      filterHook.clearAllFilters();
+                    }}
+                    className="bg-[rgba(217,81,100,1)] text-white hover:bg-[rgba(217,65,66,0.8)] border-0 transition-all duration-200 shadow-md"
+                  >
+                    Clear all filters
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Alphabet Navigation */}
+        {finalProfiles.length > 0 && <AlphabetNavigation />}
 
         {/* All sections A-Z */}
         {letters.map((letter, letterIndex) => (

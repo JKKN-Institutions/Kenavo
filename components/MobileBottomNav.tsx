@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Home, Users, Image, Mail, Plus, Info, X } from 'lucide-react';
@@ -8,6 +8,11 @@ import { Home, Users, Image, Mail, Plus, Info, X } from 'lucide-react';
 const MobileBottomNav = () => {
   const pathname = usePathname();
   const [showMenu, setShowMenu] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const navItems = [
     { href: '/', icon: Home, label: 'Home' },
@@ -17,11 +22,17 @@ const MobileBottomNav = () => {
   ];
 
   const isActive = (href: string) => {
+    if (!isMounted) return false;
     if (href === '/') {
       return pathname === '/';
     }
     return pathname.startsWith(href);
   };
+
+  // Don't render navigation during SSR to prevent hydration mismatch
+  if (!isMounted) {
+    return null;
+  }
 
   return (
     <>
