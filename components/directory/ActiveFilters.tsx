@@ -5,16 +5,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 
 interface FilterPill {
-  type: 'years' | 'locations' | 'industries';
+  type: 'cities' | 'countries' | 'industries';
   value: string;
   label: string;
 }
 
 interface ActiveFiltersProps {
-  selectedYears: string[];
-  selectedLocations: string[];
+  selectedCities: string[];
+  selectedCountries: string[];
   selectedIndustries: string[];
-  onRemoveFilter: (type: 'years' | 'locations' | 'industries', value: string) => void;
+  onRemoveFilter: (type: 'cities' | 'countries' | 'industries', value: string) => void;
   onClearAll: () => void;
   className?: string;
 }
@@ -25,8 +25,8 @@ interface ActiveFiltersProps {
  * Provides a clear all button when filters are active
  */
 export function ActiveFilters({
-  selectedYears,
-  selectedLocations,
+  selectedCities,
+  selectedCountries,
   selectedIndustries,
   onRemoveFilter,
   onClearAll,
@@ -34,20 +34,20 @@ export function ActiveFilters({
 }: ActiveFiltersProps) {
   // Build array of all active filters
   const activeFilters: FilterPill[] = [
-    ...selectedYears.map((year) => ({
-      type: 'years' as const,
-      value: year,
-      label: `Year: ${year}`,
+    ...selectedCities.map((city) => ({
+      type: 'cities' as const,
+      value: city,
+      label: `City: ${city}`,
     })),
-    ...selectedLocations.map((location) => ({
-      type: 'locations' as const,
-      value: location,
-      label: `Location: ${location}`,
+    ...selectedCountries.map((country) => ({
+      type: 'countries' as const,
+      value: country,
+      label: `Country: ${country}`,
     })),
     ...selectedIndustries.map((industry) => ({
       type: 'industries' as const,
       value: industry,
-      label: `Company: ${industry}`,
+      label: `Industry: ${industry}`,
     })),
   ];
 

@@ -102,12 +102,12 @@ function DirectoryPageContent() {
       params.set('search', searchTerm);
     }
 
-    if (filterHook.filters.years.length > 0) {
-      params.set('years', filterHook.filters.years.join(','));
+    if (filterHook.filters.cities.length > 0) {
+      params.set('cities', filterHook.filters.cities.join(','));
     }
 
-    if (filterHook.filters.locations.length > 0) {
-      params.set('locations', filterHook.filters.locations.join(','));
+    if (filterHook.filters.countries.length > 0) {
+      params.set('countries', filterHook.filters.countries.join(','));
     }
 
     if (filterHook.filters.industries.length > 0) {
@@ -254,26 +254,26 @@ function DirectoryPageContent() {
               {/* Horizontal Filters (Desktop) */}
               <div className="hidden lg:block mt-4">
                 <HorizontalFilters
-                  yearOptions={filterHook.filterOptions.availableYears}
-                  locationOptions={filterHook.filterOptions.availableLocations}
+                  cityOptions={filterHook.filterOptions.availableCities}
+                  countryOptions={filterHook.filterOptions.availableCountries}
                   industryOptions={filterHook.filterOptions.availableIndustries}
-                  selectedYears={filterHook.filters.years}
-                  selectedLocations={filterHook.filters.locations}
+                  selectedCities={filterHook.filters.cities}
+                  selectedCountries={filterHook.filters.countries}
                   selectedIndustries={filterHook.filters.industries}
-                  onToggleYear={filterHook.toggleYear}
-                  onToggleLocation={filterHook.toggleLocation}
+                  onToggleCity={filterHook.toggleCity}
+                  onToggleCountry={filterHook.toggleCountry}
                   onToggleIndustry={filterHook.toggleIndustry}
-                  onClearYears={() => {
-                    filterHook.filters.years.forEach((year) => filterHook.toggleYear(year));
+                  onClearCities={() => {
+                    filterHook.filters.cities.forEach((city) => filterHook.toggleCity(city));
                   }}
-                  onClearLocations={() => {
-                    filterHook.filters.locations.forEach((loc) => filterHook.toggleLocation(loc));
+                  onClearCountries={() => {
+                    filterHook.filters.countries.forEach((country) => filterHook.toggleCountry(country));
                   }}
                   onClearIndustries={() => {
                     filterHook.filters.industries.forEach((ind) => filterHook.toggleIndustry(ind));
                   }}
-                  getYearCount={filterHook.getYearCount}
-                  getLocationCount={filterHook.getLocationCount}
+                  getCityCount={filterHook.getCityCount}
+                  getCountryCount={filterHook.getCountryCount}
                   getIndustryCount={filterHook.getIndustryCount}
                 />
               </div>
@@ -311,21 +311,21 @@ function DirectoryPageContent() {
                       </div>
                       <div className="overflow-auto h-[calc(100vh-5rem)]">
                         <DirectoryFilters
-                          yearOptions={filterHook.filterOptions.availableYears}
-                          locationOptions={filterHook.filterOptions.availableLocations}
+                          cityOptions={filterHook.filterOptions.availableCities}
+                          countryOptions={filterHook.filterOptions.availableCountries}
                           industryOptions={filterHook.filterOptions.availableIndustries}
-                          selectedYears={filterHook.filters.years}
-                          selectedLocations={filterHook.filters.locations}
+                          selectedCities={filterHook.filters.cities}
+                          selectedCountries={filterHook.filters.countries}
                           selectedIndustries={filterHook.filters.industries}
-                          onToggleYear={filterHook.toggleYear}
-                          onToggleLocation={filterHook.toggleLocation}
+                          onToggleCity={filterHook.toggleCity}
+                          onToggleCountry={filterHook.toggleCountry}
                           onToggleIndustry={filterHook.toggleIndustry}
                           onClearAll={() => {
                             filterHook.clearAllFilters();
                             setIsFilterOpen(false);
                           }}
-                          getYearCount={filterHook.getYearCount}
-                          getLocationCount={filterHook.getLocationCount}
+                          getCityCount={filterHook.getCityCount}
+                          getCountryCount={filterHook.getCountryCount}
                           getIndustryCount={filterHook.getIndustryCount}
                           activeFilterCount={filterHook.activeFilterCount}
                           className="border-0"
@@ -340,8 +340,8 @@ function DirectoryPageContent() {
               {filterHook.hasActiveFilters && (
                 <div className="mt-4">
                   <ActiveFilters
-                    selectedYears={filterHook.filters.years}
-                    selectedLocations={filterHook.filters.locations}
+                    selectedCities={filterHook.filters.cities}
+                    selectedCountries={filterHook.filters.countries}
                     selectedIndustries={filterHook.filters.industries}
                     onRemoveFilter={filterHook.removeFilter}
                     onClearAll={filterHook.clearAllFilters}

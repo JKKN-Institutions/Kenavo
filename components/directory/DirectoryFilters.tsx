@@ -21,18 +21,18 @@ interface FilterSection {
 }
 
 interface DirectoryFiltersProps {
-  yearOptions: string[];
-  locationOptions: string[];
+  cityOptions: string[];
+  countryOptions: string[];
   industryOptions: string[];
-  selectedYears: string[];
-  selectedLocations: string[];
+  selectedCities: string[];
+  selectedCountries: string[];
   selectedIndustries: string[];
-  onToggleYear: (year: string) => void;
-  onToggleLocation: (location: string) => void;
+  onToggleCity: (city: string) => void;
+  onToggleCountry: (country: string) => void;
   onToggleIndustry: (industry: string) => void;
   onClearAll: () => void;
-  getYearCount: (year: string) => number;
-  getLocationCount: (location: string) => number;
+  getCityCount: (city: string) => number;
+  getCountryCount: (country: string) => number;
   getIndustryCount: (industry: string) => number;
   activeFilterCount: number;
   className?: string;
@@ -41,30 +41,30 @@ interface DirectoryFiltersProps {
 /**
  * Filter panel component for the alumni directory
  * Features smart filters for:
- * - Graduation Year (multi-select)
- * - Location (multi-select)
- * - Industry/Company (multi-select)
+ * - Location (City) (multi-select)
+ * - Location (Country) (multi-select)
+ * - Industry (multi-select)
  */
 export function DirectoryFilters({
-  yearOptions,
-  locationOptions,
+  cityOptions,
+  countryOptions,
   industryOptions,
-  selectedYears,
-  selectedLocations,
+  selectedCities,
+  selectedCountries,
   selectedIndustries,
-  onToggleYear,
-  onToggleLocation,
+  onToggleCity,
+  onToggleCountry,
   onToggleIndustry,
   onClearAll,
-  getYearCount,
-  getLocationCount,
+  getCityCount,
+  getCountryCount,
   getIndustryCount,
   activeFilterCount,
   className = '',
 }: DirectoryFiltersProps) {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
-    year: false,
-    location: false,
+    city: false,
+    country: false,
     industry: false,
   });
 
@@ -78,43 +78,46 @@ export function DirectoryFilters({
   // Prepare filter sections
   const filterSections: Array<FilterSection & { id: string }> = [
     {
-      id: 'year',
-      title: 'Graduation Year',
-      options: yearOptions.map((year) => ({
-        value: year,
-        count: getYearCount(year),
-      })),
-      selectedValues: selectedYears,
-      onToggle: onToggleYear,
-      emptyMessage: 'No graduation years available',
-    },
-    {
-      id: 'location',
-      title: 'Location',
-      options: locationOptions
-        .map((loc) => ({
-          value: loc,
-          count: getLocationCount(loc),
+      id: 'city',
+      title: 'City',
+      options: cityOptions
+        .map((city) => ({
+          value: city,
+          count: getCityCount(city),
         }))
         .sort((a, b) => b.count - a.count) // Sort by count descending
-        .slice(0, 20), // Show top 20 locations
-      selectedValues: selectedLocations,
-      onToggle: onToggleLocation,
-      emptyMessage: 'No locations available',
+        .slice(0, 20), // Show top 20 cities
+      selectedValues: selectedCities,
+      onToggle: onToggleCity,
+      emptyMessage: 'No cities available',
+    },
+    {
+      id: 'country',
+      title: 'Country',
+      options: countryOptions
+        .map((country) => ({
+          value: country,
+          count: getCountryCount(country),
+        }))
+        .sort((a, b) => b.count - a.count) // Sort by count descending
+        .slice(0, 20), // Show top 20 countries
+      selectedValues: selectedCountries,
+      onToggle: onToggleCountry,
+      emptyMessage: 'No countries available',
     },
     {
       id: 'industry',
-      title: 'Company/Industry',
+      title: 'Industry',
       options: industryOptions
         .map((ind) => ({
           value: ind,
           count: getIndustryCount(ind),
         }))
         .sort((a, b) => b.count - a.count) // Sort by count descending
-        .slice(0, 20), // Show top 20 companies
+        .slice(0, 20), // Show top 20 industries
       selectedValues: selectedIndustries,
       onToggle: onToggleIndustry,
-      emptyMessage: 'No companies available',
+      emptyMessage: 'No industries available',
     },
   ];
 

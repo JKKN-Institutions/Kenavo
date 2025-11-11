@@ -1,23 +1,23 @@
 'use client';
 
-import { GraduationCap, MapPin, Building2 } from 'lucide-react';
+import { MapPin, Globe, Building2 } from 'lucide-react';
 import { FilterDropdown } from './FilterDropdown';
 
 interface HorizontalFiltersProps {
-  yearOptions: string[];
-  locationOptions: string[];
+  cityOptions: string[];
+  countryOptions: string[];
   industryOptions: string[];
-  selectedYears: string[];
-  selectedLocations: string[];
+  selectedCities: string[];
+  selectedCountries: string[];
   selectedIndustries: string[];
-  onToggleYear: (year: string) => void;
-  onToggleLocation: (location: string) => void;
+  onToggleCity: (city: string) => void;
+  onToggleCountry: (country: string) => void;
   onToggleIndustry: (industry: string) => void;
-  onClearYears: () => void;
-  onClearLocations: () => void;
+  onClearCities: () => void;
+  onClearCountries: () => void;
   onClearIndustries: () => void;
-  getYearCount: (year: string) => number;
-  getLocationCount: (location: string) => number;
+  getCityCount: (city: string) => number;
+  getCountryCount: (country: string) => number;
   getIndustryCount: (industry: string) => number;
 }
 
@@ -26,58 +26,61 @@ interface HorizontalFiltersProps {
  * Displays filter dropdowns in a horizontal row
  */
 export function HorizontalFilters({
-  yearOptions,
-  locationOptions,
+  cityOptions,
+  countryOptions,
   industryOptions,
-  selectedYears,
-  selectedLocations,
+  selectedCities,
+  selectedCountries,
   selectedIndustries,
-  onToggleYear,
-  onToggleLocation,
+  onToggleCity,
+  onToggleCountry,
   onToggleIndustry,
-  onClearYears,
-  onClearLocations,
+  onClearCities,
+  onClearCountries,
   onClearIndustries,
-  getYearCount,
-  getLocationCount,
+  getCityCount,
+  getCountryCount,
   getIndustryCount,
 }: HorizontalFiltersProps) {
   return (
     <div className="flex flex-wrap items-center gap-3">
-      {/* Graduation Year Filter */}
+      {/* City Filter */}
       <FilterDropdown
-        label="Graduation Year"
-        icon={<GraduationCap className="h-4 w-4" />}
-        options={yearOptions.map((year) => ({
-          value: year,
-          count: getYearCount(year),
-        }))}
-        selectedValues={selectedYears}
-        onToggle={onToggleYear}
-        onClear={onClearYears}
-        emptyMessage="No graduation years available"
-      />
-
-      {/* Location Filter */}
-      <FilterDropdown
-        label="Location"
+        label="City"
         icon={<MapPin className="h-4 w-4" />}
-        options={locationOptions
-          .map((loc) => ({
-            value: loc,
-            count: getLocationCount(loc),
+        options={cityOptions
+          .map((city) => ({
+            value: city,
+            count: getCityCount(city),
           }))
           .sort((a, b) => b.count - a.count)
-          .slice(0, 20)} // Top 20 locations
-        selectedValues={selectedLocations}
-        onToggle={onToggleLocation}
-        onClear={onClearLocations}
-        emptyMessage="No locations available"
+          .slice(0, 20)} // Top 20 cities
+        selectedValues={selectedCities}
+        onToggle={onToggleCity}
+        onClear={onClearCities}
+        emptyMessage="No cities available"
       />
 
-      {/* Company/Industry Filter */}
+      {/* Country Filter */}
       <FilterDropdown
-        label="Company/Industry"
+        label="Country"
+        icon={<Globe className="h-4 w-4" />}
+        options={countryOptions
+          .map((country) => ({
+            value: country,
+            count: getCountryCount(country),
+          }))
+          .sort((a, b) => b.count - a.count)
+          .slice(0, 20)} // Top 20 countries
+        selectedValues={selectedCountries}
+        onToggle={onToggleCountry}
+        onClear={onClearCountries}
+        emptyMessage="No countries available"
+      />
+
+      {/* Industry Filter */}
+      <FilterDropdown
+        label="Industry"
         icon={<Building2 className="h-4 w-4" />}
         options={industryOptions
           .map((ind) => ({
@@ -85,11 +88,11 @@ export function HorizontalFilters({
             count: getIndustryCount(ind),
           }))
           .sort((a, b) => b.count - a.count)
-          .slice(0, 20)} // Top 20 companies
+          .slice(0, 20)} // Top 20 industries
         selectedValues={selectedIndustries}
         onToggle={onToggleIndustry}
         onClear={onClearIndustries}
-        emptyMessage="No companies available"
+        emptyMessage="No industries available"
       />
     </div>
   );
