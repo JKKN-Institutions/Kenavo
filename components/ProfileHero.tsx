@@ -123,7 +123,9 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
               );
             })()}
 
-            {/* Current Residential Address */}
+            {/* Current Residential Address - HIDDEN FOR PRIVACY */}
+            {/* Temporarily commented out as per client request for privacy protection */}
+            {/*
             {location && (
               <div className="bg-[rgba(255,255,255,0.05)] backdrop-blur-sm rounded-lg p-4 sm:p-5 md:p-6 lg:p-7 xl:p-5 border border-[rgba(217,81,100,0.2)]">
                 <div className="text-[rgba(217,81,100,1)] text-xs sm:text-sm md:text-base lg:text-[17px] font-medium uppercase tracking-wide mb-2 sm:mb-2.5 md:mb-3">
@@ -139,6 +141,7 @@ const ProfileHero: React.FC<ProfileHeroProps> = ({
                 </address>
               </div>
             )}
+            */}
 
             {/* Nicknames */}
             {nicknames && (

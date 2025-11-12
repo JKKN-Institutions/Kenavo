@@ -7,7 +7,7 @@ const DirectorySectionV2 = () => {
   return (
     <section
       id="directory"
-      className="w-full h-[320px] md:h-[380px] lg:h-[420px] bg-[rgba(78,46,140,1)] relative overflow-hidden"
+      className="w-full h-[352px] md:h-[418px] lg:h-[462px] bg-[rgba(78,46,140,1)] relative overflow-hidden"
       aria-labelledby="directory-heading"
     >
       {/* Mountain Background - Full Section */}
@@ -62,11 +62,11 @@ const DirectorySectionV2 = () => {
             </div>
 
             {/* Portrait 4 - Bottom Left */}
-            <div className="absolute bottom-[10%] left-[-30%] z-10 w-[150px] h-[150px] md:w-[220px] md:h-[220px]">
+            <div className="absolute bottom-[10%] left-[-43%] z-10 w-[150px] h-[150px] md:w-[220px] md:h-[220px]">
               <img
                 src="/images/profile-6.png"
                 alt="Classmate 4"
-                className="w-full h-full rounded-full object-contain border-10 border-white shadow-xl aspect-square"
+                className="w-full h-full rounded-full object-contain border-15 border-white shadow-xl aspect-square"
               />
             </div>
 

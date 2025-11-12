@@ -5,7 +5,6 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import DirectoryHeroSection from '@/components/DirectoryHeroSection';
 import Footer from '@/components/Footer';
-import ScrollNavigationButtons from '@/components/ScrollNavigationButtons';
 import Link from 'next/link';
 import { getAllProfiles } from '@/lib/api/profiles';
 import type { Profile } from '@/lib/types/database';
@@ -18,6 +17,7 @@ import { useProfileSearch } from '@/hooks/useProfileSearch';
 import { useProfileFilters } from '@/hooks/useProfileFilters';
 import { Button } from '@/components/ui/button';
 import { Filter, X } from 'lucide-react';
+import { FloatingAlphabetNav } from '@/components/directory/FloatingAlphabetNav';
 
 // Helper function to create slug from name
 const createSlug = (name: string) => {
@@ -230,7 +230,9 @@ function DirectoryPageContent() {
     <div className="bg-[rgba(64,34,120,1)] flex flex-col overflow-hidden items-stretch">
       <Header />
       <DirectoryHeroSection />
-      <ScrollNavigationButtons />
+
+      {/* Floating A-Z Navigation for Mobile */}
+      <FloatingAlphabetNav availableLetters={letters} />
 
       <main className="w-full max-w-[1200px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
         <p className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] font-normal leading-relaxed">
