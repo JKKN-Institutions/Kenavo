@@ -45,6 +45,8 @@ function DirectoryPageContent() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [authChecking, setAuthChecking] = useState(true);
+  const [hasAccess, setHasAccess] = useState(false);
 
   // Search state
   const [searchTerm, setSearchTerm] = useState(searchParams.get('search') || '');
@@ -53,8 +55,52 @@ function DirectoryPageContent() {
   // Mobile filter drawer state
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
-  // Fetch profiles from Supabase
+  // Check authentication and directory access on mount
   useEffect(() => {
+    async function checkAccess() {
+      try {
+        const response = await fetch('/api/auth/check-directory-access');
+        const data = await response.json();
+
+        if (response.status === 401) {
+          // Not authenticated - redirect to login
+          router.push('/login?redirect=/directory');
+          return;
+        }
+
+        if (response.status === 403) {
+          // Authenticated but no directory access
+          if (data.message === 'Account is inactive') {
+            router.push('/access-denied?reason=account_inactive');
+          } else if (data.message === 'Directory access not granted') {
+            router.push('/access-denied?reason=directory_access_denied');
+          } else {
+            router.push('/access-denied?reason=no_permission');
+          }
+          return;
+        }
+
+        if (response.ok && data.hasAccess) {
+          setHasAccess(true);
+        } else {
+          router.push('/access-denied?reason=error');
+        }
+      } catch (error) {
+        console.error('Error checking directory access:', error);
+        router.push('/access-denied?reason=error');
+      } finally {
+        setAuthChecking(false);
+      }
+    }
+
+    checkAccess();
+  }, [router]);
+
+  // Fetch profiles from Supabase (only if auth check passed)
+  useEffect(() => {
+    if (!hasAccess) {
+      return; // Don't load profiles until auth check completes
+    }
     async function loadProfiles() {
       try {
         setLoading(true);
@@ -69,7 +115,7 @@ function DirectoryPageContent() {
     }
 
     loadProfiles();
-  }, [refreshKey]);
+  }, [refreshKey, hasAccess]);
 
   // Check for refresh parameter in URL and trigger refetch
   useEffect(() => {
@@ -123,6 +169,23 @@ function DirectoryPageContent() {
   const letters = Object.keys(alumniByLetter).sort();
 
   const hasActiveSearchOrFilters = searchHook.isSearching || filterHook.hasActiveFilters;
+
+  // Auth checking state
+  if (authChecking) {
+    return (
+      <div className="bg-[rgba(64,34,120,1)] flex flex-col overflow-hidden items-stretch min-h-screen">
+        <Header />
+        <DirectoryHeroSection />
+        <main className="w-full max-w-[1011px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
+          <div className="text-[rgba(254,249,232,1)] text-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[rgba(217,81,100,1)] mx-auto mb-4"></div>
+            <p className="text-2xl">Checking access permissions...</p>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
 
   const AlphabetNavigation = () => {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');

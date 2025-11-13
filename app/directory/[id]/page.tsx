@@ -1,10 +1,12 @@
 import React from 'react';
-import { notFound } from 'next/navigation';
+import { notFound, redirect } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProfileHero from '@/components/ProfileHero';
 import QuestionAnswer from '@/components/QuestionAnswer';
 import { getProfileBySlug, getAllProfileSlugs } from '@/lib/api/profiles';
+import { getUser } from '@/lib/auth/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 // Enable automatic revalidation every hour to ensure fresh data from database
 // This ensures designation/organization and other profile updates appear on production
@@ -27,6 +29,36 @@ export const dynamicParams = true;
 
 export default async function DirectoryIndividualPage({ params }: { params: Promise<{ id: string }> }) {
   const { id: slug } = await params;
+
+  // Check authentication and directory access
+  const { user } = await getUser();
+
+  if (!user) {
+    // Not authenticated - redirect to login with return URL
+    redirect(`/login?redirect=/directory/${slug}`);
+  }
+
+  // Check if user has directory access
+  const { data: appUser, error: userError } = await supabaseAdmin
+    .from('app_users')
+    .select('id, email, username, has_directory_access, status')
+    .eq('id', user.id)
+    .single();
+
+  if (userError || !appUser) {
+    // User not found in app_users table
+    redirect('/access-denied?reason=no_permission');
+  }
+
+  // Check if account is active
+  if (appUser.status !== 'active') {
+    redirect('/access-denied?reason=account_inactive');
+  }
+
+  // Check directory access permission
+  if (!appUser.has_directory_access) {
+    redirect('/access-denied?reason=directory_access_denied');
+  }
 
   // Fetch profile data by slug
   let profile;
