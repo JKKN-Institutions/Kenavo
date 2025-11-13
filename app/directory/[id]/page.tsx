@@ -46,8 +46,8 @@ export default async function DirectoryIndividualPage({ params }: { params: Prom
     .single();
 
   if (userError || !appUser) {
-    // User not found in app_users table
-    redirect('/access-denied?reason=no_permission');
+    // User not found in app_users table - redirect to login for registration
+    redirect(`/login?redirect=/directory/${slug}`);
   }
 
   // Check if account is active

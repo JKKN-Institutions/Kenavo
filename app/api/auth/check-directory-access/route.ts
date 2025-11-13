@@ -34,14 +34,14 @@ export async function GET(request: NextRequest) {
       console.error('Error checking directory access:', error);
 
       // User is authenticated but not in app_users table
-      // This could be an admin or a user created before the user management system
+      // Treat as "not authenticated" for directory purposes - they need to register/setup account
       return NextResponse.json(
         {
           hasAccess: false,
-          isAuthenticated: true,
-          message: 'User not found in system',
+          isAuthenticated: false,
+          message: 'User not found in system - please login or register',
         },
-        { status: 403 }
+        { status: 401 }
       );
     }
 

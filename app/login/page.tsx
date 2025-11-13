@@ -20,6 +20,15 @@ function LoginContent() {
   useEffect(() => {
     checkAuth();
 
+    // Check for redirect parameter (user tried to access protected page)
+    const redirect = searchParams?.get('redirect');
+    if (redirect) {
+      setMessage({
+        type: 'info',
+        text: 'Please login to access the directory.',
+      });
+    }
+
     // Check for error messages from URL
     const error = searchParams?.get('error');
     if (error === 'auth_failed') {
@@ -38,7 +47,16 @@ function LoginContent() {
   const checkAuth = async () => {
     const { user } = await getUser();
     if (user) {
-      // Check if user is admin
+      // Check for redirect parameter first
+      const redirectUrl = searchParams?.get('redirect');
+
+      if (redirectUrl) {
+        // User is already logged in and trying to access a specific page
+        router.push(redirectUrl);
+        return;
+      }
+
+      // No redirect - check if user is admin
       const authCheckResponse = await fetch('/api/auth/check-admin');
       const authResult = await authCheckResponse.json();
 
@@ -130,11 +148,14 @@ function LoginContent() {
 
       console.log('✅ Signed in successfully!');
 
+      // Check for redirect parameter
+      const redirectUrl = searchParams?.get('redirect');
+
       // Check if user is admin or regular user
       const authCheckResponse = await fetch('/api/auth/check-admin');
       const authResult = await authCheckResponse.json();
 
-      if (authResult.authorized) {
+      if (authResult.authorized && !redirectUrl) {
         console.log('✅ Admin user - redirecting to admin panel');
         setMessage({
           type: 'success',
@@ -144,6 +165,17 @@ function LoginContent() {
         // Redirect to admin panel
         setTimeout(() => {
           router.push('/admin-panel');
+        }, 1000);
+      } else if (redirectUrl) {
+        console.log('✅ Redirecting to intended page:', redirectUrl);
+        setMessage({
+          type: 'success',
+          text: 'Signed in successfully! Redirecting...',
+        });
+
+        // Redirect to the intended page
+        setTimeout(() => {
+          router.push(redirectUrl);
         }, 1000);
       } else {
         console.log('✅ Regular user - redirecting to directory');
