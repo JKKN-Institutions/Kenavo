@@ -68,6 +68,31 @@ export default function AdminPanel() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<TabType>('manage');
   const [loggingOut, setLoggingOut] = useState(false);
+  const [authChecking, setAuthChecking] = useState(true);
+
+  // Check authorization on mount
+  useEffect(() => {
+    checkAuthorization();
+  }, []);
+
+  const checkAuthorization = async () => {
+    try {
+      const response = await fetch('/api/auth/check-admin');
+      const result = await response.json();
+
+      if (!result.authorized) {
+        console.error('❌ Unauthorized access attempt to admin panel');
+        router.push('/login?error=access_denied');
+        return;
+      }
+
+      console.log('✅ Admin authorization confirmed');
+      setAuthChecking(false);
+    } catch (error) {
+      console.error('Error checking authorization:', error);
+      router.push('/login?error=auth_failed');
+    }
+  };
 
   const handleLogout = async () => {
     setLoggingOut(true);
@@ -82,6 +107,18 @@ export default function AdminPanel() {
     router.push('/login');
     router.refresh();
   };
+
+  // Show loading state while checking authorization
+  if (authChecking) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900 flex items-center justify-center">
+        <div className="text-center">
+          <RefreshCw size={48} className="animate-spin text-purple-300 mx-auto mb-4" />
+          <p className="text-white text-lg">Verifying authorization...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-900 via-purple-800 to-indigo-900">
