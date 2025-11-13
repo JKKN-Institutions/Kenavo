@@ -72,6 +72,51 @@ export interface ProfileComplete extends Profile {
   qa_responses: ProfileQA[]
 }
 
+// User Management Types
+export type UserRole = 'admin' | 'user';
+
+export interface AppUser {
+  id: string // UUID from auth.users
+  email: string
+  username: string | null
+  role: UserRole
+  has_directory_access: boolean
+  status: 'active' | 'inactive'
+  created_by: string | null // UUID
+  created_at: string
+  updated_at: string
+}
+
+// Extended user with creator info
+export interface AppUserWithCreator extends AppUser {
+  created_by_user: {
+    email: string
+    username: string | null
+  } | null
+}
+
+// User creation input
+export interface CreateAppUserInput {
+  email: string
+  username?: string
+  password: string
+  role?: UserRole
+  has_directory_access?: boolean
+  status?: 'active' | 'inactive'
+}
+
+// User update input
+export interface UpdateAppUserInput {
+  email?: string
+  username?: string
+  password?: string
+  role?: UserRole
+  has_directory_access?: boolean
+  status?: 'active' | 'inactive'
+}
+
 // API response types
 export type ProfilesResponse = Profile[]
 export type SingleProfileResponse = Profile
+export type AppUsersResponse = AppUser[]
+export type SingleAppUserResponse = AppUser

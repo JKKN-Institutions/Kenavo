@@ -1,46 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
+import { getUser, isAdmin } from '@/lib/auth/server';
 
 /**
  * CHECK ADMIN AUTHORIZATION
  *
- * Verifies if the current authenticated user's email is in the ADMIN_EMAILS whitelist.
+ * Verifies if the current authenticated user is an admin.
+ * Checks both ADMIN_EMAILS whitelist and database role field.
  * Used by client-side components to check authorization before accessing admin features.
  */
 export async function GET(request: NextRequest) {
   try {
-    const cookieStore = await cookies();
-
-    // Create Supabase SSR client
-    const supabase = createServerClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-      {
-        cookies: {
-          get(name: string) {
-            return cookieStore.get(name)?.value;
-          },
-          set(name: string, value: string, options: any) {
-            try {
-              cookieStore.set({ name, value, ...options });
-            } catch (error) {
-              console.error('Error setting cookie:', error);
-            }
-          },
-          remove(name: string, options: any) {
-            try {
-              cookieStore.set({ name, value: '', ...options });
-            } catch (error) {
-              console.error('Error removing cookie:', error);
-            }
-          },
-        },
-      }
-    );
-
     // Get current user
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const { user, error } = await getUser();
 
     if (error || !user) {
       return NextResponse.json(
@@ -53,20 +24,17 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Check if user email is in admin whitelist
+    // Check if user is admin (checks both ADMIN_EMAILS and database role)
     const userEmail = user.email || '';
-    const adminEmails = process.env.ADMIN_EMAILS?.split(',').map(e => e.trim()) || [];
-
     console.log('Checking admin access for:', userEmail);
-    console.log('Admin whitelist:', adminEmails);
 
-    const isAdmin = adminEmails.includes(userEmail);
+    const adminStatus = await isAdmin();
 
-    if (!isAdmin) {
+    if (!adminStatus) {
       return NextResponse.json(
         {
           authorized: false,
-          message: 'Access denied. Your email is not authorized for admin access.',
+          message: 'Access denied. You do not have admin privileges.',
           user: {
             email: userEmail,
             id: user.id
@@ -75,6 +43,8 @@ export async function GET(request: NextRequest) {
         { status: 403 }
       );
     }
+
+    console.log('✅ Admin access granted for:', userEmail);
 
     return NextResponse.json(
       {

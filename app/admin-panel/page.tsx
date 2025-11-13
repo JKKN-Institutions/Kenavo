@@ -1,14 +1,15 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Upload, UserPlus, CheckCircle, AlertCircle, Edit2, Search, X, Save, List, LogOut, Image as ImageIcon, RefreshCw, Mail } from 'lucide-react';
+import { Upload, UserPlus, CheckCircle, AlertCircle, Edit2, Search, X, Save, List, LogOut, Image as ImageIcon, RefreshCw, Mail, Users } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { signOut } from '@/lib/auth/client';
 import BulkImagePreviewModal, { ImageMapping } from '@/components/admin/BulkImagePreviewModal';
 import GalleryManagementTab from '@/components/admin/GalleryManagementTab';
 import ContactSubmissionsTab from '@/components/ContactSubmissionsTab';
+import UserManagementTab from '@/components/admin/UserManagementTab';
 
-type TabType = 'manage' | 'bulkUpdate' | 'single' | 'gallery' | 'contact';
+type TabType = 'manage' | 'bulkUpdate' | 'single' | 'gallery' | 'contact' | 'users';
 
 // Helper function to parse CSV line (handles quoted values with commas)
 function parseCSVLine(line: string): string[] {
@@ -66,9 +67,29 @@ interface Question {
 
 export default function AdminPanel() {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState<TabType>('manage');
   const [loggingOut, setLoggingOut] = useState(false);
   const [authChecking, setAuthChecking] = useState(true);
+
+  // Initialize activeTab from URL or default to 'manage'
+  const [activeTab, setActiveTab] = useState<TabType>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get('tab') as TabType;
+      if (tab && ['manage', 'bulkUpdate', 'single', 'gallery', 'contact', 'users'].includes(tab)) {
+        return tab;
+      }
+    }
+    return 'manage';
+  });
+
+  // Update URL when tab changes
+  useEffect(() => {
+    if (typeof window !== 'undefined' && !authChecking) {
+      const url = new URL(window.location.href);
+      url.searchParams.set('tab', activeTab);
+      window.history.replaceState({}, '', url.toString());
+    }
+  }, [activeTab, authChecking]);
 
   // Check authorization on mount
   useEffect(() => {
@@ -198,6 +219,17 @@ export default function AdminPanel() {
             <Mail size={20} />
             Contact Forms
           </button>
+          <button
+            onClick={() => setActiveTab('users')}
+            className={`flex items-center gap-2 px-6 py-3 rounded-lg font-semibold transition-all ${
+              activeTab === 'users'
+                ? 'bg-white text-purple-900 shadow-lg'
+                : 'bg-white/10 text-white hover:bg-white/20'
+            }`}
+          >
+            <Users size={20} />
+            Users
+          </button>
         </div>
 
         {/* Tab Content */}
@@ -207,6 +239,7 @@ export default function AdminPanel() {
           {activeTab === 'single' && <SingleProfileForm />}
           {activeTab === 'gallery' && <GalleryManagementTab />}
           {activeTab === 'contact' && <ContactSubmissionsTab />}
+          {activeTab === 'users' && <UserManagementTab />}
         </div>
       </div>
     </div>

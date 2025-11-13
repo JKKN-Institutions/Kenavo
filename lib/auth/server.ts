@@ -2,6 +2,7 @@
 import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { supabaseAdmin } from '@/lib/supabase-admin';
 
 export async function createClient() {
   const cookieStore = await cookies();
@@ -44,11 +45,31 @@ export async function isAdmin() {
     return false;
   }
 
-  // Check user metadata or database for admin role
-  // For now, we'll use a simple email whitelist
+  // First, check email whitelist for backward compatibility
   const adminEmails = process.env.ADMIN_EMAILS?.split(',') || [];
+  if (adminEmails.includes(user.email || '')) {
+    return true;
+  }
 
-  return adminEmails.includes(user.email || '');
+  // Then check app_users table for role = 'admin'
+  // Use supabaseAdmin to bypass RLS policies
+  try {
+    const { data: appUser, error } = await supabaseAdmin
+      .from('app_users')
+      .select('role, status')
+      .eq('id', user.id)
+      .single();
+
+    if (error || !appUser) {
+      return false;
+    }
+
+    // User must have admin role and be active
+    return appUser.role === 'admin' && appUser.status === 'active';
+  } catch (error) {
+    console.error('Error checking admin role:', error);
+    return false;
+  }
 }
 
 // Middleware helper for protecting routes

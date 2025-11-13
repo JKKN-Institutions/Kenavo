@@ -3,8 +3,8 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { LogIn, AlertCircle, CheckCircle, Loader2, Mail, Lock } from 'lucide-react';
-import { signInWithGoogle, signInWithPassword, getUser, signOut } from '@/lib/auth/client';
-import Link from 'next/link';
+import { signInWithPassword, getUser, signOut } from '@/lib/auth/client';
+// import Link from 'next/link';
 
 // Separate component that uses useSearchParams
 function LoginContent() {
@@ -38,42 +38,53 @@ function LoginContent() {
   const checkAuth = async () => {
     const { user } = await getUser();
     if (user) {
-      router.push('/admin-panel');
-    }
-  };
+      // Check if user is admin
+      const authCheckResponse = await fetch('/api/auth/check-admin');
+      const authResult = await authCheckResponse.json();
 
-  const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setMessage({
-      type: 'info',
-      text: 'Redirecting to Google...',
-    });
-
-    try {
-      console.log('Starting Google sign-in...');
-      const { error } = await signInWithGoogle();
-
-      if (error) {
-        console.error('Google sign-in error:', error);
-        setMessage({
-          type: 'error',
-          text: `Failed to sign in with Google: ${error.message}`,
-        });
-        setLoading(false);
-        return;
+      if (authResult.authorized) {
+        // Admin user - redirect to admin panel
+        router.push('/admin-panel');
+      } else {
+        // Regular user - redirect to directory
+        router.push('/directory');
       }
-
-      // If no error, user will be redirected to Google
-      // They'll come back via the auth callback
-    } catch (error: any) {
-      console.error('Unexpected Google sign-in error:', error);
-      setMessage({
-        type: 'error',
-        text: `Error: ${error.message || 'An unexpected error occurred'}`,
-      });
-      setLoading(false);
     }
   };
+
+  // GOOGLE SIGN-IN DISABLED
+  // const handleGoogleSignIn = async () => {
+  //   setLoading(true);
+  //   setMessage({
+  //     type: 'info',
+  //     text: 'Redirecting to Google...',
+  //   });
+
+  //   try {
+  //     console.log('Starting Google sign-in...');
+  //     const { error } = await signInWithGoogle();
+
+  //     if (error) {
+  //       console.error('Google sign-in error:', error);
+  //       setMessage({
+  //         type: 'error',
+  //         text: `Failed to sign in with Google: ${error.message}`,
+  //       });
+  //       setLoading(false);
+  //       return;
+  //     }
+
+  //     // If no error, user will be redirected to Google
+  //     // They'll come back via the auth callback
+  //   } catch (error: any) {
+  //     console.error('Unexpected Google sign-in error:', error);
+  //     setMessage({
+  //       type: 'error',
+  //       text: `Error: ${error.message || 'An unexpected error occurred'}`,
+  //     });
+  //     setLoading(false);
+  //   }
+  // };
 
   const handleEmailSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -117,36 +128,35 @@ function LoginContent() {
         return;
       }
 
-      console.log('✅ Signed in, checking admin authorization...');
+      console.log('✅ Signed in successfully!');
 
-      // Check if user is authorized for admin access
+      // Check if user is admin or regular user
       const authCheckResponse = await fetch('/api/auth/check-admin');
       const authResult = await authCheckResponse.json();
 
-      if (!authResult.authorized) {
-        console.error('❌ Admin access denied');
-
-        // Sign out the user since they're not authorized
-        await signOut();
-
+      if (authResult.authorized) {
+        console.log('✅ Admin user - redirecting to admin panel');
         setMessage({
-          type: 'error',
-          text: authResult.message || 'Access denied. Your email is not authorized for admin access.',
+          type: 'success',
+          text: 'Admin access granted! Redirecting...',
         });
-        setEmailLoading(false);
-        return;
+
+        // Redirect to admin panel
+        setTimeout(() => {
+          router.push('/admin-panel');
+        }, 1000);
+      } else {
+        console.log('✅ Regular user - redirecting to directory');
+        setMessage({
+          type: 'success',
+          text: 'Signed in successfully! Redirecting to directory...',
+        });
+
+        // Redirect to directory page
+        setTimeout(() => {
+          router.push('/directory');
+        }, 1000);
       }
-
-      console.log('✅ Admin access granted');
-      setMessage({
-        type: 'success',
-        text: 'Signed in successfully! Redirecting...',
-      });
-
-      // Wait a moment then redirect to admin panel
-      setTimeout(() => {
-        router.push('/admin-panel');
-      }, 1000);
 
     } catch (error: any) {
       console.error('Unexpected email sign-in error:', error);
@@ -168,7 +178,7 @@ function LoginContent() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-purple-600 rounded-full mb-4">
               <LogIn size={32} className="text-white" />
             </div>
-            <h1 className="text-3xl font-bold text-white mb-2">Admin Login</h1>
+            <h1 className="text-3xl font-bold text-white mb-2">Login</h1>
             <p className="text-purple-200">Kenavo Alumni Directory</p>
           </div>
 
@@ -192,8 +202,8 @@ function LoginContent() {
             </div>
           )}
 
-          {/* Google Sign-In Button */}
-          <button
+          {/* GOOGLE SIGN-IN DISABLED */}
+          {/* <button
             onClick={handleGoogleSignIn}
             disabled={loading || emailLoading}
             className="w-full bg-white hover:bg-gray-100 disabled:bg-gray-300 text-gray-900 px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-3 disabled:cursor-not-allowed shadow-lg"
@@ -226,17 +236,17 @@ function LoginContent() {
                 Sign in with Google
               </>
             )}
-          </button>
+          </button> */}
 
-          {/* Divider */}
-          <div className="relative my-6">
+          {/* DIVIDER REMOVED - Email sign-in only */}
+          {/* <div className="relative my-6">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-white/20"></div>
             </div>
             <div className="relative flex justify-center text-sm">
               <span className="px-4 bg-white/10 text-purple-200">Or continue with email</span>
             </div>
-          </div>
+          </div> */}
 
           {/* Email/Password Form */}
           <form onSubmit={handleEmailSignIn} className="space-y-4">
@@ -280,15 +290,15 @@ function LoginContent() {
               </div>
             </div>
 
-            {/* Forgot Password Link */}
-            <div className="flex justify-end">
+            {/* FORGOT PASSWORD DISABLED */}
+            {/* <div className="flex justify-end">
               <Link
                 href="/forgot-password"
                 className="text-sm text-purple-300 hover:text-purple-100 transition-colors"
               >
                 Forgot password?
               </Link>
-            </div>
+            </div> */}
 
             {/* Sign In Button */}
             <button
@@ -304,26 +314,26 @@ function LoginContent() {
               ) : (
                 <>
                   <LogIn size={20} />
-                  Sign in with Email
+                  Sign In
                 </>
               )}
             </button>
           </form>
 
-          {/* Register Link */}
-          <div className="mt-4 text-center">
+          {/* REGISTER LINK DISABLED - Users are created by admin only */}
+          {/* <div className="mt-4 text-center">
             <p className="text-purple-200 text-sm">
               Don&apos;t have an account?{' '}
               <Link href="/register" className="text-purple-300 hover:text-purple-100 font-semibold underline">
                 Register here
               </Link>
             </p>
-          </div>
+          </div> */}
 
           {/* Info Text */}
           <div className="mt-6 pt-6 border-t border-white/20">
             <p className="text-purple-200 text-sm text-center">
-              This area is restricted to authorized administrators only.
+              Sign in with your credentials to access the alumni directory.
             </p>
           </div>
         </div>
@@ -332,7 +342,7 @@ function LoginContent() {
         <div className="mt-6 bg-blue-500/20 border border-blue-500/50 rounded-lg p-4 text-blue-100 text-sm">
           <p className="font-semibold mb-2">🔐 Authentication</p>
           <p>
-            Sign in with Google or use your registered email and password to access the admin panel.
+            Sign in with your email and password. Admins will be redirected to the admin panel, while regular users can access the directory.
           </p>
         </div>
       </div>
