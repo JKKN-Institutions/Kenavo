@@ -120,3 +120,80 @@ export type ProfilesResponse = Profile[]
 export type SingleProfileResponse = Profile
 export type AppUsersResponse = AppUser[]
 export type SingleAppUserResponse = AppUser
+
+// Gemini AI Types
+export type DocumentCategory = 'alumni_profiles' | 'knowledge_base' | 'events' | 'newsletters' | 'resources'
+export type UploadStatus = 'pending' | 'uploading' | 'completed' | 'failed'
+
+export interface GeminiDocument {
+  id: string
+  name: string
+  display_name: string
+  file_name: string
+  file_size: number | null
+  file_type: string | null
+  category: DocumentCategory
+  tags: string[]
+  description: string | null
+  rag_store_name: string | null
+  gemini_file_name: string | null
+  upload_status: UploadStatus
+  error_message: string | null
+  uploaded_by: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface CreateGeminiDocumentInput {
+  display_name: string
+  file_name: string
+  file_size?: number
+  file_type?: string
+  category: DocumentCategory
+  tags?: string[]
+  description?: string
+}
+
+export interface UpdateGeminiDocumentInput {
+  display_name?: string
+  category?: DocumentCategory
+  tags?: string[]
+  description?: string
+  upload_status?: UploadStatus
+  error_message?: string
+  rag_store_name?: string
+  gemini_file_name?: string
+}
+
+export interface GroundingChunk {
+  retrievedContext?: {
+    text?: string
+  }
+}
+
+export interface ChatMessage {
+  role: 'user' | 'model'
+  parts: { text: string }[]
+  groundingChunks?: GroundingChunk[]
+}
+
+export interface GeminiChatHistory {
+  id: string
+  session_id: string
+  user_id: string | null
+  message_role: 'user' | 'model'
+  message_text: string
+  grounding_chunks: GroundingChunk[] | null
+  created_at: string
+}
+
+export interface ChatRequest {
+  message: string
+  sessionId?: string
+}
+
+export interface ChatResponse {
+  response: string
+  groundingChunks: GroundingChunk[]
+  sessionId: string
+}

@@ -100,19 +100,32 @@ const DirectorySectionV2 = () => {
               <div className="relative w-[75px] h-[75px] md:w-[110px] md:h-[110px]">
                 {/* Starburst background */}
                 <div className="absolute inset-0 flex items-center justify-center">
-                  <svg viewBox="0 0 200 200" className="w-full h-full">
+                  <svg viewBox="0 0 200 200" className="w-full h-full" suppressHydrationWarning>
                     <circle cx="100" cy="100" r="95" fill="white" />
-                    {[...Array(24)].map((_, i) => (
-                      <line
-                        key={i}
-                        x1="100"
-                        y1="100"
-                        x2={100 + 90 * Math.cos((i * 15 * Math.PI) / 180)}
-                        y2={100 + 90 * Math.sin((i * 15 * Math.PI) / 180)}
-                        stroke="rgba(217,81,100,1)"
-                        strokeWidth="2"
-                      />
-                    ))}
+                    <line x1="100" y1="100" x2="190" y2="100" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="186.60254037844387" y2="123.47759065022574" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="177.78174593052023" y2="145.04844339512095" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="163.63961030678928" y2="163.63961030678928" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="145.04844339512095" y2="177.78174593052023" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="123.47759065022574" y2="186.60254037844387" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="100" y2="190" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="76.52240934977426" y2="186.60254037844387" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="54.95155660487905" y2="177.78174593052023" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="36.360389693210715" y2="163.63961030678928" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="22.21825406947977" y2="145.04844339512095" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="13.397459621556133" y2="123.47759065022574" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="10" y2="100" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="13.397459621556133" y2="76.52240934977426" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="22.21825406947977" y2="54.95155660487905" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="36.360389693210715" y2="36.360389693210715" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="54.95155660487905" y2="22.21825406947977" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="76.52240934977426" y2="13.397459621556133" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="100" y2="10" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="123.47759065022574" y2="13.397459621556133" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="145.04844339512095" y2="22.21825406947977" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="163.63961030678928" y2="36.360389693210715" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="177.78174593052023" y2="54.95155660487905" stroke="rgba(217,81,100,1)" strokeWidth="2" />
+                    <line x1="100" y1="100" x2="186.60254037844387" y2="76.52240934977426" stroke="rgba(217,81,100,1)" strokeWidth="2" />
                     <circle cx="100" cy="100" r="85" fill="white" stroke="rgba(217,81,100,1)" strokeWidth="3" />
                   </svg>
                 </div>

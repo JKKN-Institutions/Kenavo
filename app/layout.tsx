@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import MobileBottomNav from "@/components/MobileBottomNav";
+import KenavoAIChatWidget from "@/components/KenavoAIChatWidget";
 
 export const metadata: Metadata = {
   title: "Kenavo - Montfort Class of 2000",
@@ -93,6 +94,7 @@ export default function RootLayout({
           {children}
         </div>
         <MobileBottomNav />
+        <KenavoAIChatWidget />
       </body>
     </html>
   );
