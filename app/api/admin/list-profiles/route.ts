@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     // Apply search filter
     if (search) {
-      query = query.or(`name.ilike.%${search}%,location.ilike.%${search}%,company.ilike.%${search}%`);
+      query = query.or(`name.ilike.%${search}%,location.ilike.%${search}%,designation_organisation.ilike.%${search}%,company.ilike.%${search}%,current_job.ilike.%${search}%,nicknames.ilike.%${search}%,email.ilike.%${search}%`);
     }
 
     // Apply year filter

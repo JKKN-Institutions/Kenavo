@@ -327,7 +327,7 @@ function ManageProfilesTab() {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" size={20} />
             <input
               type="text"
-              placeholder="Search by name, location, or designation/organisation..."
+              placeholder="Search by name, email, location, job, company, organisation, or nickname..."
               value={searchTerm}
               onChange={(e) => {
                 setSearchTerm(e.target.value);

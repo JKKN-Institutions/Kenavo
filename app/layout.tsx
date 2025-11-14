@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import MobileBottomNav from "@/components/MobileBottomNav";
 import KenavoAIChatWidget from "@/components/KenavoAIChatWidget";
+import { BugReporterWrapper } from "@/components/BugReporterWrapper";
+import { Toaster } from 'react-hot-toast';
 
 export const metadata: Metadata = {
   title: "Kenavo - Montfort Class of 2000",
@@ -22,6 +24,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased pb-0 lg:pb-0 relative">
+        <BugReporterWrapper>
         {/* Global Radial Gradient Overlays */}
 
         {/* Corner Gradients */}
@@ -95,6 +98,8 @@ export default function RootLayout({
         </div>
         <MobileBottomNav />
         <KenavoAIChatWidget />
+        <Toaster position="top-right" />
+        </BugReporterWrapper>
       </body>
     </html>
   );
