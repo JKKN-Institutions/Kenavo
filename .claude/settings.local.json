@@ -93,5 +93,6 @@
     "supabase",
     "context7"
   ],
-  "disabledMcpjsonServers": []
+  "disabledMcpjsonServers": [],
+  "enableAllProjectMcpServers": true
 }

@@ -1,0 +1,188 @@
+# Navigation and Floating Action Menu Setup Guide
+
+This guide documents how to implement the Navigation and Floating Action Menu (FAB) setup from the Kenavo application into another Next.js application.
+
+## 1. Dependencies
+
+Ensure you have the following dependencies installed in your project:
+
+```bash
+npm install lucide-react
+```
+
+The implementation also uses standard Next.js hooks:
+- `next/link`
+- `next/navigation` (for `usePathname`)
+
+## 2. Component Implementation
+
+Create a new component file, e.g., `components/MobileBottomNav.tsx`.
+
+### Code Structure
+
+The component consists of two main parts:
+1.  **Bottom Navigation Bar**: A fixed bar at the bottom displaying primary navigation links.
+2.  **Floating Action Button (FAB)**: A circular button that toggles a secondary menu.
+
+### Source Code
+
+Copy the following code into `components/MobileBottomNav.tsx`:
+
+```tsx
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Home, Users, Image, Mail, Plus, Info, X } from 'lucide-react';
+
+const MobileBottomNav = () => {
+  const pathname = usePathname();
+  const [showMenu, setShowMenu] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  // Define your primary navigation items here
+  const navItems = [
+    { href: '/', icon: Home, label: 'Home' },
+    { href: '/directory', icon: Users, label: 'Directory' },
+    { href: '/gallery', icon: Image, label: 'Gallery' },
+    { href: '/contact', icon: Mail, label: 'Contact' },
+  ];
+
+  const isActive = (href: string) => {
+    if (!isMounted) return false;
+    if (href === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(href);
+  };
+
+  // Prevent hydration mismatch
+  if (!isMounted) {
+    return null;
+  }
+
+  return (
+    <>
+      {/* Main Navigation Container */}
+      <nav
+        className="fixed bottom-4 left-4 right-16 bg-gradient-to-r from-[rgba(78,46,140,0.85)] to-[rgba(108,66,160,0.75)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.3)] rounded-full lg:hidden z-50"
+        role="navigation"
+        aria-label="Mobile navigation"
+      >
+        <div className="flex items-center justify-around h-10 px-2">
+          {navItems.map((item) => {
+            const Icon = item.icon;
+            const active = isActive(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="relative flex flex-col items-center justify-center transition-all duration-300 ease-out active:scale-95"
+              >
+                {active ? (
+                  <div className="flex flex-row items-center justify-center gap-1.5 px-2.5 py-1.5 rounded-2xl bg-[rgba(50,30,90,0.8)] backdrop-blur-md shadow-lg border border-white/20 transition-all duration-300">
+                    <Icon size={16} strokeWidth={2.5} className="text-white transition-all duration-300" />
+                    <span className="text-xs font-semibold text-white whitespace-nowrap">
+                      {item.label}
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-center p-1">
+                    <Icon
+                      size={16}
+                      strokeWidth={2}
+                      className="text-white/70 hover:text-white/90 transition-all duration-300"
+                    />
+                  </div>
+                )}
+              </Link>
+            );
+          })}
+        </div>
+      </nav>
+
+      {/* Floating Action Button (FAB) */}
+      <div className="fixed bottom-4 right-4 lg:hidden z-50">
+        <button
+          onClick={() => setShowMenu(!showMenu)}
+          className="relative flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-br from-[rgba(217,81,100,1)] to-[rgba(217,81,100,0.8)] shadow-lg hover:shadow-xl transition-all duration-300 active:scale-95 border-2 border-white/20"
+          aria-label="More options"
+        >
+          {showMenu ? (
+            <X size={14} strokeWidth={2.5} className="text-white" />
+          ) : (
+            <Plus size={14} strokeWidth={2.5} className="text-white" />
+          )}
+        </button>
+      </div>
+
+      {/* FAB Menu - Bottom Sheet */}
+      {showMenu && (
+        <div
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 animate-in fade-in duration-200"
+          onClick={() => setShowMenu(false)}
+        >
+          <div
+            className="absolute bottom-[4.5rem] right-4 bg-[rgba(78,46,140,0.98)] backdrop-blur-lg rounded-2xl shadow-2xl border border-white/20 overflow-hidden animate-in slide-in-from-bottom-4 duration-300"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex flex-col p-2 min-w-[160px]">
+              {/* Add your menu items here */}
+              <Link
+                href="/about"
+                onClick={() => setShowMenu(false)}
+                className="flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-xl transition-all duration-200 active:scale-95"
+              >
+                <Info size={16} className="text-white/90" />
+                <span className="text-sm font-medium text-white">About</span>
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+};
+
+export default MobileBottomNav;
+```
+
+## 3. Integration
+
+To use this component, import and render it in your root layout file (usually `app/layout.tsx`) or a specific layout wrapper.
+
+```tsx
+// app/layout.tsx
+import MobileBottomNav from '@/components/MobileBottomNav';
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <html lang="en">
+      <body>
+        {children}
+        <MobileBottomNav />
+      </body>
+    </html>
+  );
+}
+```
+
+## 4. Customization
+
+### Colors
+The component uses Tailwind CSS classes with arbitrary values for specific colors (e.g., `bg-[rgba(78,46,140,0.85)]`).
+- **Navigation Bar Background**: Modify the `bg-gradient-to-r` classes in the `<nav>` element.
+- **Active Item Background**: Modify the `bg-[rgba(50,30,90,0.8)]` class in the active state div.
+- **FAB Background**: Modify the `bg-gradient-to-br` classes in the FAB button.
+
+### Icons
+Import different icons from `lucide-react` and update the `navItems` array or the FAB menu items.
+
+### Visibility
+The component currently uses `lg:hidden` to hide on large screens (desktops). Remove this class if you want it visible on all devices.
