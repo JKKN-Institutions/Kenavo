@@ -193,7 +193,7 @@ export const ContactForm: React.FC<ContactFormProps> = ({ className = "" }) => {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="bg-[rgba(217,81,100,1)] self-center flex w-[150px] sm:w-[170px] md:w-[190px] lg:w-[210px] max-w-full flex-col items-stretch text-lg sm:text-xl md:text-2xl font-black whitespace-nowrap text-center leading-none justify-center mt-4 sm:mt-5 md:mt-6 lg:mt-7 px-10 sm:px-12 md:px-14 py-3 md:py-3.5 lg:py-4 rounded-[50px] hover:bg-[rgba(207,71,90,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-[rgba(217,81,100,1)] self-center flex w-[150px] sm:w-[170px] md:w-[190px] lg:w-[210px] max-w-full flex-col items-stretch text-lg sm:text-xl md:text-2xl font-black whitespace-nowrap text-center leading-none justify-center mt-4 sm:mt-5 md:mt-6 lg:mt-7 px-10 sm:px-12 md:px-14 py-3 md:py-3.5 lg:py-4 !rounded-full hover:bg-[rgba(207,71,90,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {isSubmitting ? 'Sending...' : 'Submit'}
         </button>

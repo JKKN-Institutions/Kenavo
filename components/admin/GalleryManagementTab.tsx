@@ -66,14 +66,14 @@ export default function GalleryManagementTab() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between pb-6 border-b-2 border-neutral-200">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-2">Gallery Management</h2>
-          <p className="text-purple-200">Manage gallery albums and images</p>
+          <h2 className="text-2xl font-bold text-[#4E2E8C] mb-2">Gallery Management</h2>
+          <p className="text-neutral-600">Manage gallery albums and images</p>
         </div>
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-semibold transition-all"
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-yellow hover:bg-accent-400 text-[#4E2E8C] font-semibold transition-all shadow-sm hover:shadow-md"
         >
           <RefreshCw size={18} />
           Refresh
@@ -81,9 +81,9 @@ export default function GalleryManagementTab() {
       </div>
 
       {loading ? (
-        <div className="text-white text-center py-10">
-          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2"></div>
-          <p>Loading albums...</p>
+        <div className="text-neutral-600 text-center py-16 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-neutral-200 border-t-[#4E2E8C] mb-4"></div>
+          <p className="text-sm font-medium">Loading albums...</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -102,24 +102,24 @@ export default function GalleryManagementTab() {
             {selectedAlbum ? (
               <div className="space-y-6">
                 {/* Album Header */}
-                <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+                <div className="bg-[#4E2E8C]/5 rounded-lg p-4 border-2 border-[#4E2E8C]/20">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       {selectedAlbum.thumbnail_url ? (
                         <img
                           src={selectedAlbum.thumbnail_url}
                           alt={selectedAlbum.name}
-                          className="w-20 h-20 rounded-lg object-cover border-2 border-white/30"
+                          className="w-20 h-20 rounded-lg object-cover border-2 border-[#4E2E8C]"
                         />
                       ) : (
-                        <div className="w-20 h-20 rounded-lg bg-white/5 flex items-center justify-center border-2 border-white/30">
-                          <FolderOpen size={32} className="text-white/50" />
+                        <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center border-2 border-neutral-300">
+                          <FolderOpen size={32} className="text-neutral-400" />
                         </div>
                       )}
                       <div>
-                        <h3 className="text-xl font-bold text-white">{selectedAlbum.name}</h3>
-                        <p className="text-purple-200 text-sm mt-1">{selectedAlbum.description}</p>
-                        <p className="text-white/50 text-xs mt-2">Slug: {selectedAlbum.slug}</p>
+                        <h3 className="text-xl font-bold text-[#4E2E8C]">{selectedAlbum.name}</h3>
+                        <p className="text-neutral-600 text-sm mt-1">{selectedAlbum.description}</p>
+                        <p className="text-neutral-500 text-xs mt-2">Slug: {selectedAlbum.slug}</p>
                       </div>
                     </div>
                   </div>
@@ -138,10 +138,10 @@ export default function GalleryManagementTab() {
                 />
               </div>
             ) : (
-              <div className="bg-white/5 rounded-lg p-12 border border-white/20 text-center">
-                <ImageIcon size={64} className="text-white/30 mx-auto mb-4" />
-                <h3 className="text-xl font-semibold text-white mb-2">Select an Album</h3>
-                <p className="text-purple-200">
+              <div className="bg-neutral-50 rounded-lg p-12 border-2 border-neutral-200 text-center">
+                <ImageIcon size={64} className="text-neutral-300 mx-auto mb-4" />
+                <h3 className="text-xl font-semibold text-[#4E2E8C] mb-2">Select an Album</h3>
+                <p className="text-neutral-600">
                   Choose an album from the list to manage its images
                 </p>
               </div>

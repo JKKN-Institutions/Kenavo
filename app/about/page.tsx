@@ -9,7 +9,7 @@ export default function AboutPage() {
     <div className="bg-[rgba(78,46,140,1)] flex flex-col items-center min-h-screen overflow-x-hidden">
       <Header />
 
-        <main role="main" className="flex-1 w-full pb-10 sm:pb-12 md:pb-16">
+        <main role="main" className="flex-1 w-full pb-10 sm:pb-12 md:pb-14">
         <AboutHeroSection />
 
         {/* THE CLASS Section */}
@@ -19,7 +19,7 @@ export default function AboutPage() {
           imageSrc="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/1b54518e-9c1e-4450-830f-5c7d2c360405?placeholderIfAbsent=true"
           imageAlt="Montfort School students from Class of 2000"
           imagePosition="right"
-          className="mt-6 sm:mt-8 md:mt-10 lg:mt-8 xl:mt-6"
+          className="mt-8 sm:mt-10 md:mt-12 lg:mt-14"
         />
 
         {/* OUR MASCOT Section */}
@@ -29,7 +29,7 @@ export default function AboutPage() {
           imageSrc="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/0f0b3931-e11a-47c4-9502-34bf4a50ce15?placeholderIfAbsent=true"
           imageAlt="Albino the white monkey mascot"
           imagePosition="left"
-          className="mt-8 sm:mt-10 md:mt-10 lg:mt-8 xl:mt-6"
+          className="mt-8 sm:mt-10 md:mt-12 lg:mt-14"
         />
 
         {/* THE NAME Section */}
@@ -39,7 +39,7 @@ export default function AboutPage() {
           imageSrc="https://api.builder.io/api/v1/image/assets/b95740542f8a4181a070e70dfc13758e/43bede24-211b-4256-ab12-a16fc9513a10?placeholderIfAbsent=true"
           imageAlt="Kenavo farewell banner and memories"
           imagePosition="right"
-          className="mt-8 sm:mt-10 md:mt-10 lg:mt-8 xl:mt-6"
+          className="mt-8 sm:mt-10 md:mt-12 lg:mt-14"
         />
       </main>
 

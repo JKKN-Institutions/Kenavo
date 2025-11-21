@@ -98,7 +98,7 @@ const LoadMoreButton: React.FC<LoadMoreButtonProps> = ({
       <button
         onClick={onLoadMore}
         disabled={loading}
-        className="bg-[rgba(217,81,100,1)] flex flex-row items-center justify-center gap-2 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 min-h-[44px] text-base sm:text-lg md:text-xl text-white font-black text-center leading-none whitespace-nowrap rounded-full hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-12 sm:mt-16 md:mt-20 lg:mt-24 mb-3 sm:mb-4"
+        className="bg-[rgba(217,81,100,1)] flex flex-row items-center justify-center gap-2 px-8 sm:px-10 md:px-12 py-3 sm:py-3.5 md:py-4 min-h-[44px] text-base sm:text-lg md:text-xl text-white font-black text-center leading-none whitespace-nowrap !rounded-full hover:bg-[rgba(197,61,80,1)] active:scale-95 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-12 sm:mt-16 md:mt-20 lg:mt-24 mb-3 sm:mb-4"
         aria-label={loading ? 'Loading more items' : `Load more items${remaining ? ` (${remaining} remaining)` : ''}`}
       >
         {loading ? (

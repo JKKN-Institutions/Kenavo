@@ -173,12 +173,12 @@ function DirectoryPageContent() {
             alt={`${profile.name} profile`}
           />
         </div>
-        <div className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] leading-tight mt-3 sm:mt-4">
+        <div className="text-[rgba(254,249,232,1)] text-base sm:text-lg md:text-xl lg:text-[24px] leading-[1.3] mt-4 sm:mt-5">
           {profile.name}
         </div>
         <Link
           href={`/directory/${slug}`}
-          className="text-[rgba(217,81,100,1)] text-base sm:text-lg leading-none underline mt-6 sm:mt-8 md:mt-10 lg:mt-12 text-left hover:text-[rgba(217,81,100,0.8)] transition-colors inline-block"
+          className="text-[rgba(217,81,100,1)] text-sm sm:text-base leading-none underline mt-5 sm:mt-6 md:mt-8 lg:mt-10 text-left hover:text-[rgba(217,81,100,0.8)] transition-colors inline-block"
         >
           View More
         </Link>
@@ -234,14 +234,14 @@ function DirectoryPageContent() {
       {/* Floating A-Z Navigation for Mobile */}
       <FloatingAlphabetNav availableLetters={letters} />
 
-      <main className="w-full max-w-[1200px] mx-auto flex flex-col mt-12 md:mt-16 px-5 sm:px-8 md:px-10">
-        <p className="text-[rgba(254,249,232,1)] text-lg sm:text-xl md:text-2xl lg:text-[28px] font-normal leading-relaxed">
+      <main className="w-full max-w-[1200px] mx-auto flex flex-col mt-14 md:mt-20 px-5 sm:px-8 md:px-10">
+        <p className="text-[rgba(254,249,232,1)] text-base sm:text-lg md:text-xl lg:text-[24px] font-normal leading-[1.6]">
           Start exploring you might just reconnect with someone you forgot you
           missed.
         </p>
 
         {/* Search and Filter Section */}
-        <div className="mt-8 lg:mt-12">
+        <div className="mt-10 lg:mt-14">
           <div className="flex flex-col gap-4">
             {/* Full Width - Search and Horizontal Filters */}
             <div className="flex-1">
@@ -384,7 +384,7 @@ function DirectoryPageContent() {
         {/* All sections A-Z */}
         {letters.map((letter, letterIndex) => (
           <section key={letter} id={`letter-${letter}`}>
-            <h2 className={`text-[rgba(217,81,100,1)] text-2xl sm:text-3xl md:text-4xl lg:text-[42px] font-bold leading-none ${letterIndex === 0 ? 'mt-16 sm:mt-20 md:mt-32 lg:mt-40 xl:mt-[285px]' : 'mt-10 sm:mt-12 md:mt-14 lg:mt-[61px]'}`}>
+            <h2 className={`text-[rgba(217,81,100,1)] text-xl sm:text-2xl md:text-3xl lg:text-[36px] font-bold leading-none ${letterIndex === 0 ? 'mt-14 sm:mt-18 md:mt-24 lg:mt-32 xl:mt-40' : 'mt-10 sm:mt-12 md:mt-16 lg:mt-20'}`}>
               {letter}
             </h2>
 

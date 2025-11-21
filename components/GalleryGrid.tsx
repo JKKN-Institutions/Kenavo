@@ -40,8 +40,8 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
   // Initial loading state (no albums loaded yet)
   if (loading && albums.length === 0) {
     return (
-      <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
-        <div className="flex justify-center items-center py-20">
+      <section className="w-full max-w-[900px] mx-auto px-4 sm:px-6 md:px-8 mt-8 sm:mt-10 md:mt-12" aria-label="Photo gallery">
+        <div className="flex justify-center items-center py-12">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
         </div>
       </section>
@@ -51,12 +51,12 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
   // Error state
   if (error && albums.length === 0) {
     return (
-      <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
-        <div className="text-center py-20">
+      <section className="w-full max-w-[900px] mx-auto px-4 sm:px-6 md:px-8 mt-8 sm:mt-10 md:mt-12" aria-label="Photo gallery">
+        <div className="text-center py-12">
           <p className="text-red-400 text-lg">{error}</p>
           <button
             onClick={retry}
-            className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+            className="mt-4 px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
           >
             Try Again
           </button>
@@ -68,8 +68,8 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
   // Empty state
   if (!loading && albums.length === 0) {
     return (
-      <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
-        <div className="text-center py-20">
+      <section className="w-full max-w-[900px] mx-auto px-4 sm:px-6 md:px-8 mt-8 sm:mt-10 md:mt-12" aria-label="Photo gallery">
+        <div className="text-center py-12">
           <p className="text-white text-lg">No gallery albums available yet.</p>
         </div>
       </section>
@@ -77,8 +77,8 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
   }
 
   return (
-    <section className="w-full max-w-[931px] mx-auto px-4 sm:px-6 md:px-8 mt-12 sm:mt-16 md:mt-20 lg:mt-[119px]" aria-label="Photo gallery">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+    <section className="w-full max-w-[900px] mx-auto px-4 sm:px-6 md:px-8 mt-8 sm:mt-10 md:mt-12" aria-label="Photo gallery">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {albums.map((album) => (
           <div key={album.id} className="w-full">
             <GalleryCard
@@ -107,7 +107,7 @@ const GalleryGrid: React.FC<GalleryGridProps> = ({ externalState }) => {
           <p className="text-red-400 text-sm mb-3">{error}</p>
           <button
             onClick={retry}
-            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm"
+            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm"
           >
             Try Again
           </button>

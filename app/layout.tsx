@@ -22,7 +22,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className="antialiased pb-0 lg:pb-0 relative">
         <BugReporterWrapper>
         {/* Global Radial Gradient Overlays */}

@@ -76,10 +76,10 @@ export function CustomBugReporter() {
       {/* Floating Bug Button */}
       <button
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-50 flex items-center justify-center w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-110"
+        className="fixed bottom-14 left-3 z-40 flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 text-white shadow-md hover:shadow-lg transition-all duration-200 hover:scale-110 lg:bottom-6 lg:left-6 lg:w-10 lg:h-10"
         title="Report Bug"
       >
-        <Bug className="w-6 h-6" />
+        <Bug className="w-4 h-4 lg:w-5 lg:h-5" />
       </button>
 
       {/* Bug Report Modal */}

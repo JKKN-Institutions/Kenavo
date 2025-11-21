@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ContactSubmission } from '@/lib/types/contact';
-import { Mail, Search, Download, Eye, Trash2, Check } from 'lucide-react';
+import { Mail, Search, Download, Eye, Trash2, Check, X } from 'lucide-react';
 
 export default function ContactSubmissionsTab() {
   const [submissions, setSubmissions] = useState<ContactSubmission[]>([]);
@@ -97,21 +97,24 @@ export default function ContactSubmissionsTab() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold text-white mb-4">
-        Contact Form Submissions ({totalCount} Total)
-      </h2>
+      <div className="pb-6 border-b-2 border-[#4E2E8C]/20">
+        <h2 className="text-2xl font-bold text-[#4E2E8C]">
+          Contact Form Submissions ({totalCount} Total)
+        </h2>
+        <p className="text-neutral-600 text-sm mt-1">Manage and respond to contact form submissions</p>
+      </div>
 
       {/* Search and Filters */}
       <div className="flex gap-4 flex-wrap">
         <div className="flex-1 min-w-[200px]">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-white/50" size={20} />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" size={20} />
             <input
               type="text"
               placeholder="Search by name or email..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/50 focus:outline-none focus:border-[rgba(217,81,100,1)]"
+              className="w-full pl-10 pr-4 py-3 bg-white border-2 border-neutral-200 rounded-lg text-[#4E2E8C] placeholder-neutral-400 focus:outline-none focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 shadow-sm transition-all"
             />
           </div>
         </div>
@@ -119,7 +122,7 @@ export default function ContactSubmissionsTab() {
         <select
           value={statusFilter}
           onChange={(e) => setStatusFilter(e.target.value)}
-          className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white focus:outline-none focus:border-[rgba(217,81,100,1)]"
+          className="px-4 py-3 bg-white border-2 border-neutral-200 rounded-lg text-[#4E2E8C] focus:outline-none focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 shadow-sm transition-all cursor-pointer hover:bg-neutral-50"
         >
           <option value="all">All Status</option>
           <option value="unread">Unread</option>
@@ -131,28 +134,34 @@ export default function ContactSubmissionsTab() {
 
       {/* Submissions Table */}
       {loading ? (
-        <div className="text-center py-8 text-white">Loading...</div>
+        <div className="text-center py-16 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-neutral-200 border-t-[#4E2E8C] mb-4"></div>
+          <p className="text-sm font-medium text-neutral-600">Loading...</p>
+        </div>
       ) : submissions.length === 0 ? (
-        <div className="text-center py-8 text-white/70">No submissions found</div>
+        <div className="text-center py-16 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <p className="text-sm font-medium text-[#4E2E8C]">No submissions found</p>
+          <p className="text-xs text-neutral-500 mt-1">Try adjusting your filters</p>
+        </div>
       ) : (
-        <div className="overflow-x-auto rounded-lg border border-white/20">
+        <div className="overflow-x-auto rounded-xl border-2 border-neutral-200 shadow-sm">
           <table className="w-full">
-            <thead className="bg-white/10">
+            <thead className="bg-[#4E2E8C]/5">
               <tr>
-                <th className="px-4 py-3 text-left text-white font-medium">Name</th>
-                <th className="px-4 py-3 text-left text-white font-medium">Email</th>
-                <th className="px-4 py-3 text-left text-white font-medium">Date</th>
-                <th className="px-4 py-3 text-left text-white font-medium">Status</th>
-                <th className="px-4 py-3 text-left text-white font-medium">Files</th>
-                <th className="px-4 py-3 text-left text-white font-medium">Actions</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Name</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Email</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Date</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Status</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Files</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
               {submissions.map((submission) => (
-                <tr key={submission.id} className="border-t border-white/10 hover:bg-white/5">
-                  <td className="px-4 py-3 text-white">{submission.full_name}</td>
-                  <td className="px-4 py-3 text-white">{submission.email}</td>
-                  <td className="px-4 py-3 text-white/70">
+                <tr key={submission.id} className="border-t border-neutral-200 hover:bg-[#4E2E8C]/5 transition-colors">
+                  <td className="px-4 py-3 text-[#4E2E8C] font-medium">{submission.full_name}</td>
+                  <td className="px-4 py-3 text-neutral-700">{submission.email}</td>
+                  <td className="px-4 py-3 text-neutral-600 text-sm">
                     {new Date(submission.created_at).toLocaleDateString()}
                   </td>
                   <td className="px-4 py-3">
@@ -160,24 +169,24 @@ export default function ContactSubmissionsTab() {
                       {submission.status}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-white/70">
+                  <td className="px-4 py-3 text-neutral-600 font-medium">
                     {submission.files.length}
                   </td>
                   <td className="px-4 py-3">
                     <div className="flex gap-2">
                       <button
                         onClick={() => setSelectedSubmission(submission)}
-                        className="p-1 hover:bg-white/10 rounded"
+                        className="p-1.5 hover:bg-[#4E2E8C]/10 rounded transition-colors"
                         title="View"
                       >
-                        <Eye size={16} className="text-white" />
+                        <Eye size={16} className="text-[#4E2E8C]" />
                       </button>
                       <button
                         onClick={() => deleteSubmission(submission.id)}
-                        className="p-1 hover:bg-white/10 rounded"
+                        className="p-1.5 hover:bg-red-50 rounded transition-colors"
                         title="Delete"
                       >
-                        <Trash2 size={16} className="text-red-400" />
+                        <Trash2 size={16} className="text-red-600" />
                       </button>
                     </div>
                   </td>
@@ -190,21 +199,23 @@ export default function ContactSubmissionsTab() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex justify-center gap-2">
+        <div className="flex justify-center gap-3 pt-4">
           <button
             onClick={() => setPage(Math.max(1, page - 1))}
             disabled={page === 1}
-            className="px-4 py-2 bg-white/10 text-white rounded disabled:opacity-50"
+            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
           >
             Previous
           </button>
-          <span className="px-4 py-2 text-white">
-            Page {page} of {totalPages}
-          </span>
+          <div className="px-5 py-2.5 rounded-lg bg-[#4E2E8C]/10 border-2 border-[#4E2E8C]">
+            <span className="text-[#4E2E8C] font-bold text-sm">{page}</span>
+            <span className="text-neutral-500 text-sm mx-1.5">/</span>
+            <span className="text-[#4E2E8C] text-sm">{totalPages}</span>
+          </div>
           <button
             onClick={() => setPage(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
-            className="px-4 py-2 bg-white/10 text-white rounded disabled:opacity-50"
+            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
           >
             Next
           </button>
@@ -213,43 +224,45 @@ export default function ContactSubmissionsTab() {
 
       {/* View Modal */}
       {selectedSubmission && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50" onClick={() => setSelectedSubmission(null)}>
-          <div className="bg-[rgba(78,46,140,1)] rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-            <div className="flex justify-between items-start mb-4">
-              <h3 className="text-xl font-bold text-white">Submission Details</h3>
-              <button onClick={() => setSelectedSubmission(null)} className="text-white hover:text-red-400">×</button>
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4 z-50" onClick={() => setSelectedSubmission(null)}>
+          <div className="bg-gradient-to-br from-purple-50 to-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border-2 border-purple-200" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-start mb-6 pb-4 border-b-2 border-[#4E2E8C]/20">
+              <h3 className="text-2xl font-bold text-[#4E2E8C]">Submission Details</h3>
+              <button onClick={() => setSelectedSubmission(null)} className="text-neutral-400 hover:text-[#4E2E8C] transition-all p-2 hover:bg-[#4E2E8C]/10 rounded-lg">
+                <X size={24} />
+              </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-5">
               <div>
-                <label className="text-white/70 text-sm">Name:</label>
-                <p className="text-white">{selectedSubmission.full_name}</p>
+                <label className="text-[#4E2E8C] font-semibold text-sm mb-1 block">Name:</label>
+                <p className="text-neutral-700 font-medium">{selectedSubmission.full_name}</p>
               </div>
 
               <div>
-                <label className="text-white/70 text-sm">Email:</label>
-                <p className="text-white">{selectedSubmission.email}</p>
+                <label className="text-[#4E2E8C] font-semibold text-sm mb-1 block">Email:</label>
+                <p className="text-neutral-700">{selectedSubmission.email}</p>
               </div>
 
               <div>
-                <label className="text-white/70 text-sm">Date:</label>
-                <p className="text-white">{new Date(selectedSubmission.created_at).toLocaleString()}</p>
+                <label className="text-[#4E2E8C] font-semibold text-sm mb-1 block">Date:</label>
+                <p className="text-neutral-600 text-sm">{new Date(selectedSubmission.created_at).toLocaleString()}</p>
               </div>
 
               <div>
-                <label className="text-white/70 text-sm">Message:</label>
-                <p className="text-white whitespace-pre-wrap bg-white/5 p-4 rounded">{selectedSubmission.message}</p>
+                <label className="text-[#4E2E8C] font-semibold text-sm mb-2 block">Message:</label>
+                <p className="text-neutral-700 whitespace-pre-wrap bg-purple-50 p-4 rounded-lg border border-purple-200 leading-relaxed">{selectedSubmission.message}</p>
               </div>
 
               {selectedSubmission.files.length > 0 && (
                 <div>
-                  <label className="text-white/70 text-sm">Attachments ({selectedSubmission.files.length}):</label>
-                  <div className="space-y-2 mt-2">
+                  <label className="text-[#4E2E8C] font-semibold text-sm mb-2 block">Attachments ({selectedSubmission.files.length}):</label>
+                  <div className="space-y-2">
                     {selectedSubmission.files.map((file, idx) => (
-                      <div key={idx} className="flex justify-between items-center bg-white/5 p-2 rounded">
-                        <span className="text-white">{file.name}</span>
-                        <a href={file.url} download className="text-[rgba(217,81,100,1)] hover:underline">
-                          <Download size={16} />
+                      <div key={idx} className="flex justify-between items-center bg-white p-3 rounded-lg border border-[#4E2E8C]/20 hover:border-[#4E2E8C] transition-colors">
+                        <span className="text-neutral-700 font-medium">{file.name}</span>
+                        <a href={file.url} download className="text-[#4E2E8C] hover:text-[#5E3E9C] transition-colors">
+                          <Download size={18} />
                         </a>
                       </div>
                     ))}
@@ -258,11 +271,11 @@ export default function ContactSubmissionsTab() {
               )}
 
               <div>
-                <label className="text-white/70 text-sm">Status:</label>
+                <label className="text-[#4E2E8C] font-semibold text-sm mb-2 block">Status:</label>
                 <select
                   value={selectedSubmission.status}
                   onChange={(e) => updateStatus(selectedSubmission.id, e.target.value)}
-                  className="mt-1 w-full px-4 py-2 bg-white/10 border border-white/20 rounded text-white"
+                  className="w-full px-4 py-2.5 bg-white border-2 border-[#4E2E8C]/20 rounded-lg text-[#4E2E8C] focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 focus:outline-none cursor-pointer"
                 >
                   <option value="unread">Unread</option>
                   <option value="read">Read</option>
@@ -271,16 +284,16 @@ export default function ContactSubmissionsTab() {
                 </select>
               </div>
 
-              <div className="flex gap-2 pt-4">
+              <div className="flex gap-3 pt-4 border-t-2 border-[#4E2E8C]/20">
                 <button
                   onClick={() => updateStatus(selectedSubmission.id, 'replied')}
-                  className="px-4 py-2 bg-[rgba(217,81,100,1)] text-white rounded hover:bg-[rgba(217,81,100,0.8)]"
+                  className="flex-1 px-5 py-3 bg-[#4E2E8C] hover:bg-[#5E3E9C] text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
                 >
                   Mark as Replied
                 </button>
                 <button
                   onClick={() => deleteSubmission(selectedSubmission.id)}
-                  className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                  className="px-5 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
                 >
                   Delete
                 </button>

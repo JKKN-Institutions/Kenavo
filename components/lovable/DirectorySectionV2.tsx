@@ -7,7 +7,7 @@ const DirectorySectionV2 = () => {
   return (
     <section
       id="directory"
-      className="w-full min-h-[580px] md:h-[360px] lg:h-[390px] bg-[rgba(78,46,140,1)] relative overflow-hidden !m-0 !p-0"
+      className="w-full min-h-[480px] md:h-[320px] lg:h-[350px] bg-[rgba(78,46,140,1)] relative overflow-hidden !m-0 !p-0"
       aria-labelledby="directory-heading"
       style={{ margin: 0, padding: 0 }}
     >
@@ -36,7 +36,7 @@ const DirectorySectionV2 = () => {
       <div className="relative z-10 h-full grid grid-cols-1 md:grid-cols-2 w-full gap-0 m-0 p-0">
 
         {/* LEFT SIDE - Portrait Collage with Badge */}
-        <div className="relative h-[340px] md:h-full overflow-hidden m-0 p-0">
+        <div className="relative h-[280px] md:h-full overflow-hidden m-0 p-0">
           {/* Light gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-r from-white/15 via-white/5 to-transparent pointer-events-none z-5"></div>
           <div className="relative w-full h-full m-0 p-0">
@@ -149,7 +149,7 @@ const DirectorySectionV2 = () => {
         </div>
 
         {/* RIGHT SIDE - Text Content */}
-        <div className="relative h-auto md:h-full flex items-center justify-center py-8 md:py-0">
+        <div className="relative h-auto md:h-full flex items-center justify-center py-5 md:py-0">
 
           {/* Decorative Birds - Top Right */}
           <div className="absolute top-[8%] right-[12%] z-10 opacity-50 hidden md:block">
@@ -160,13 +160,13 @@ const DirectorySectionV2 = () => {
           </div>
 
           {/* Text Content */}
-          <div className="w-full px-6 md:px-8 lg:px-12 space-y-5 md:space-y-8">
+          <div className="w-full px-6 md:px-8 lg:px-10 space-y-4 md:space-y-5">
 
             {/* Heading */}
             <h2
               id="directory-heading"
               className="text-[rgba(217,81,100,1)] font-bold leading-tight text-center md:text-left"
-              style={{ fontSize: 'clamp(22px, 5vw, 48px)', lineHeight: '1.3' }}
+              style={{ fontSize: 'clamp(20px, 4vw, 42px)', lineHeight: '1.25' }}
             >
               From Yercaud to New York, here's what we're all up to now.
             </h2>
@@ -174,16 +174,16 @@ const DirectorySectionV2 = () => {
             {/* Description */}
             <p
               className="text-[rgba(254,249,232,1)] font-normal leading-relaxed text-center md:text-left"
-              style={{ fontSize: 'clamp(14px, 2vw, 20px)', lineHeight: '1.6' }}
+              style={{ fontSize: 'clamp(14px, 1.6vw, 18px)', lineHeight: '1.7' }}
             >
               Browse profiles, spot familiar faces, revisit a few inside jokes.
               Whether you're checking in or catching up, this is where it all comes together.
             </p>
 
             {/* CTA Button */}
-            <div className="flex justify-center md:justify-start pt-2 md:pt-4">
+            <div className="flex justify-center md:justify-start pt-1 md:pt-2">
               <Link href="/directory">
-                <button className="bg-white text-[rgba(78,46,140,1)] font-black text-sm md:text-base lg:text-lg px-10 md:px-16 lg:px-20 py-3 md:py-4 rounded-full hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg">
+                <button className="bg-white text-[rgba(78,46,140,1)] font-black text-sm md:text-base px-8 md:px-12 lg:px-16 py-2.5 md:py-3 !rounded-full hover:bg-gray-100 hover:scale-105 active:scale-95 transition-all duration-200 shadow-lg">
                   Browse the Directory
                 </button>
               </Link>

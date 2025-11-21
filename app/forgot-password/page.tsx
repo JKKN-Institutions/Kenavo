@@ -148,7 +148,7 @@ export default function ForgotPasswordPage() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-8 py-3 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-3 disabled:cursor-not-allowed shadow-lg disabled:opacity-50"
+                className="w-full bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-8 py-3 rounded-full font-bold text-lg transition-all flex items-center justify-center gap-3 disabled:cursor-not-allowed shadow-lg disabled:opacity-50"
               >
                 {loading ? (
                   <>
@@ -182,14 +182,14 @@ export default function ForgotPasswordPage() {
                     setMessage(null);
                     setEmail('');
                   }}
-                  className="w-full bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-lg font-semibold transition-all"
+                  className="w-full bg-white/10 hover:bg-white/20 text-white px-8 py-3 rounded-full font-semibold transition-all"
                 >
                   Try Different Email
                 </button>
 
                 <Link
                   href="/login"
-                  className="w-full bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-lg font-bold text-center transition-all"
+                  className="w-full bg-purple-600 hover:bg-purple-700 text-white px-8 py-3 rounded-full font-bold text-center transition-all"
                 >
                   Return to Login
                 </Link>

@@ -215,36 +215,36 @@ export default function AIDocumentsTab() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
-          <Sparkles size={28} />
+        <h2 className="text-lg font-semibold text-[#4E2E8C] flex items-center gap-2">
+          <Sparkles size={20} className="text-[#4E2E8C]" />
           AI Documents
         </h2>
         <div className="flex gap-3">
           <button
             onClick={handleSyncAlumni}
             disabled={syncing}
-            className="bg-purple-600 hover:bg-purple-700 disabled:bg-purple-800 text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center gap-2"
+            className="bg-[#4E2E8C] hover:bg-[#5E3E9C] disabled:opacity-50 text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow-sm"
           >
             {syncing ? (
               <>
-                <Loader2 size={20} className="animate-spin" />
+                <Loader2 size={16} className="animate-spin" />
                 Syncing...
               </>
             ) : (
               <>
-                <RefreshCw size={20} />
+                <RefreshCw size={16} />
                 Sync Alumni
               </>
             )}
           </button>
           <button
             onClick={() => setUploadModalOpen(true)}
-            className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center gap-2"
+            className="bg-[#D95164] hover:bg-[#C94154] text-white px-4 py-2 rounded-lg font-medium text-sm transition-all flex items-center gap-2 shadow-sm"
           >
-            <Upload size={20} />
+            <Upload size={16} />
             Upload Document
           </button>
         </div>
@@ -253,54 +253,54 @@ export default function AIDocumentsTab() {
       {/* Message */}
       {message && (
         <div
-          className={`flex items-center gap-2 p-4 rounded-lg ${
-            message.type === 'success' ? 'bg-green-500/20 text-green-100' : 'bg-red-500/20 text-red-100'
+          className={`flex items-center gap-2 p-3 rounded-lg text-sm ${
+            message.type === 'success' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'
           }`}
         >
-          {message.type === 'success' ? <CheckCircle size={20} /> : <XCircle size={20} />}
+          {message.type === 'success' ? <CheckCircle size={16} /> : <XCircle size={16} />}
           <span>{message.text}</span>
         </div>
       )}
 
       {/* Filters */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div>
-          <label className="block text-sm font-medium text-purple-200 mb-2">Category</label>
+          <label className="block text-sm font-medium text-slate-300 mb-1.5">Category</label>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-white/50 focus:outline-none"
+            className="w-full px-3 py-2.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 focus:border-[#4E2E8C] focus:outline-none text-sm cursor-pointer"
           >
-            <option value="all" className="bg-purple-900">All Categories</option>
-            <option value="alumni_profiles" className="bg-purple-900">Alumni Profiles</option>
-            <option value="knowledge_base" className="bg-purple-900">Knowledge Base</option>
-            <option value="events" className="bg-purple-900">Events</option>
-            <option value="newsletters" className="bg-purple-900">Newsletters</option>
-            <option value="resources" className="bg-purple-900">Resources</option>
+            <option value="all">All Categories</option>
+            <option value="alumni_profiles">Alumni Profiles</option>
+            <option value="knowledge_base">Knowledge Base</option>
+            <option value="events">Events</option>
+            <option value="newsletters">Newsletters</option>
+            <option value="resources">Resources</option>
           </select>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-purple-200 mb-2">Status</label>
+          <label className="block text-sm font-medium text-slate-300 mb-1.5">Status</label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-white/50 focus:outline-none"
+            className="w-full px-3 py-2.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 focus:border-[#4E2E8C] focus:outline-none text-sm cursor-pointer"
           >
-            <option value="all" className="bg-purple-900">All Status</option>
-            <option value="completed" className="bg-purple-900">Completed</option>
-            <option value="uploading" className="bg-purple-900">Uploading</option>
-            <option value="pending" className="bg-purple-900">Pending</option>
-            <option value="failed" className="bg-purple-900">Failed</option>
+            <option value="all">All Status</option>
+            <option value="completed">Completed</option>
+            <option value="uploading">Uploading</option>
+            <option value="pending">Pending</option>
+            <option value="failed">Failed</option>
           </select>
         </div>
 
         <div className="flex items-end">
           <button
             onClick={() => fetchDocuments()}
-            className="w-full text-white/70 hover:text-white px-4 py-3 rounded-lg border border-white/20 hover:border-white/50 transition-all flex items-center justify-center gap-2"
+            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2.5 rounded-lg border border-slate-700 transition-all flex items-center justify-center gap-2 text-sm font-medium"
           >
-            <RefreshCw size={18} />
+            <RefreshCw size={14} />
             Refresh
           </button>
         </div>
@@ -309,41 +309,41 @@ export default function AIDocumentsTab() {
       {/* Documents List */}
       {loading ? (
         <div className="text-center py-12">
-          <Loader2 size={48} className="mx-auto animate-spin text-white/50" />
-          <p className="text-white/70 mt-4">Loading documents...</p>
+          <Loader2 size={32} className="mx-auto animate-spin text-slate-500" />
+          <p className="text-slate-400 mt-4 text-sm">Loading documents...</p>
         </div>
       ) : documents.length === 0 ? (
-        <div className="text-center py-12 bg-white/5 rounded-lg border border-white/10">
-          <FileText size={48} className="mx-auto text-white/30 mb-4" />
-          <p className="text-white/70 text-lg">No documents found</p>
-          <p className="text-white/50 text-sm mt-2">Upload your first document to get started</p>
+        <div className="text-center py-12 bg-slate-800/30 rounded-lg border border-slate-700">
+          <FileText size={40} className="mx-auto text-slate-600 mb-4" />
+          <p className="text-slate-300 font-medium">No documents found</p>
+          <p className="text-slate-500 text-sm mt-2">Upload your first document to get started</p>
         </div>
       ) : (
-        <div className="bg-white/5 rounded-lg border border-white/10 overflow-hidden">
+        <div className="bg-slate-800/30 rounded-lg border border-slate-700 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-white/10">
+              <thead className="bg-slate-800/50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Document</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Category</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Uploaded</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Document</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wider">Category</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wider">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Uploaded</th>
+                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-slate-700/50">
                 {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 text-white">
+                  <tr key={doc.id} className="hover:bg-slate-800/40 transition-colors">
+                    <td className="px-4 py-3 text-white">
                       <div>
-                        <div className="font-semibold">{doc.display_name}</div>
-                        <div className="text-sm text-white/50">{doc.file_name}</div>
+                        <div className="font-medium text-sm">{doc.display_name}</div>
+                        <div className="text-xs text-slate-500">{doc.file_name}</div>
                         {doc.tags && doc.tags.length > 0 && (
-                          <div className="flex gap-1 mt-1">
+                          <div className="flex gap-1 mt-1.5">
                             {doc.tags.map((tag, idx) => (
                               <span
                                 key={idx}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-white/10 text-white/70"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-slate-700/50 text-slate-400"
                               >
                                 <Tag size={10} />
                                 {tag}
@@ -353,18 +353,18 @@ export default function AIDocumentsTab() {
                         )}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-center">{getCategoryBadge(doc.category)}</td>
-                    <td className="px-6 py-4 text-center">{getStatusBadge(doc.upload_status)}</td>
-                    <td className="px-6 py-4 text-white/70 text-sm">
+                    <td className="px-4 py-3 text-center">{getCategoryBadge(doc.category)}</td>
+                    <td className="px-4 py-3 text-center">{getStatusBadge(doc.upload_status)}</td>
+                    <td className="px-4 py-3 text-slate-400 text-xs">
                       {new Date(doc.created_at).toLocaleString()}
                     </td>
-                    <td className="px-6 py-4 text-center">
+                    <td className="px-4 py-3 text-center">
                       <button
                         onClick={() => handleDelete(doc.id)}
-                        className="text-red-400 hover:text-red-300 transition-all p-2 hover:bg-red-500/10 rounded-lg"
+                        className="text-red-400 hover:text-red-300 transition-all p-1.5 hover:bg-red-500/10 rounded-md"
                         title="Delete document"
                       >
-                        <Trash2 size={18} />
+                        <Trash2 size={14} />
                       </button>
                     </td>
                   </tr>
@@ -377,78 +377,81 @@ export default function AIDocumentsTab() {
 
       {/* Upload Modal */}
       {uploadModalOpen && (
-        <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
-          <div className="bg-gradient-to-br from-purple-900 to-indigo-900 rounded-2xl p-6 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
-            <div className="flex justify-between items-center mb-6">
-              <h3 className="text-2xl font-bold text-white">Upload Document</h3>
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-slate-900 rounded-xl p-6 max-w-lg w-full border border-slate-800 max-h-[90vh] overflow-y-auto shadow-2xl">
+            <div className="flex justify-between items-center mb-5 pb-4 border-b border-slate-800">
+              <h3 className="text-lg font-semibold text-white flex items-center gap-2">
+                <Upload size={20} className="text-[#4E2E8C]" />
+                Upload Document
+              </h3>
               <button
                 onClick={() => {
                   setUploadModalOpen(false);
                   resetForm();
                 }}
-                className="text-white hover:text-red-400 transition-all"
+                className="text-slate-400 hover:text-white transition-all p-1 hover:bg-slate-800 rounded-lg"
               >
-                <XCircle size={24} />
+                <XCircle size={20} />
               </button>
             </div>
 
             <form onSubmit={handleUpload} className="space-y-4">
               <div>
-                <label className="block text-white font-semibold mb-2">File *</label>
+                <label className="block text-slate-300 font-medium mb-1.5 text-sm">File *</label>
                 <input
                   type="file"
                   onChange={handleFileSelect}
                   accept=".pdf,.txt,.doc,.docx,.csv"
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-purple-600 file:text-white hover:file:bg-purple-700"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-800 text-white border border-slate-700 focus:border-[#4E2E8C] focus:outline-none text-sm file:mr-3 file:py-1.5 file:px-3 file:rounded-md file:border-0 file:text-xs file:font-medium file:bg-[#4E2E8C] file:text-white hover:file:bg-[#5E3E9C] file:cursor-pointer"
                 />
               </div>
 
               <div>
-                <label className="block text-white font-semibold mb-2">Display Name *</label>
+                <label className="block text-slate-300 font-medium mb-1.5 text-sm">Display Name *</label>
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   required
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 border border-white/30 focus:border-white focus:outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-800 text-white placeholder-slate-500 border border-slate-700 focus:border-[#4E2E8C] focus:ring-1 focus:ring-purple-500 focus:outline-none text-sm"
                   placeholder="My Document"
                 />
               </div>
 
               <div>
-                <label className="block text-white font-semibold mb-2">Category *</label>
+                <label className="block text-slate-300 font-medium mb-1.5 text-sm">Category *</label>
                 <select
                   value={category}
                   onChange={(e) => setCategory(e.target.value as DocumentCategory)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 focus:border-[#4E2E8C] focus:outline-none text-sm cursor-pointer"
                 >
-                  <option value="knowledge_base" className="bg-purple-900">Knowledge Base</option>
-                  <option value="events" className="bg-purple-900">Events</option>
-                  <option value="newsletters" className="bg-purple-900">Newsletters</option>
-                  <option value="resources" className="bg-purple-900">Resources</option>
-                  <option value="alumni_profiles" className="bg-purple-900">Alumni Profiles</option>
+                  <option value="knowledge_base">Knowledge Base</option>
+                  <option value="events">Events</option>
+                  <option value="newsletters">Newsletters</option>
+                  <option value="resources">Resources</option>
+                  <option value="alumni_profiles">Alumni Profiles</option>
                 </select>
               </div>
 
               <div>
-                <label className="block text-white font-semibold mb-2">Tags (comma-separated)</label>
+                <label className="block text-slate-300 font-medium mb-1.5 text-sm">Tags (comma-separated)</label>
                 <input
                   type="text"
                   value={tags}
                   onChange={(e) => setTags(e.target.value)}
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 border border-white/30 focus:border-white focus:outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-800 text-white placeholder-slate-500 border border-slate-700 focus:border-[#4E2E8C] focus:ring-1 focus:ring-purple-500 focus:outline-none text-sm"
                   placeholder="handbook, 2024, policies"
                 />
               </div>
 
               <div>
-                <label className="block text-white font-semibold mb-2">Description</label>
+                <label className="block text-slate-300 font-medium mb-1.5 text-sm">Description</label>
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   rows={3}
-                  className="w-full px-4 py-3 rounded-lg bg-white/20 text-white placeholder-white/50 border border-white/30 focus:border-white focus:outline-none"
+                  className="w-full px-3 py-2 rounded-lg bg-slate-800 text-white placeholder-slate-500 border border-slate-700 focus:border-[#4E2E8C] focus:ring-1 focus:ring-purple-500 focus:outline-none text-sm resize-none"
                   placeholder="Brief description of the document..."
                 />
               </div>
@@ -457,19 +460,29 @@ export default function AIDocumentsTab() {
                 <button
                   type="submit"
                   disabled={uploading}
-                  className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-green-800 text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2"
+                  className="flex-1 bg-brand-yellow hover:bg-accent-400 disabled:opacity-50 text-[#4E2E8C] px-4 py-2.5 rounded-lg font-medium text-sm transition-all flex items-center justify-center gap-2"
                 >
                   {uploading ? (
                     <>
-                      <Loader2 size={18} className="animate-spin" />
+                      <Loader2 size={16} className="animate-spin" />
                       Uploading...
                     </>
                   ) : (
                     <>
-                      <Upload size={18} />
+                      <Upload size={16} />
                       Upload
                     </>
                   )}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUploadModalOpen(false);
+                    resetForm();
+                  }}
+                  className="px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white font-medium text-sm transition-all border border-slate-700"
+                >
+                  Cancel
                 </button>
               </div>
             </form>

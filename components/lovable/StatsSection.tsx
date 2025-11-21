@@ -9,8 +9,8 @@ interface StatCardProps {
 
 const StatCard: React.FC<StatCardProps> = ({ number, description, bgColor, textColor }) => {
   return (
-    <div className={`${bgColor} flex flex-col items-center justify-center font-bold aspect-square w-full max-w-[220px] sm:max-w-[240px] md:max-w-[260px] mx-auto p-5 sm:p-6 md:p-8 rounded-full shadow-xl hover:scale-105 transition-transform`}>
-      <div className={`${textColor} text-2xl sm:text-3xl md:text-4xl leading-snug`}>
+    <div className={`${bgColor} flex flex-col items-center justify-center font-bold aspect-square w-full max-w-[160px] sm:max-w-[180px] md:max-w-[200px] mx-auto p-4 sm:p-5 md:p-6 rounded-full shadow-xl hover:scale-105 transition-transform`}>
+      <div className={`${textColor} text-xl sm:text-2xl md:text-3xl leading-snug`}>
         {number}
       </div>
       <div className="text-white text-[10px] sm:text-xs md:text-sm leading-normal text-center mt-2 sm:mt-3">
@@ -55,7 +55,7 @@ const StatsSection = () => {
 
   return (
     <section
-      className="relative w-full bg-[rgba(64,34,120,1)] py-12 sm:py-16 md:py-20 lg:py-24 overflow-hidden"
+      className="relative w-full bg-[rgba(64,34,120,1)] py-8 sm:py-10 md:py-12 lg:py-14 overflow-hidden"
       aria-labelledby="stats-heading"
     >
       {/* Background Image */}
@@ -67,26 +67,26 @@ const StatsSection = () => {
         />
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-2 sm:px-4 lg:px-8">
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-10 sm:mb-14 md:mb-16">
+        <div className="text-center mb-6 sm:mb-8 md:mb-10">
           <h2
             id="stats-heading"
             className="text-[rgba(217,81,100,1)] font-bold leading-tight"
-            style={{ fontSize: 'clamp(32px, 5vw, 54px)', lineHeight: '1.25' }}
+            style={{ fontSize: 'clamp(28px, 4vw, 48px)', lineHeight: '1.2' }}
           >
             Kenavo by the Numbers
           </h2>
           <p
-            className="text-white font-normal mt-4"
-            style={{ fontSize: 'clamp(18px, 2.5vw, 28px)' }}
+            className="text-white font-normal mt-5"
+            style={{ fontSize: 'clamp(16px, 2vw, 22px)', lineHeight: '1.5' }}
           >
             Some stats. Some smiles.
           </p>
         </div>
 
         {/* Stats Grid - Responsive */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8 md:gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5 md:gap-6">
           {stats.map((stat, index) => (
             <div key={index} className="flex justify-center">
               <StatCard {...stat} />

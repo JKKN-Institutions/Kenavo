@@ -23,11 +23,11 @@ export const ContentSection: React.FC<ContentSectionProps> = ({
 
   return (
     <section
-      className={`self-center w-full max-w-[974px] mx-auto px-4 sm:px-6 md:px-8 lg:px-4 xl:px-0 relative z-10 ${className}`}
+      className={`self-center w-full max-w-[974px] mx-auto px-4 sm:px-6 md:px-8 lg:px-6 xl:px-0 relative z-10 ${className}`}
       aria-labelledby={`section-${title.toLowerCase().replace(/\s+/g, '-')}`}
       style={{ background: 'transparent' }}
     >
-      <div className="gap-3 sm:gap-4 md:gap-5 flex flex-col md:flex-row md:items-start md:justify-between" style={{ background: 'transparent' }}>
+      <div className="gap-6 sm:gap-8 md:gap-10 flex flex-col md:flex-row md:items-start md:justify-between" style={{ background: 'transparent' }}>
         {/* Image Container */}
         <div
           className={`
@@ -47,7 +47,7 @@ export const ContentSection: React.FC<ContentSectionProps> = ({
           <img
             src={imageSrc}
             alt={imageAlt}
-            className="w-full h-auto object-cover max-w-[280px] sm:max-w-[350px] md:max-w-full block"
+            className="w-full h-auto object-cover max-w-[220px] sm:max-w-[280px] md:max-w-[320px] lg:max-w-[380px] block"
             style={{
               display: 'block',
               background: 'transparent',
@@ -72,12 +72,12 @@ export const ContentSection: React.FC<ContentSectionProps> = ({
                 id={`section-${title.toLowerCase().replace(/\s+/g, '-')}`}
                 className={`
                   text-[rgba(217,81,100,1)] font-bold text-center md:text-left
-                  text-[28px] leading-[1.05]
-                  sm:text-[36px] sm:leading-[1.05]
-                  md:text-[46px] md:leading-[1.05]
-                  lg:text-[48px] lg:leading-[1.05]
-                  xl:text-[54px] xl:leading-[1.05]
-                  mb-2 sm:mb-3 md:mb-4 lg:mb-4 xl:mb-5
+                  text-[26px] leading-[1.1]
+                  sm:text-[32px] sm:leading-[1.1]
+                  md:text-[40px] md:leading-[1.1]
+                  lg:text-[44px] lg:leading-[1.1]
+                  xl:text-[48px] xl:leading-[1.1]
+                  mb-3 sm:mb-4 md:mb-5 lg:mb-6 xl:mb-6
                   ${isImageLeft ? 'md:max-w-[395px]' : ''}
                 `}
                 dangerouslySetInnerHTML={{ __html: title }}
@@ -86,12 +86,12 @@ export const ContentSection: React.FC<ContentSectionProps> = ({
             <div
               className={`
                 text-white font-normal text-center md:text-left
-                text-[13px] leading-[1.4]
-                sm:text-[16px] sm:leading-[1.45]
-                md:text-[18px] md:leading-[1.45]
-                lg:text-[18px] lg:leading-[1.4]
-                xl:text-[20px] xl:leading-[1.4]
-                mt-2 sm:mt-3 md:mt-4 lg:mt-4 xl:mt-4
+                text-[14px] leading-[1.6]
+                sm:text-[15px] sm:leading-[1.65]
+                md:text-[16px] md:leading-[1.7]
+                lg:text-[17px] lg:leading-[1.7]
+                xl:text-[18px] xl:leading-[1.7]
+                mt-3 sm:mt-4 md:mt-5 lg:mt-5 xl:mt-6
               `}
               dangerouslySetInnerHTML={{ __html: content }}
             />

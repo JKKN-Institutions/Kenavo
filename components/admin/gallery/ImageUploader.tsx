@@ -131,8 +131,8 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
   };
 
   return (
-    <div className="bg-white/10 rounded-lg p-6 border border-white/20">
-      <h3 className="text-lg font-bold text-white mb-4">Upload Images</h3>
+    <div className="bg-neutral-50 rounded-lg p-6 border-2 border-neutral-200">
+      <h3 className="text-lg font-bold text-brand-green mb-4">Upload Images</h3>
 
       {/* Upload Mode Selector */}
       <div className="flex gap-3 mb-4">
@@ -143,8 +143,8 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
           }}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-all ${
             uploadMode === 'files'
-              ? 'bg-purple-600 text-white'
-              : 'bg-white/10 text-white/70 hover:bg-white/20'
+              ? 'bg-brand-green text-white'
+              : 'bg-white text-neutral-600 hover:bg-neutral-100 border-2 border-neutral-200'
           }`}
         >
           <ImageIcon size={18} />
@@ -157,8 +157,8 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
           }}
           className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg font-semibold transition-all ${
             uploadMode === 'zip'
-              ? 'bg-purple-600 text-white'
-              : 'bg-white/10 text-white/70 hover:bg-white/20'
+              ? 'bg-brand-green text-white'
+              : 'bg-white text-neutral-600 hover:bg-neutral-100 border-2 border-neutral-200'
           }`}
         >
           <FileArchive size={18} />
@@ -170,33 +170,33 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
       {uploadMode === 'zip' ? (
         <div className="space-y-4">
           <div>
-            <label className="block text-white font-semibold mb-2">Select ZIP File</label>
+            <label className="block text-brand-green font-semibold mb-2">Select ZIP File</label>
             <input
               ref={zipInputRef}
               type="file"
               accept=".zip"
               onChange={handleZipChange}
               disabled={uploading}
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-600 file:text-white file:cursor-pointer hover:file:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-lg bg-white text-brand-green border-2 border-neutral-200 focus:border-brand-green focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-brand-green file:text-white file:cursor-pointer hover:file:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
             />
             {zipFile && (
-              <p className="text-white/70 text-sm mt-2 flex items-center gap-2">
+              <p className="text-neutral-600 text-sm mt-2 flex items-center gap-2">
                 <FileArchive size={16} />
                 {zipFile.name} ({(zipFile.size / 1024 / 1024).toFixed(2)} MB)
-                <button onClick={clearSelection} className="text-red-400 hover:text-red-300 ml-2">
+                <button onClick={clearSelection} className="text-red-600 hover:text-red-700 ml-2">
                   <X size={16} />
                 </button>
               </p>
             )}
           </div>
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-neutral-500">
             ZIP file should contain image files (JPG, PNG, WebP, GIF). All images will be extracted and uploaded to this album.
           </p>
         </div>
       ) : (
         <div className="space-y-4">
           <div>
-            <label className="block text-white font-semibold mb-2">Select Images (Max 50)</label>
+            <label className="block text-brand-green font-semibold mb-2">Select Images (Max 50)</label>
             <input
               ref={fileInputRef}
               type="file"
@@ -204,13 +204,13 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
               multiple
               onChange={handleFilesChange}
               disabled={uploading}
-              className="w-full px-4 py-3 rounded-lg bg-white/20 text-white border border-white/30 focus:border-white focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-purple-600 file:text-white file:cursor-pointer hover:file:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full px-4 py-3 rounded-lg bg-white text-brand-green border-2 border-neutral-200 focus:border-brand-green focus:outline-none file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-brand-green file:text-white file:cursor-pointer hover:file:bg-primary-700 disabled:opacity-50 disabled:cursor-not-allowed"
             />
             {selectedFiles.length > 0 && (
-              <div className="mt-3 p-3 bg-white/10 rounded-lg">
+              <div className="mt-3 p-3 bg-white rounded-lg border-2 border-neutral-200">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="text-white font-semibold">{selectedFiles.length} image(s) selected</p>
-                  <button onClick={clearSelection} className="text-red-400 hover:text-red-300 text-sm">
+                  <p className="text-brand-green font-semibold">{selectedFiles.length} image(s) selected</p>
+                  <button onClick={clearSelection} className="text-red-600 hover:text-red-700 text-sm">
                     Clear
                   </button>
                 </div>
@@ -220,7 +220,7 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
                       <img
                         src={URL.createObjectURL(file)}
                         alt={file.name}
-                        className="w-full h-16 object-cover rounded border border-white/20"
+                        className="w-full h-16 object-cover rounded border-2 border-neutral-200"
                       />
                       <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded flex items-center justify-center">
                         <p className="text-white text-xs truncate px-1">{file.name}</p>
@@ -231,7 +231,7 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
               </div>
             )}
           </div>
-          <p className="text-xs text-white/50">
+          <p className="text-xs text-neutral-500">
             Select multiple images to upload. Supported formats: JPG, PNG, WebP, GIF. Max size: 5MB per image.
           </p>
         </div>
@@ -239,7 +239,7 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
 
       {/* Progress */}
       {progress && (
-        <div className="mt-4 p-3 bg-blue-500/20 text-blue-100 rounded-lg text-sm">
+        <div className="mt-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm border-2 border-blue-200">
           {progress}
         </div>
       )}
@@ -247,12 +247,12 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
       {/* Message */}
       {message && (
         <div
-          className={`mt-4 flex items-center gap-2 p-3 rounded-lg ${
+          className={`mt-4 flex items-center gap-2 p-3 rounded-lg border-2 ${
             message.type === 'success'
-              ? 'bg-green-500/20 text-green-100'
+              ? 'bg-green-50 text-green-700 border-green-200'
               : message.type === 'error'
-              ? 'bg-red-500/20 text-red-100'
-              : 'bg-blue-500/20 text-blue-100'
+              ? 'bg-red-50 text-red-700 border-red-200'
+              : 'bg-blue-50 text-blue-700 border-blue-200'
           }`}
         >
           {message.type === 'success' ? (
@@ -270,7 +270,7 @@ export default function ImageUploader({ album, onUploadComplete }: ImageUploader
       <button
         onClick={handleUpload}
         disabled={uploading || (uploadMode === 'zip' ? !zipFile : selectedFiles.length === 0)}
-        className="w-full mt-4 bg-green-600 hover:bg-green-700 disabled:bg-green-800 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2"
+        className="w-full mt-4 bg-brand-green hover:bg-primary-700 disabled:bg-neutral-400 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
       >
         {uploading ? (
           <>

@@ -37,12 +37,12 @@ export default function AlbumList({
   };
 
   return (
-    <div className="bg-white/10 rounded-lg p-4 border border-white/20">
+    <div className="bg-neutral-50 rounded-lg p-4 border-2 border-neutral-200">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white">Albums ({albums.length})</h3>
+        <h3 className="text-lg font-bold text-brand-green">Albums ({albums.length})</h3>
         <button
           onClick={handleCreateClick}
-          className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-green-600 hover:bg-green-700 text-white text-sm font-semibold transition-all"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-brand-green hover:bg-primary-700 text-white text-sm font-semibold transition-all shadow-sm hover:shadow-md"
         >
           <Plus size={16} />
           New
@@ -51,7 +51,7 @@ export default function AlbumList({
 
       <div className="space-y-2 max-h-[600px] overflow-y-auto">
         {albums.length === 0 ? (
-          <div className="text-center py-8 text-white/50">
+          <div className="text-center py-8 text-neutral-500">
             <FolderOpen size={48} className="mx-auto mb-2 opacity-30" />
             <p className="text-sm">No albums yet</p>
             <p className="text-xs mt-1">Click "New" to create one</p>
@@ -61,10 +61,10 @@ export default function AlbumList({
             <div
               key={album.id}
               onClick={() => onSelectAlbum(album)}
-              className={`p-3 rounded-lg cursor-pointer transition-all group ${
+              className={`p-3 rounded-lg cursor-pointer transition-all group border-2 ${
                 selectedAlbum?.id === album.id
-                  ? 'bg-purple-600 text-white'
-                  : 'bg-white/5 hover:bg-white/10 text-white/90'
+                  ? 'bg-brand-green text-white border-brand-green'
+                  : 'bg-white hover:bg-neutral-50 text-brand-green border-neutral-200 hover:border-brand-green'
               }`}
             >
               <div className="flex items-center justify-between">
@@ -73,24 +73,28 @@ export default function AlbumList({
                     <img
                       src={album.thumbnail_url}
                       alt={album.name}
-                      className="w-12 h-12 rounded object-cover flex-shrink-0"
+                      className="w-12 h-12 rounded object-cover flex-shrink-0 border-2 border-neutral-200"
                     />
                   ) : (
-                    <div className="w-12 h-12 rounded bg-white/5 flex items-center justify-center flex-shrink-0">
-                      <ImageIcon size={20} className="text-white/50" />
+                    <div className={`w-12 h-12 rounded flex items-center justify-center flex-shrink-0 border-2 ${
+                      selectedAlbum?.id === album.id ? 'bg-white/20 border-white/30' : 'bg-neutral-100 border-neutral-200'
+                    }`}>
+                      <ImageIcon size={20} className={selectedAlbum?.id === album.id ? 'text-white' : 'text-neutral-400'} />
                     </div>
                   )}
                   <div className="flex-1 min-w-0">
                     <p className="font-semibold truncate">{album.name}</p>
-                    <p className="text-xs opacity-75 truncate">{album.description || 'No description'}</p>
+                    <p className={`text-xs opacity-75 truncate ${selectedAlbum?.id === album.id ? 'text-white' : 'text-neutral-600'}`}>
+                      {album.description || 'No description'}
+                    </p>
                   </div>
                 </div>
                 <button
                   onClick={(e) => handleEditClick(e, album)}
                   className={`p-2 rounded transition-all ${
                     selectedAlbum?.id === album.id
-                      ? 'hover:bg-purple-700'
-                      : 'hover:bg-white/10 opacity-0 group-hover:opacity-100'
+                      ? 'hover:bg-primary-700 text-white'
+                      : 'hover:bg-neutral-100 text-brand-green opacity-0 group-hover:opacity-100'
                   }`}
                 >
                   <Edit2 size={16} />

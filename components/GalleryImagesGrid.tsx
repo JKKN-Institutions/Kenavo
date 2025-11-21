@@ -86,7 +86,7 @@ const GalleryImagesGrid: React.FC<GalleryImagesGridProps> = ({
           <p className="text-red-600 text-lg mb-4">{error}</p>
           <button
             onClick={retry}
-            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors"
+            className="px-6 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors"
           >
             Try Again
           </button>
@@ -160,7 +160,7 @@ const GalleryImagesGrid: React.FC<GalleryImagesGridProps> = ({
             <p className="text-red-600 text-sm sm:text-base mb-3 sm:mb-4">{error}</p>
             <button
               onClick={retry}
-              className="px-6 py-3 min-h-[44px] bg-purple-600 hover:bg-purple-700 text-white rounded-lg transition-colors text-sm sm:text-base font-medium"
+              className="px-6 py-3 min-h-[44px] bg-purple-600 hover:bg-purple-700 text-white rounded-full transition-colors text-sm sm:text-base font-medium"
             >
               Try Again
             </button>

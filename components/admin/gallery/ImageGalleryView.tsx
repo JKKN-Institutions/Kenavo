@@ -193,9 +193,9 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
   const isAllSelected = images.length > 0 && selectedImages.size === images.length;
 
   return (
-    <div className="bg-white/10 rounded-lg p-6 border border-white/20">
+    <div className="bg-neutral-50 rounded-lg p-6 border-2 border-neutral-200">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white">
+        <h3 className="text-lg font-bold text-brand-green">
           Images ({images.length})
         </h3>
         <div className="flex items-center gap-2">
@@ -239,17 +239,17 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
 
       {/* Selection mode toolbar */}
       {selectionMode && (
-        <div className="mb-4 p-4 bg-blue-500/20 border border-blue-500/30 rounded-lg">
+        <div className="mb-4 p-4 bg-blue-50 border-2 border-blue-200 rounded-lg">
           <div className="flex items-center justify-between gap-4 flex-wrap">
             <div className="flex items-center gap-4">
               <button
                 onClick={isAllSelected ? clearSelection : selectAllImages}
-                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-semibold transition-all"
+                className="flex items-center gap-2 px-3 py-2 rounded-lg bg-white hover:bg-neutral-50 text-brand-green border-2 border-neutral-200 text-sm font-semibold transition-all"
               >
                 {isAllSelected ? <Square size={16} /> : <CheckSquare size={16} />}
                 {isAllSelected ? 'Deselect All' : 'Select All'}
               </button>
-              <span className="text-white text-sm font-medium">
+              <span className="text-brand-green text-sm font-medium">
                 {selectedImages.size} of {images.length} selected
               </span>
             </div>
@@ -258,7 +258,7 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
               <div className="flex items-center gap-2">
                 <button
                   onClick={clearSelection}
-                  className="px-3 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-sm font-semibold transition-all"
+                  className="px-3 py-2 rounded-lg bg-white hover:bg-neutral-50 text-brand-green border-2 border-neutral-200 text-sm font-semibold transition-all"
                 >
                   Clear Selection
                 </button>
@@ -286,12 +286,12 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
       )}
 
       {loading ? (
-        <div className="text-center py-10 text-white">
+        <div className="text-center py-10 text-brand-green">
           <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-white mb-2"></div>
           <p>Loading images...</p>
         </div>
       ) : images.length === 0 ? (
-        <div className="text-center py-12 text-white/50">
+        <div className="text-center py-12 text-neutral-500">
           <ImageIcon size={48} className="mx-auto mb-3 opacity-30" />
           <p>No images in this album yet</p>
           <p className="text-sm mt-1">Upload some images to get started</p>
@@ -299,7 +299,7 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
       ) : (
         <>
           {reordering && (
-            <div className="mb-4 p-3 bg-blue-500/20 text-blue-100 rounded-lg text-sm">
+            <div className="mb-4 p-3 bg-blue-50 text-blue-700 rounded-lg text-sm border-2 border-blue-200">
               Saving new order...
             </div>
           )}
@@ -314,14 +314,14 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
                   onDragStart={() => !selectionMode && handleDragStart(index)}
                   onDragOver={(e) => !selectionMode && handleDragOver(e, index)}
                   onDragEnd={() => !selectionMode && handleDragEnd()}
-                  className={`relative group bg-white/5 rounded-lg overflow-hidden border-2 transition-all ${
+                  className={`relative group bg-white rounded-lg overflow-hidden border-2 transition-all ${
                     selectionMode
                       ? isSelected
-                        ? 'border-blue-500 bg-blue-500/20'
-                        : 'border-white/10 hover:border-blue-400/50 cursor-pointer'
+                        ? 'border-blue-500 bg-blue-50'
+                        : 'border-neutral-200 hover:border-blue-400 cursor-pointer'
                       : draggedIndex === index
-                        ? 'border-purple-500 opacity-50 cursor-move'
-                        : 'border-white/10 hover:border-white/30 cursor-move'
+                        ? 'border-brand-green opacity-50 cursor-move'
+                        : 'border-neutral-200 hover:border-brand-green cursor-move'
                   }`}
                   onClick={() => selectionMode && toggleImageSelection(image.id)}
                 >
@@ -329,7 +329,7 @@ export default function ImageGalleryView({ album, onUpdate }: ImageGalleryViewPr
                   {selectionMode && (
                     <div className="absolute top-2 left-2 z-20">
                       <div className={`w-6 h-6 rounded flex items-center justify-center ${
-                        isSelected ? 'bg-blue-600' : 'bg-white/20 border-2 border-white/50'
+                        isSelected ? 'bg-blue-600' : 'bg-white border-2 border-neutral-300'
                       }`}>
                         {isSelected && <CheckSquare size={16} className="text-white" />}
                       </div>

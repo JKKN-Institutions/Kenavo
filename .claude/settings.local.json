@@ -82,17 +82,22 @@
       "Bash(lsof:*)",
       "Bash(del \"C:\\Users\\admin\\Projects\\KenavoFinal\\components\\BugReporterProvider.tsx\" \"C:\\Users\\admin\\Projects\\KenavoFinal\\components\\BugReportWidget.tsx\")",
       "Bash(cmd /c \"del C:\\Users\\admin\\Projects\\KenavoFinal\\components\\BugReporterProvider.tsx C:\\Users\\admin\\Projects\\KenavoFinal\\components\\BugReportWidget.tsx\")",
-      "Bash(tasklist /FI 'IMAGENAME eq node.exe' /FO CSV 2)"
+      "Bash(tasklist /FI 'IMAGENAME eq node.exe' /FO CSV 2)",
+      "Skill(skill-creator)",
+      "Bash(python:*)",
+      "Skill(frontend-design:frontend-design)",
+      "Bash(cmd /c \"taskkill /F /PID 40464\")",
+      "Skill(ui-ux-designer)"
     ],
     "deny": [],
     "ask": []
   },
+  "enableAllProjectMcpServers": true,
   "enabledMcpjsonServers": [
     "memory",
     "filesystem",
     "supabase",
     "context7"
   ],
-  "disabledMcpjsonServers": [],
-  "enableAllProjectMcpServers": true
+  "disabledMcpjsonServers": []
 }

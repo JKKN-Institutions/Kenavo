@@ -80,14 +80,14 @@ export default function UserManagementTab() {
   const getStatusBadge = (status: string) => {
     if (status === 'active') {
       return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300">
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-700 border border-green-200">
           <CheckCircle size={14} />
           Active
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-300">
+      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-700 border border-red-200">
         <XCircle size={14} />
         Inactive
       </span>
@@ -97,14 +97,14 @@ export default function UserManagementTab() {
   const getRoleBadge = (role: string) => {
     if (role === 'admin') {
       return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-300">
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-700 border border-purple-200">
           <Shield size={14} />
           Admin
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-300">
+      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-700 border border-gray-200">
         <User size={14} />
         User
       </span>
@@ -113,14 +113,14 @@ export default function UserManagementTab() {
 
   return (
     <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <h2 className="text-2xl font-bold text-white flex items-center gap-2">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-6 border-b-2 border-neutral-200">
+        <h2 className="text-2xl font-bold text-[#4E2E8C] flex items-center gap-2 tracking-tight">
           <Users size={28} />
           User Management
         </h2>
         <button
           onClick={handleCreateUser}
-          className="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg font-bold transition-all flex items-center gap-2 justify-center"
+          className="bg-[#4E2E8C] hover:bg-[#5E3E9C] text-white px-6 py-3 rounded-lg font-semibold transition-all flex items-center gap-2 justify-center shadow-sm hover:shadow-md"
         >
           <UserPlus size={20} />
           Add New User
@@ -131,7 +131,7 @@ export default function UserManagementTab() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div className="md:col-span-2">
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-white/50" size={20} />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400" size={20} />
             <input
               type="text"
               placeholder="Search by email or username..."
@@ -140,7 +140,7 @@ export default function UserManagementTab() {
                 setSearchTerm(e.target.value);
                 setPage(1);
               }}
-              className="w-full pl-12 pr-4 py-3 rounded-lg bg-white/10 text-white placeholder-white/50 border border-white/20 focus:border-white/50 focus:outline-none"
+              className="w-full pl-12 pr-4 py-3 rounded-lg bg-white text-[#4E2E8C] placeholder-neutral-400 border-2 border-neutral-200 focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 focus:outline-none shadow-sm transition-all"
             />
           </div>
         </div>
@@ -152,24 +152,24 @@ export default function UserManagementTab() {
               setStatusFilter(e.target.value);
               setPage(1);
             }}
-            className="w-full px-4 py-3 rounded-lg bg-white/10 text-white border border-white/20 focus:border-white/50 focus:outline-none"
+            className="w-full px-4 py-3 rounded-lg bg-white text-[#4E2E8C] border-2 border-neutral-200 focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 focus:outline-none cursor-pointer shadow-sm transition-all"
           >
-            <option value="all" className="bg-purple-900">All Users</option>
-            <option value="active" className="bg-purple-900">Active Only</option>
-            <option value="inactive" className="bg-purple-900">Inactive Only</option>
+            <option value="all">All Users</option>
+            <option value="active">Active Only</option>
+            <option value="inactive">Inactive Only</option>
           </select>
         </div>
       </div>
 
       {/* Stats */}
-      <div className="bg-white/5 rounded-lg p-4 border border-white/10">
+      <div className="bg-[#4E2E8C]/10 rounded-lg p-4 border-2 border-[#4E2E8C]/20">
         <div className="flex items-center justify-between">
-          <p className="text-white/70">
-            Total Users: <span className="text-white font-bold">{totalCount}</span>
+          <p className="text-neutral-600">
+            Total Users: <span className="text-[#4E2E8C] font-bold">{totalCount}</span>
           </p>
           <button
             onClick={fetchUsers}
-            className="text-white/70 hover:text-white transition-all flex items-center gap-2"
+            className="text-[#4E2E8C] hover:text-[#5E3E9C] transition-all flex items-center gap-2 font-medium"
             title="Refresh"
           >
             <RefreshCw size={18} />
@@ -180,60 +180,60 @@ export default function UserManagementTab() {
 
       {/* Users Table */}
       {loading ? (
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
-          <p className="text-white/70 mt-4">Loading users...</p>
+        <div className="text-center py-16 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-neutral-200 border-t-[#4E2E8C] mb-4"></div>
+          <p className="text-neutral-600 font-medium">Loading users...</p>
         </div>
       ) : users.length === 0 ? (
-        <div className="text-center py-12 bg-white/5 rounded-lg border border-white/10">
-          <Users size={48} className="mx-auto text-white/30 mb-4" />
-          <p className="text-white/70 text-lg">No users found</p>
-          <p className="text-white/50 text-sm mt-2">
+        <div className="text-center py-16 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <Users size={48} className="mx-auto text-neutral-300 mb-4" />
+          <p className="text-[#4E2E8C] text-lg font-semibold">No users found</p>
+          <p className="text-neutral-500 text-sm mt-2">
             {searchTerm || statusFilter !== 'all'
               ? 'Try adjusting your filters'
               : 'Create your first user to get started'}
           </p>
         </div>
       ) : (
-        <div className="bg-white/5 rounded-lg border border-white/10 overflow-hidden">
+        <div className="bg-white rounded-xl border-2 border-neutral-200 overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-white/10">
+              <thead className="bg-[#4E2E8C]/5">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Email</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Username</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Role</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Directory Access</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-white">Created</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-white">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#4E2E8C]">Email</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#4E2E8C]">Username</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Role</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Directory Access</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#4E2E8C]">Created</th>
+                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/10">
+              <tbody className="divide-y divide-neutral-200">
                 {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-white/5 transition-colors">
-                    <td className="px-6 py-4 text-white">
+                  <tr key={user.id} className="hover:bg-[#4E2E8C]/5 transition-colors">
+                    <td className="px-6 py-4 text-neutral-700">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-full bg-purple-500/30 flex items-center justify-center text-white font-semibold">
+                        <div className="w-8 h-8 rounded-full bg-[#4E2E8C]/20 flex items-center justify-center text-[#4E2E8C] font-semibold border border-[#4E2E8C]/30">
                           {user.email.charAt(0).toUpperCase()}
                         </div>
                         {user.email}
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-white/70">
-                      {user.username || <span className="italic text-white/40">-</span>}
+                    <td className="px-6 py-4 text-neutral-600">
+                      {user.username || <span className="italic text-neutral-400">-</span>}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {getRoleBadge(user.role)}
                     </td>
                     <td className="px-6 py-4 text-center">
                       {user.has_directory_access ? (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 border border-blue-200">
                           <CheckCircle size={14} />
                           Granted
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-300">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-700 border border-gray-200">
                           <XCircle size={14} />
                           Denied
                         </span>
@@ -242,7 +242,7 @@ export default function UserManagementTab() {
                     <td className="px-6 py-4 text-center">
                       {getStatusBadge(user.status)}
                     </td>
-                    <td className="px-6 py-4 text-white/70 text-sm">
+                    <td className="px-6 py-4 text-neutral-600 text-sm">
                       {formatDate(user.created_at)}
                     </td>
                     <td className="px-6 py-4">
@@ -266,21 +266,23 @@ export default function UserManagementTab() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-3 pt-6 mt-6 border-t-2 border-neutral-200">
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
           >
             Previous
           </button>
-          <span className="text-white px-4">
-            Page {page} of {totalPages}
-          </span>
+          <div className="px-5 py-2.5 rounded-lg bg-[#4E2E8C]/5 border-2 border-[#4E2E8C]">
+            <span className="text-[#4E2E8C] font-bold text-sm">{page}</span>
+            <span className="text-neutral-500 text-sm mx-1.5">/</span>
+            <span className="text-[#4E2E8C] text-sm">{totalPages}</span>
+          </div>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-4 py-2 rounded-lg bg-white/10 text-white hover:bg-white/20 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
           >
             Next
           </button>
