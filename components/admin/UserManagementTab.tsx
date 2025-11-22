@@ -80,14 +80,14 @@ export default function UserManagementTab() {
   const getStatusBadge = (status: string) => {
     if (status === 'active') {
       return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-700 border border-green-200">
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-100 to-green-50 text-green-700 border border-green-300 shadow-sm">
           <CheckCircle size={14} />
           Active
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-700 border border-red-200">
+      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-red-100 to-red-50 text-red-700 border border-red-300 shadow-sm">
         <XCircle size={14} />
         Inactive
       </span>
@@ -97,14 +97,14 @@ export default function UserManagementTab() {
   const getRoleBadge = (role: string) => {
     if (role === 'admin') {
       return (
-        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-purple-500/20 text-purple-700 border border-purple-200">
+        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border border-purple-300 shadow-sm">
           <Shield size={14} />
           Admin
         </span>
       );
     }
     return (
-      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-700 border border-gray-200">
+      <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 border border-neutral-300 shadow-sm">
         <User size={14} />
         User
       </span>
@@ -162,14 +162,14 @@ export default function UserManagementTab() {
       </div>
 
       {/* Stats */}
-      <div className="bg-[#4E2E8C]/10 rounded-lg p-4 border-2 border-[#4E2E8C]/20">
+      <div className="bg-gradient-to-r from-purple-50 via-white to-purple-50 rounded-lg p-4 border-2 border-purple-200 shadow-sm">
         <div className="flex items-center justify-between">
-          <p className="text-neutral-600">
-            Total Users: <span className="text-[#4E2E8C] font-bold">{totalCount}</span>
+          <p className="text-neutral-700 font-medium">
+            Total Users: <span className="text-[#4E2E8C] font-bold text-lg">{totalCount}</span>
           </p>
           <button
             onClick={fetchUsers}
-            className="text-[#4E2E8C] hover:text-[#5E3E9C] transition-all flex items-center gap-2 font-medium"
+            className="text-[#4E2E8C] hover:text-white hover:bg-[#4E2E8C] transition-all flex items-center gap-2 font-semibold px-3 py-1.5 rounded-lg"
             title="Refresh"
           >
             <RefreshCw size={18} />
@@ -195,18 +195,18 @@ export default function UserManagementTab() {
           </p>
         </div>
       ) : (
-        <div className="bg-white rounded-xl border-2 border-neutral-200 overflow-hidden shadow-sm">
+        <div className="bg-white rounded-xl border-2 border-purple-200 overflow-hidden shadow-md">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-[#4E2E8C]/5">
+              <thead className="bg-gradient-to-r from-purple-50 via-white to-purple-50">
                 <tr>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#4E2E8C]">Email</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#4E2E8C]">Username</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Role</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Directory Access</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Status</th>
-                  <th className="px-6 py-4 text-left text-sm font-semibold text-[#4E2E8C]">Created</th>
-                  <th className="px-6 py-4 text-center text-sm font-semibold text-[#4E2E8C]">Actions</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Email</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Username</th>
+                  <th className="px-6 py-4 text-center text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Role</th>
+                  <th className="px-6 py-4 text-center text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Directory Access</th>
+                  <th className="px-6 py-4 text-center text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Status</th>
+                  <th className="px-6 py-4 text-left text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Created</th>
+                  <th className="px-6 py-4 text-center text-sm font-bold text-[#4E2E8C] border-b-2 border-purple-200">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-200">
@@ -228,12 +228,12 @@ export default function UserManagementTab() {
                     </td>
                     <td className="px-6 py-4 text-center">
                       {user.has_directory_access ? (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-700 border border-blue-200">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border border-blue-300 shadow-sm">
                           <CheckCircle size={14} />
                           Granted
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gray-500/20 text-gray-700 border border-gray-200">
+                        <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 border border-neutral-300 shadow-sm">
                           <XCircle size={14} />
                           Denied
                         </span>
@@ -249,7 +249,7 @@ export default function UserManagementTab() {
                       <div className="flex items-center justify-center gap-2">
                         <button
                           onClick={() => handleEditUser(user)}
-                          className="text-blue-400 hover:text-blue-300 transition-all p-2 hover:bg-blue-500/10 rounded-lg"
+                          className="text-[#4E2E8C] hover:text-white hover:bg-[#4E2E8C] transition-all p-2 rounded-lg"
                           title="Edit user"
                         >
                           <Edit size={18} />

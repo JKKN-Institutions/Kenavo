@@ -531,3 +531,38 @@
 .scrollbar-hide::-webkit-scrollbar {
   display: none;  /* Chrome, Safari, and Opera */
 }
+
+/* Ultra-Modern Admin Panel Animations */
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Smooth Scroll Behavior */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom Purple Scrollbar for Admin Panel */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(248, 247, 255, 0.5);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #c4b5fd 0%, #a78bfa 100%);
+  border-radius: 10px;
+  border: 2px solid rgba(248, 247, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #a78bfa 0%, #8b5cf6 100%);
+}

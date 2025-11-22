@@ -168,28 +168,28 @@ export default function AIDocumentsTab() {
     switch (status) {
       case 'completed':
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-green-500/20 text-green-300">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-green-100 to-green-50 text-green-700 border border-green-300 shadow-sm">
             <CheckCircle size={14} />
             Completed
           </span>
         );
       case 'uploading':
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border border-blue-300 shadow-sm">
             <Loader2 size={14} className="animate-spin" />
             Uploading
           </span>
         );
       case 'failed':
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-300">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-red-100 to-red-50 text-red-700 border border-red-300 shadow-sm">
             <XCircle size={14} />
             Failed
           </span>
         );
       default:
         return (
-          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-yellow-500/20 text-yellow-300">
+          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-yellow-100 to-yellow-50 text-yellow-700 border border-yellow-300 shadow-sm">
             <Clock size={14} />
             Pending
           </span>
@@ -199,15 +199,15 @@ export default function AIDocumentsTab() {
 
   const getCategoryBadge = (cat: string) => {
     const colors: Record<string, string> = {
-      alumni_profiles: 'bg-purple-500/20 text-purple-300',
-      knowledge_base: 'bg-blue-500/20 text-blue-300',
-      events: 'bg-green-500/20 text-green-300',
-      newsletters: 'bg-yellow-500/20 text-yellow-300',
-      resources: 'bg-pink-500/20 text-pink-300',
+      alumni_profiles: 'bg-gradient-to-r from-purple-100 to-purple-50 text-purple-700 border border-purple-300 shadow-sm',
+      knowledge_base: 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border border-blue-300 shadow-sm',
+      events: 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border border-green-300 shadow-sm',
+      newsletters: 'bg-gradient-to-r from-yellow-100 to-yellow-50 text-yellow-700 border border-yellow-300 shadow-sm',
+      resources: 'bg-gradient-to-r from-pink-100 to-pink-50 text-pink-700 border border-pink-300 shadow-sm',
     };
 
     return (
-      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${colors[cat] || 'bg-gray-500/20 text-gray-300'}`}>
+      <span className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${colors[cat] || 'bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 border border-neutral-300 shadow-sm'}`}>
         <FolderOpen size={14} />
         {cat.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
       </span>
@@ -265,11 +265,11 @@ export default function AIDocumentsTab() {
       {/* Filters */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Category</label>
+          <label className="block text-sm font-semibold text-[#4E2E8C] mb-1.5">Category</label>
           <select
             value={categoryFilter}
             onChange={(e) => setCategoryFilter(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 focus:border-[#4E2E8C] focus:outline-none text-sm cursor-pointer"
+            className="w-full px-3 py-2.5 rounded-lg bg-white text-[#4E2E8C] border-2 border-neutral-200 focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 focus:outline-none text-sm cursor-pointer shadow-sm transition-all"
           >
             <option value="all">All Categories</option>
             <option value="alumni_profiles">Alumni Profiles</option>
@@ -281,11 +281,11 @@ export default function AIDocumentsTab() {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-slate-300 mb-1.5">Status</label>
+          <label className="block text-sm font-semibold text-[#4E2E8C] mb-1.5">Status</label>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="w-full px-3 py-2.5 rounded-lg bg-slate-800 text-slate-300 border border-slate-700 focus:border-[#4E2E8C] focus:outline-none text-sm cursor-pointer"
+            className="w-full px-3 py-2.5 rounded-lg bg-white text-[#4E2E8C] border-2 border-neutral-200 focus:border-[#4E2E8C] focus:ring-2 focus:ring-[#4E2E8C]/20 focus:outline-none text-sm cursor-pointer shadow-sm transition-all"
           >
             <option value="all">All Status</option>
             <option value="completed">Completed</option>
@@ -298,7 +298,7 @@ export default function AIDocumentsTab() {
         <div className="flex items-end">
           <button
             onClick={() => fetchDocuments()}
-            className="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white px-3 py-2.5 rounded-lg border border-slate-700 transition-all flex items-center justify-center gap-2 text-sm font-medium"
+            className="w-full bg-[#4E2E8C] hover:bg-[#5E3E9C] text-white px-3 py-2.5 rounded-lg border-2 border-[#4E2E8C] transition-all flex items-center justify-center gap-2 text-sm font-semibold shadow-sm hover:shadow-md"
           >
             <RefreshCw size={14} />
             Refresh
@@ -308,42 +308,42 @@ export default function AIDocumentsTab() {
 
       {/* Documents List */}
       {loading ? (
-        <div className="text-center py-12">
-          <Loader2 size={32} className="mx-auto animate-spin text-slate-500" />
-          <p className="text-slate-400 mt-4 text-sm">Loading documents...</p>
+        <div className="text-center py-12 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <Loader2 size={32} className="mx-auto animate-spin text-[#4E2E8C]" />
+          <p className="text-neutral-600 mt-4 text-sm font-medium">Loading documents...</p>
         </div>
       ) : documents.length === 0 ? (
-        <div className="text-center py-12 bg-slate-800/30 rounded-lg border border-slate-700">
-          <FileText size={40} className="mx-auto text-slate-600 mb-4" />
-          <p className="text-slate-300 font-medium">No documents found</p>
-          <p className="text-slate-500 text-sm mt-2">Upload your first document to get started</p>
+        <div className="text-center py-12 bg-neutral-50 rounded-xl border-2 border-neutral-200">
+          <FileText size={40} className="mx-auto text-neutral-300 mb-4" />
+          <p className="text-[#4E2E8C] font-semibold text-lg">No documents found</p>
+          <p className="text-neutral-600 text-sm mt-2">Upload your first document to get started</p>
         </div>
       ) : (
-        <div className="bg-slate-800/30 rounded-lg border border-slate-700 overflow-hidden">
+        <div className="bg-white rounded-xl border-2 border-purple-200 overflow-hidden shadow-md">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/50">
+              <thead className="bg-gradient-to-r from-purple-50 via-white to-purple-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Document</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wider">Category</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wider">Status</th>
-                  <th className="px-4 py-3 text-left text-xs font-semibold text-slate-300 uppercase tracking-wider">Uploaded</th>
-                  <th className="px-4 py-3 text-center text-xs font-semibold text-slate-300 uppercase tracking-wider">Actions</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-[#4E2E8C] uppercase tracking-wider border-b-2 border-purple-200">Document</th>
+                  <th className="px-4 py-3 text-center text-xs font-bold text-[#4E2E8C] uppercase tracking-wider border-b-2 border-purple-200">Category</th>
+                  <th className="px-4 py-3 text-center text-xs font-bold text-[#4E2E8C] uppercase tracking-wider border-b-2 border-purple-200">Status</th>
+                  <th className="px-4 py-3 text-left text-xs font-bold text-[#4E2E8C] uppercase tracking-wider border-b-2 border-purple-200">Uploaded</th>
+                  <th className="px-4 py-3 text-center text-xs font-bold text-[#4E2E8C] uppercase tracking-wider border-b-2 border-purple-200">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700/50">
+              <tbody className="divide-y divide-neutral-200">
                 {documents.map((doc) => (
-                  <tr key={doc.id} className="hover:bg-slate-800/40 transition-colors">
-                    <td className="px-4 py-3 text-white">
+                  <tr key={doc.id} className="hover:bg-[#4E2E8C]/5 transition-colors">
+                    <td className="px-4 py-3 text-neutral-700">
                       <div>
-                        <div className="font-medium text-sm">{doc.display_name}</div>
-                        <div className="text-xs text-slate-500">{doc.file_name}</div>
+                        <div className="font-semibold text-sm text-[#4E2E8C]">{doc.display_name}</div>
+                        <div className="text-xs text-neutral-600 mt-0.5">{doc.file_name}</div>
                         {doc.tags && doc.tags.length > 0 && (
                           <div className="flex gap-1 mt-1.5">
                             {doc.tags.map((tag, idx) => (
                               <span
                                 key={idx}
-                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs bg-slate-700/50 text-slate-400"
+                                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 border border-neutral-300"
                               >
                                 <Tag size={10} />
                                 {tag}
@@ -355,13 +355,13 @@ export default function AIDocumentsTab() {
                     </td>
                     <td className="px-4 py-3 text-center">{getCategoryBadge(doc.category)}</td>
                     <td className="px-4 py-3 text-center">{getStatusBadge(doc.upload_status)}</td>
-                    <td className="px-4 py-3 text-slate-400 text-xs">
+                    <td className="px-4 py-3 text-neutral-600 text-xs">
                       {new Date(doc.created_at).toLocaleString()}
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button
                         onClick={() => handleDelete(doc.id)}
-                        className="text-red-400 hover:text-red-300 transition-all p-1.5 hover:bg-red-500/10 rounded-md"
+                        className="text-red-600 hover:text-white hover:bg-red-600 transition-all p-1.5 rounded-lg"
                         title="Delete document"
                       >
                         <Trash2 size={14} />

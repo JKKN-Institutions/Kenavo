@@ -73,10 +73,11 @@ export default function GalleryManagementTab() {
         </div>
         <button
           onClick={handleRefresh}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-yellow hover:bg-accent-400 text-[#4E2E8C] font-semibold transition-all shadow-sm hover:shadow-md"
+          className="group relative flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-yellow to-accent-400 text-[#4E2E8C] font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
         >
-          <RefreshCw size={18} />
-          Refresh
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <RefreshCw size={18} className="relative z-10 group-hover:rotate-180 transition-transform duration-500" />
+          <span className="relative z-10">Refresh</span>
         </button>
       </div>
 
@@ -102,24 +103,24 @@ export default function GalleryManagementTab() {
             {selectedAlbum ? (
               <div className="space-y-6">
                 {/* Album Header */}
-                <div className="bg-[#4E2E8C]/5 rounded-lg p-4 border-2 border-[#4E2E8C]/20">
+                <div className="bg-gradient-to-r from-purple-50 via-white to-purple-50 rounded-lg p-4 border-2 border-purple-200 shadow-sm">
                   <div className="flex items-start justify-between">
                     <div className="flex items-start gap-4">
                       {selectedAlbum.thumbnail_url ? (
                         <img
                           src={selectedAlbum.thumbnail_url}
                           alt={selectedAlbum.name}
-                          className="w-20 h-20 rounded-lg object-cover border-2 border-[#4E2E8C]"
+                          className="w-20 h-20 rounded-lg object-cover border-2 border-[#4E2E8C] shadow-md"
                         />
                       ) : (
-                        <div className="w-20 h-20 rounded-lg bg-neutral-100 flex items-center justify-center border-2 border-neutral-300">
+                        <div className="w-20 h-20 rounded-lg bg-gradient-to-br from-neutral-100 to-neutral-50 flex items-center justify-center border-2 border-neutral-300">
                           <FolderOpen size={32} className="text-neutral-400" />
                         </div>
                       )}
                       <div>
                         <h3 className="text-xl font-bold text-[#4E2E8C]">{selectedAlbum.name}</h3>
-                        <p className="text-neutral-600 text-sm mt-1">{selectedAlbum.description}</p>
-                        <p className="text-neutral-500 text-xs mt-2">Slug: {selectedAlbum.slug}</p>
+                        <p className="text-neutral-700 text-sm mt-1 font-medium">{selectedAlbum.description}</p>
+                        <p className="text-neutral-600 text-xs mt-2">Slug: <span className="font-medium text-[#4E2E8C]">{selectedAlbum.slug}</span></p>
                       </div>
                     </div>
                   </div>

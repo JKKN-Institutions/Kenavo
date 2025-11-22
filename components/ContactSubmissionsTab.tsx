@@ -87,11 +87,11 @@ export default function ContactSubmissionsTab() {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'unread': return 'bg-red-500/20 text-red-300';
-      case 'read': return 'bg-blue-500/20 text-blue-300';
-      case 'replied': return 'bg-green-500/20 text-green-300';
-      case 'archived': return 'bg-gray-500/20 text-gray-300';
-      default: return 'bg-gray-500/20 text-gray-300';
+      case 'unread': return 'bg-gradient-to-r from-red-100 to-red-50 text-red-700 border border-red-300 font-semibold';
+      case 'read': return 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 border border-blue-300 font-semibold';
+      case 'replied': return 'bg-gradient-to-r from-green-100 to-green-50 text-green-700 border border-green-300 font-semibold';
+      case 'archived': return 'bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 border border-neutral-300 font-semibold';
+      default: return 'bg-gradient-to-r from-neutral-100 to-neutral-50 text-neutral-700 border border-neutral-300 font-semibold';
     }
   };
 
@@ -144,16 +144,16 @@ export default function ContactSubmissionsTab() {
           <p className="text-xs text-neutral-500 mt-1">Try adjusting your filters</p>
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border-2 border-neutral-200 shadow-sm">
+        <div className="overflow-x-auto rounded-xl border-2 border-purple-200 shadow-md">
           <table className="w-full">
-            <thead className="bg-[#4E2E8C]/5">
+            <thead className="bg-gradient-to-r from-purple-50 via-white to-purple-50">
               <tr>
-                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Name</th>
-                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Email</th>
-                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Date</th>
-                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Status</th>
-                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Files</th>
-                <th className="px-4 py-3 text-left text-[#4E2E8C] font-semibold">Actions</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-bold border-b-2 border-purple-200">Name</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-bold border-b-2 border-purple-200">Email</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-bold border-b-2 border-purple-200">Date</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-bold border-b-2 border-purple-200">Status</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-bold border-b-2 border-purple-200">Files</th>
+                <th className="px-4 py-3 text-left text-[#4E2E8C] font-bold border-b-2 border-purple-200">Actions</th>
               </tr>
             </thead>
             <tbody>
@@ -203,21 +203,23 @@ export default function ContactSubmissionsTab() {
           <button
             onClick={() => setPage(Math.max(1, page - 1))}
             disabled={page === 1}
-            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
+            className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
-            Previous
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10">Previous</span>
           </button>
-          <div className="px-5 py-2.5 rounded-lg bg-[#4E2E8C]/10 border-2 border-[#4E2E8C]">
+          <div className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-[#4E2E8C] shadow-md">
             <span className="text-[#4E2E8C] font-bold text-sm">{page}</span>
             <span className="text-neutral-500 text-sm mx-1.5">/</span>
-            <span className="text-[#4E2E8C] text-sm">{totalPages}</span>
+            <span className="text-[#4E2E8C] text-sm font-semibold">{totalPages}</span>
           </div>
           <button
             onClick={() => setPage(Math.min(totalPages, page + 1))}
             disabled={page === totalPages}
-            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
+            className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
-            Next
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10">Next</span>
           </button>
         </div>
       )}
@@ -251,7 +253,9 @@ export default function ContactSubmissionsTab() {
 
               <div>
                 <label className="text-[#4E2E8C] font-semibold text-sm mb-2 block">Message:</label>
-                <p className="text-neutral-700 whitespace-pre-wrap bg-purple-50 p-4 rounded-lg border border-purple-200 leading-relaxed">{selectedSubmission.message}</p>
+                <div className="bg-white p-6 rounded-xl border-2 border-[#4E2E8C] shadow-lg">
+                  <p className="text-black font-bold whitespace-pre-wrap leading-relaxed text-lg">{selectedSubmission.message}</p>
+                </div>
               </div>
 
               {selectedSubmission.files.length > 0 && (
@@ -287,15 +291,17 @@ export default function ContactSubmissionsTab() {
               <div className="flex gap-3 pt-4 border-t-2 border-[#4E2E8C]/20">
                 <button
                   onClick={() => updateStatus(selectedSubmission.id, 'replied')}
-                  className="flex-1 px-5 py-3 bg-[#4E2E8C] hover:bg-[#5E3E9C] text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="group relative flex-1 px-5 py-3 bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
                 >
-                  Mark as Replied
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative z-10">Mark as Replied</span>
                 </button>
                 <button
                   onClick={() => deleteSubmission(selectedSubmission.id)}
-                  className="px-5 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-semibold transition-all shadow-sm hover:shadow-md"
+                  className="group relative px-5 py-3 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl font-bold transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
                 >
-                  Delete
+                  <div className="absolute inset-0 bg-gradient-to-r from-red-700 to-red-800 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <span className="relative z-10">Delete</span>
                 </button>
               </div>
             </div>

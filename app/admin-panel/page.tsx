@@ -144,38 +144,56 @@ export default function AdminPanel() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-purple-100">
-      {/* Subtle background pattern */}
-      <div className="fixed inset-0 bg-[linear-gradient(to_right,#e5e7eb_1px,transparent_1px),linear-gradient(to_bottom,#e5e7eb_1px,transparent_1px)] bg-[size:3rem_3rem] opacity-[0.3] pointer-events-none" />
+    <div className="min-h-screen bg-gradient-to-br from-[#f8f7ff] via-white to-[#faf5ff] relative overflow-hidden">
+      {/* Ultra-Modern Animated Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        {/* Mesh Gradient Orbs */}
+        <div className="absolute top-0 -left-4 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+        <div className="absolute top-0 -right-4 w-72 h-72 bg-yellow-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
+        <div className="absolute -bottom-8 left-20 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-4000"></div>
+
+        {/* Sophisticated Grid Pattern */}
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#8080800a_1px,transparent_1px),linear-gradient(to_bottom,#8080800a_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+      </div>
 
       <div className="relative min-h-screen flex flex-col">
-        {/* Professional Header */}
-        <header className="border-b-2 border-[#4E2E8C] bg-gradient-to-r from-[#4E2E8C] via-[#5E3E9C] to-[#4E2E8C] sticky top-0 z-40 shadow-lg">
+        {/* Premium Glassmorphism Header */}
+        <header className="backdrop-blur-xl bg-white/60 border-b border-purple-200/50 sticky top-0 z-50 shadow-[0_8px_32px_0_rgba(78,46,140,0.12)]">
           <div className="container mx-auto px-6 lg:px-8">
-            <div className="flex items-center justify-between h-20">
-              {/* Logo & Title */}
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="w-12 h-12 rounded-lg bg-brand-yellow flex items-center justify-center shadow-md">
-                    <span className="text-[#4E2E8C] font-bold text-xl">K</span>
+            <div className="flex items-center justify-between h-24">
+              {/* Modern Logo & Title */}
+              <div className="flex items-center gap-5">
+                <div className="relative group">
+                  {/* Floating Logo with Glow Effect */}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] to-[#7C3AED] rounded-2xl blur-md opacity-75 group-hover:opacity-100 transition-opacity"></div>
+                  <div className="relative w-14 h-14 rounded-2xl bg-gradient-to-br from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] flex items-center justify-center shadow-xl transform group-hover:scale-110 transition-transform duration-300">
+                    <span className="text-white font-black text-2xl tracking-tight">K</span>
                   </div>
-                  <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-white rounded-full border-2 border-[#4E2E8C]" title="System online"></div>
+                  {/* Pulse Indicator */}
+                  <div className="absolute -top-1 -right-1">
+                    <span className="relative flex h-4 w-4">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white shadow-lg"></span>
+                    </span>
+                  </div>
                 </div>
-                <div>
-                  <h1 className="text-xl font-bold text-white tracking-tight">Kenavo Admin</h1>
-                  <p className="text-sm text-white/70">Management Dashboard</p>
+                <div className="space-y-1">
+                  <h1 className="text-2xl font-black bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] bg-clip-text text-transparent tracking-tight">Kenavo Admin</h1>
+                  <p className="text-sm font-medium text-neutral-600">Premium Management Dashboard</p>
                 </div>
               </div>
 
-              {/* User Actions */}
-              <div className="flex items-center gap-3">
+              {/* Sophisticated User Actions */}
+              <div className="flex items-center gap-4">
+                {/* Modern Sign Out Button */}
                 <button
                   onClick={handleLogout}
                   disabled={loggingOut}
-                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-yellow hover:bg-accent-400 text-[#4E2E8C] text-sm font-semibold transition-all disabled:opacity-50 shadow-sm hover:shadow-md"
+                  className="group relative flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-105 disabled:opacity-50 disabled:hover:scale-100 transition-all duration-300 overflow-hidden"
                 >
-                  <LogOut size={16} />
-                  {loggingOut ? 'Signing out...' : 'Sign Out'}
+                  <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                  <LogOut size={18} className="relative z-10" />
+                  <span className="relative z-10">{loggingOut ? 'Signing out...' : 'Sign Out'}</span>
                 </button>
               </div>
             </div>
@@ -183,93 +201,122 @@ export default function AdminPanel() {
         </header>
 
         {/* Main Content Area */}
-        <div className="flex-1 container mx-auto px-6 lg:px-8 py-8">
-          {/* Horizontal Navigation */}
-          <nav className="mb-8">
-            <div className="flex items-center gap-2 p-1.5 bg-gradient-to-r from-white via-purple-50 to-white rounded-xl border-2 border-purple-200 shadow-md overflow-x-auto backdrop-blur-sm">
-              <button
-                onClick={() => setActiveTab('manage')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'manage'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <List size={16} />
-                <span className="hidden sm:inline">Profiles</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('bulkUpdate')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'bulkUpdate'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <Upload size={16} />
-                <span className="hidden sm:inline">Import</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('single')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'single'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <UserPlus size={16} />
-                <span className="hidden sm:inline">Create</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('gallery')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'gallery'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <ImageIcon size={16} />
-                <span className="hidden sm:inline">Gallery</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('contact')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'contact'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <Mail size={16} />
-                <span className="hidden sm:inline">Messages</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('users')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'users'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <Users size={16} />
-                <span className="hidden sm:inline">Users</span>
-              </button>
-              <button
-                onClick={() => setActiveTab('ai-documents')}
-                className={`flex items-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold transition-all whitespace-nowrap border-2 ${
-                  activeTab === 'ai-documents'
-                    ? 'bg-gradient-to-r from-[#4E2E8C] to-[#5E3E9C] text-white shadow-lg border-[#4E2E8C] scale-105'
-                    : 'text-neutral-600 hover:text-[#4E2E8C] hover:bg-neutral-50 border-transparent hover:border-neutral-200'
-                }`}
-              >
-                <Sparkles size={16} />
-                <span className="hidden sm:inline">AI Docs</span>
-              </button>
+        <div className="flex-1 container mx-auto px-6 lg:px-8 py-10">
+          {/* Ultra-Modern Tab Navigation */}
+          <nav className="mb-10">
+            <div className="relative backdrop-blur-md bg-white/80 p-2 rounded-2xl border border-purple-200/50 shadow-[0_8px_30px_rgb(0,0,0,0.08)] overflow-x-auto">
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setActiveTab('manage')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'manage'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'manage' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <List size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">Profiles</span>
+                  {activeTab === 'manage' && (
+                    <div className="absolute inset-0 rounded-xl bg-white/20 animate-pulse"></div>
+                  )}
+                </button>
+                <button
+                  onClick={() => setActiveTab('bulkUpdate')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'bulkUpdate'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'bulkUpdate' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <Upload size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">Import</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('single')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'single'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'single' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <UserPlus size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">Create</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('gallery')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'gallery'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'gallery' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <ImageIcon size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">Gallery</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('contact')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'contact'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'contact' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <Mail size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">Messages</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('users')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'users'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'users' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <Users size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">Users</span>
+                </button>
+                <button
+                  onClick={() => setActiveTab('ai-documents')}
+                  className={`group relative flex items-center gap-2.5 px-5 py-3.5 rounded-xl text-sm font-bold transition-all duration-300 whitespace-nowrap ${
+                    activeTab === 'ai-documents'
+                      ? 'text-white'
+                      : 'text-neutral-700 hover:text-[#4E2E8C] hover:bg-purple-50/50'
+                  }`}
+                >
+                  {activeTab === 'ai-documents' && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#4E2E8C] via-[#6D28D9] to-[#7C3AED] rounded-xl shadow-lg"></div>
+                  )}
+                  <Sparkles size={18} className="relative z-10" />
+                  <span className="relative z-10 hidden sm:inline">AI Docs</span>
+                </button>
+              </div>
             </div>
           </nav>
 
-          {/* Tab Content Card */}
-          <main className="bg-gradient-to-br from-white to-purple-50 rounded-2xl border-2 border-purple-200 shadow-2xl overflow-hidden backdrop-blur-sm">
-            <div className="p-8">
+          {/* Premium Content Card with Glassmorphism */}
+          <main className="relative backdrop-blur-md bg-white/70 rounded-3xl border border-purple-200/50 shadow-[0_20px_70px_-15px_rgba(78,46,140,0.3)] overflow-hidden">
+            {/* Subtle Inner Glow */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-50/50 via-transparent to-white/50 pointer-events-none"></div>
+
+            <div className="relative p-10">
               {activeTab === 'manage' && <ManageProfilesTab />}
               {activeTab === 'bulkUpdate' && <BulkUpdateTab />}
               {activeTab === 'single' && <SingleProfileForm />}
@@ -352,10 +399,11 @@ function ManageProfilesTab() {
         </div>
         <button
           onClick={fetchProfiles}
-          className="px-4 py-2 rounded-lg bg-brand-yellow hover:bg-accent-400 text-[#4E2E8C] text-sm font-semibold transition-all flex items-center gap-2 shadow-sm hover:shadow-md"
+          className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white text-sm font-bold transition-all duration-300 flex items-center gap-2.5 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
         >
-          <RefreshCw size={16} />
-          <span className="hidden sm:inline">Refresh</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <RefreshCw size={16} className="relative z-10 group-hover:rotate-180 transition-transform duration-500" />
+          <span className="hidden sm:inline relative z-10">Refresh</span>
         </button>
       </div>
 
@@ -435,10 +483,11 @@ function ManageProfilesTab() {
               </div>
               <button
                 onClick={() => handleEdit(profile)}
-                className="px-4 py-2 rounded-lg bg-[#4E2E8C] hover:bg-[#5E3E9C] text-white text-sm font-semibold transition-all flex items-center gap-2 shadow-sm hover:shadow-md"
+                className="group relative px-4 py-2 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white text-sm font-bold transition-all duration-300 flex items-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
               >
-                <Edit2 size={16} />
-                <span className="hidden sm:inline">Edit</span>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Edit2 size={16} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                <span className="hidden sm:inline relative z-10">Edit</span>
               </button>
             </div>
           ))}
@@ -451,21 +500,23 @@ function ManageProfilesTab() {
           <button
             onClick={() => setPage(p => Math.max(1, p - 1))}
             disabled={page === 1}
-            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
+            className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
-            Previous
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10">Previous</span>
           </button>
-          <div className="px-5 py-2.5 rounded-lg bg-[#4E2E8C]/10 border-2 border-[#4E2E8C]">
+          <div className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-50 to-purple-100 border-2 border-[#4E2E8C] shadow-md">
             <span className="text-[#4E2E8C] font-bold text-sm">{page}</span>
             <span className="text-neutral-500 text-sm mx-1.5">/</span>
-            <span className="text-[#4E2E8C] text-sm">{totalPages}</span>
+            <span className="text-[#4E2E8C] text-sm font-semibold">{totalPages}</span>
           </div>
           <button
             onClick={() => setPage(p => Math.min(totalPages, p + 1))}
             disabled={page === totalPages}
-            className="px-5 py-2.5 rounded-lg bg-white text-[#4E2E8C] text-sm font-semibold disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#4E2E8C] hover:text-white transition-all shadow-sm hover:shadow-md border-2 border-neutral-200 hover:border-[#4E2E8C]"
+            className="group relative px-5 py-2.5 rounded-xl bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] text-white text-sm font-bold disabled:opacity-30 disabled:cursor-not-allowed transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
-            Next
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+            <span className="relative z-10">Next</span>
           </button>
         </div>
       )}
@@ -630,9 +681,9 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
           </div>
           <button
             onClick={onClose}
-            className="text-neutral-400 hover:text-[#4E2E8C] hover:bg-neutral-100 transition-all p-2 rounded-lg"
+            className="group relative text-neutral-400 hover:text-white backdrop-blur-md bg-neutral-100/50 hover:bg-gradient-to-r hover:from-[#4E2E8C] hover:to-[#6D28D9] transition-all duration-300 p-2.5 rounded-xl shadow-md hover:shadow-lg hover:scale-110"
           >
-            <X size={24} />
+            <X size={24} className="group-hover:rotate-90 transition-transform duration-300" />
           </button>
         </div>
 
@@ -646,9 +697,10 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
                   <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" style={{ objectPosition: 'center top' }} />
                 </div>
               )}
-              <label className="cursor-pointer bg-brand-yellow hover:bg-accent-400 text-[#4E2E8C] px-5 py-2.5 rounded-lg font-semibold transition-all flex items-center gap-2.5 text-sm shadow-sm hover:shadow-md">
-                <Upload size={18} />
-                {imageFile ? 'Change Image' : 'Upload Image'}
+              <label className="group relative cursor-pointer bg-gradient-to-r from-brand-yellow to-accent-400 text-[#4E2E8C] px-5 py-2.5 rounded-xl font-bold transition-all duration-300 flex items-center gap-2.5 text-sm shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <Upload size={18} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative z-10">{imageFile ? 'Change Image' : 'Upload Image'}</span>
                 <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
               </label>
             </div>
@@ -815,17 +867,18 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-[#4E2E8C] hover:bg-[#5E3E9C] disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-lg font-bold text-base transition-all flex items-center justify-center gap-2.5 shadow-md hover:shadow-lg"
+              className="group relative flex-1 bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-3 rounded-xl font-bold text-base transition-all duration-300 flex items-center justify-center gap-2.5 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
             >
+              <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               {loading ? (
                 <>
-                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                  Saving Changes...
+                  <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin relative z-10"></div>
+                  <span className="relative z-10">Saving Changes...</span>
                 </>
               ) : (
                 <>
-                  <Save size={18} />
-                  Save Changes
+                  <Save size={18} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                  <span className="relative z-10">Save Changes</span>
                 </>
               )}
             </button>
@@ -833,9 +886,9 @@ function EditProfileModal({ profile, onClose }: { profile: Profile; onClose: () 
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="px-6 py-3 rounded-lg bg-white hover:bg-neutral-50 text-[#4E2E8C] font-bold text-base transition-all border-2 border-neutral-200 hover:border-[#4E2E8C] disabled:opacity-50 disabled:cursor-not-allowed shadow-sm"
+              className="group relative px-6 py-3 rounded-xl backdrop-blur-md bg-white/80 hover:bg-white text-[#4E2E8C] font-bold text-base transition-all duration-300 border-2 border-neutral-200 hover:border-[#4E2E8C] disabled:opacity-50 disabled:cursor-not-allowed shadow-md hover:shadow-lg hover:scale-105"
             >
-              Cancel
+              <span className="relative z-10">Cancel</span>
             </button>
           </div>
         </form>
@@ -1343,28 +1396,32 @@ function BulkUpdateTab() {
         <button
           onClick={handleExportProfiles}
           disabled={exportLoading}
-          className="bg-[#4E2E8C] hover:bg-[#5E3E9C] disabled:opacity-50 text-white px-6 py-4 rounded-lg font-bold text-base transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+          className="group relative bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] disabled:opacity-50 text-white px-6 py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 overflow-hidden"
         >
-          {exportLoading ? 'Exporting...' : (
+          <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          {exportLoading ? (
+            <span className="relative z-10">Exporting...</span>
+          ) : (
             <>
-              <span className="text-xl">📥</span>
-              <span>Download Template</span>
+              <span className="text-xl relative z-10">📥</span>
+              <span className="relative z-10">Download Template</span>
             </>
           )}
         </button>
         <button
           onClick={downloadBulkUpdateTemplate}
-          className="bg-brand-yellow hover:bg-accent-400 text-[#4E2E8C] px-6 py-4 rounded-lg font-bold text-base transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+          className="group relative bg-gradient-to-r from-brand-yellow to-accent-400 text-[#4E2E8C] px-6 py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2 overflow-hidden"
         >
-          <span className="text-xl">📋</span>
-          <span>Download Template</span>
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <span className="text-xl relative z-10">📋</span>
+          <span className="relative z-10">Download Template</span>
         </button>
         <button
           onClick={exportProfileIds}
-          className="bg-white hover:bg-[#4E2E8C]/5 text-[#4E2E8C] border-2 border-[#4E2E8C] px-6 py-4 rounded-lg font-bold text-base transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2"
+          className="group relative backdrop-blur-md bg-white/80 hover:bg-white text-[#4E2E8C] border-2 border-[#4E2E8C] px-6 py-4 rounded-xl font-bold text-base transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105 flex items-center justify-center gap-2"
         >
-          <span className="text-xl">🆔</span>
-          <span>Export Profile IDs</span>
+          <span className="text-xl relative z-10">🆔</span>
+          <span className="relative z-10">Export Profile IDs</span>
         </button>
       </div>
 
@@ -1426,17 +1483,18 @@ function BulkUpdateTab() {
           <button
             type="submit"
             disabled={slambookLoading || !slambookFile}
-            className="w-full bg-[#4E2E8C] hover:bg-[#5E3E9C] disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-5 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl border-2 border-[#4E2E8C] hover:border-primary-700"
+            className="group relative w-full bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-5 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             {slambookLoading ? (
               <>
-                <RefreshCw className="animate-spin" size={22} />
-                <span>Processing CSV...</span>
+                <RefreshCw className="animate-spin relative z-10" size={22} />
+                <span className="relative z-10">Processing CSV...</span>
               </>
             ) : (
               <>
-                <Upload size={22} />
-                <span>Upload & Process Slambook CSV</span>
+                <Upload size={22} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative z-10">Upload & Process Slambook CSV</span>
               </>
             )}
           </button>
@@ -1471,17 +1529,18 @@ function BulkUpdateTab() {
           <button
             type="submit"
             disabled={loading || !csvFile}
-            className="w-full bg-brand-yellow hover:bg-accent-400 disabled:opacity-50 disabled:cursor-not-allowed text-[#4E2E8C] px-8 py-5 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl border-2 border-brand-yellow hover:border-accent-400"
+            className="group relative w-full bg-gradient-to-r from-brand-yellow to-accent-400 disabled:opacity-50 disabled:cursor-not-allowed text-[#4E2E8C] px-8 py-5 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
+            <div className="absolute inset-0 bg-gradient-to-r from-accent-400 to-accent-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             {loading ? (
               <>
-                <RefreshCw className="animate-spin" size={22} />
-                <span>Updating Profiles...</span>
+                <RefreshCw className="animate-spin relative z-10" size={22} />
+                <span className="relative z-10">Updating Profiles...</span>
               </>
             ) : (
               <>
-                <Upload size={22} />
-                <span>Update Profiles from CSV</span>
+                <Upload size={22} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative z-10">Update Profiles from CSV</span>
               </>
             )}
           </button>
@@ -1548,17 +1607,18 @@ function BulkUpdateTab() {
           <button
             onClick={handleZipUpload}
             disabled={imageLoading || !zipFile}
-            className="w-full bg-[#4E2E8C] hover:bg-[#5E3E9C] disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-5 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-xl border-2 border-[#4E2E8C] hover:border-primary-700"
+            className="group relative w-full bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] disabled:opacity-50 disabled:cursor-not-allowed text-white px-8 py-5 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
           >
+            <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             {imageLoading ? (
               <>
-                <RefreshCw className="animate-spin" size={22} />
-                <span>Processing ZIP File...</span>
+                <RefreshCw className="animate-spin relative z-10" size={22} />
+                <span className="relative z-10">Processing ZIP File...</span>
               </>
             ) : (
               <>
-                <Upload size={22} />
-                <span>Preview Image Mappings</span>
+                <Upload size={22} className="relative z-10 group-hover:scale-110 transition-transform duration-300" />
+                <span className="relative z-10">Preview Image Mappings</span>
               </>
             )}
           </button>
@@ -1821,9 +1881,10 @@ function SingleProfileForm() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-[#4E2E8C] hover:bg-[#5E3E9C] disabled:opacity-50 text-white px-8 py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2 shadow-md hover:shadow-lg"
+        className="group relative w-full bg-gradient-to-r from-[#4E2E8C] to-[#6D28D9] disabled:opacity-50 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:scale-105 overflow-hidden"
       >
-        {loading ? 'Creating...' : 'Create Profile'}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#6D28D9] to-[#7C3AED] opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <span className="relative z-10">{loading ? 'Creating...' : 'Create Profile'}</span>
       </button>
     </form>
   );
