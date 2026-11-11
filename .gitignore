@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Local credential files: never commit (security clean-up 2026-11-11)
+.mcp.json
